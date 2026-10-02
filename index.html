@@ -1250,6 +1250,7 @@ const ITEMS = {
   stapler: { name: 'Степлер Димы', kind: 'easter', desc: 'Подписан: «Степлер №3. Учёт ведётся».' },
   cactus_note: { name: 'Записка у кактуса', kind: 'easter', desc: '«Гена, поливать раз в две недели. Не разговаривать с ним — он стесняется».' },
   pick: { name: 'Медиатор Никиты', kind: 'easter', desc: 'На медиаторе нацарапано: «19».' },
+  dima_key: { name: 'Ключ «Д. — 2 эт.»', kind: 'story', desc: 'Запасной ключ из коробки Марка. На бирке: «Д. — 2 эт., кабинет». Марк хранит ключи от всех дверей. Конечно.' },
   garage_key: { name: 'Ключ с биркой GARAGE', kind: 'story', desc: 'Твой ключ от гаража №13. Ты не был там уже месяц.' },
   cat_photo: { name: 'Фото кота у ларька', kind: 'easter', desc: 'Уличный кот. Посмотрел на тебя с осуждением.' },
 };
@@ -1574,6 +1575,7 @@ const DESKS = {
       { id: 'laptop', x: 124, y: 92, w: 80, h: 58, label: 'Ноутбук', draw: c => D.laptop(c, 132, 94, { col: '#8a8f99', scr: '#2a1a0a', logo: 'PIN' }), act: { comp: 'mark' } },
       { id: 'planner', x: 40, y: 142, w: 48, h: 26, label: 'Подставка', draw: c => { R(c, 42, 154, 44, 10, '#3a2a1c'); R(c, 42, 154, 44, 2, '#5a4030'); ptext(c, 'PLANNER', 64, 157, '#d8c39a', 1, 'center'); }, act: { text: 'Подставка с надписью «PLANNER». Пустая. Ежедневника нет — Марк его где-то оставил. Он никогда с ним не расстаётся… обычно.' } },
       { id: 'folders', x: 214, y: 120, w: 56, h: 40, label: 'Три папки', draw: c => { D.book(c, 216, 140, 50, 12, '#c0392b', 'НЕ ОТКРЫВ.'); D.book(c, 218, 128, 46, 11, '#2c5a8e', 'ЛИЧНОЕ'); D.book(c, 220, 117, 42, 10, '#d4ac0d', 'РАБОТА', '#222'); }, act: { text: 'Три папки: «РАБОТА», «ЛИЧНОЕ», «НЕ ОТКРЫВАТЬ». В «НЕ ОТКРЫВАТЬ» — записка «Я же сказал». В «ЛИЧНОЕ» — памятка почерком Марка: «Все PIN-коды — дни рождения (ДДММ). Ноутбук — самый важный человек на этом столе».', flag: 'hint_mark_pin' } },
+      { id: 'keys', x: 268, y: 140, w: 34, h: 24, label: 'Коробка с ключами', draw: c => { R(c, 270, 146, 30, 16, '#5a4030'); R(c, 270, 146, 30, 2, '#7a5a44'); for (let i = 0; i < 4; i++) { R(c, 273 + i * 7, 140, 2, 8, '#c0c8d2'); disc(c, 274 + i * 7, 140, 2, '#d4b26a'); } ptext(c, 'КЛЮЧИ', 285, 152, '#e8dcc0', 1, 'center'); }, act: { text: 'Коробка «ЗАПАСНЫЕ КЛЮЧИ». Всё подписано: «Архив», «Серверная», «Д. — 2 эт., кабинет»… Ключ от кабинета Димы. Пригодится.', item: 'dima_key' } },
       { id: 'ruler', x: 92, y: 158, w: 58, h: 14, label: 'Линейка', draw: c => D.ruler(c, 96, 162, 52), act: { text: 'Линейка. На обороте: «НЕ БРАТЬ. Я ЗНАЮ, ЧТО ЭТО ТЫ, КИРИЛЛ».', item: 'ruler' } },
       { id: 'pen', x: 156, y: 154, w: 36, h: 12, label: 'Чёрная ручка', draw: c => D.pen(c, 158, 158), act: { text: 'Чёрная ручка. Одна. Лежит строго параллельно краю стола.' } },
       { id: 'plant', x: 276, y: 96, w: 30, h: 40, label: 'Растение', draw: c => D.plant(c, 280, 100), act: { text: 'Фикус. Табличка: «Фикус Марка. Полив — вт, пт. Не трогать по ср».' } },
@@ -1858,9 +1860,9 @@ const COMPUTERS = {
    34 DATA — эпизоды, цели, подсказки «?»
    ===================================================================== */
 const WHERE = { // где днём обычно бывают персонажи (для подсказок)
-  mark: 'у ресепшена в центре 1 этажа', tigran: 'в опенспейсе слева на 1 этаже', taras: 'у кулера рядом с ресепшеном',
-  kirill: 'в зоне отдыха справа внизу', sasha: 'на кухне (1 этаж, справа сверху)', andrey: 'на 2 этаже',
-  dima: 'на 2 этаже, у принтера', nikita: 'на 2 этаже',
+  mark: 'у ресепшена в центре 1 этажа', nikita: 'в холле 1 этажа', tigran: 'на 2 этаже, у своего стола (верхний ряд слева)', taras: 'на 2 этаже, у своего стола (верхний ряд справа)',
+  andrey: 'на 2 этаже, у своего стола (средний ряд справа)', kirill: 'на 2 этаже, у своего стола (нижний ряд слева)', sasha: 'на 2 этаже, у своего стола (нижний ряд справа)',
+  dima: 'на 2 этаже, в нижнем коридоре у своего кабинета',
 };
 const Q = (t, done, hint) => ({ t, done, hint });
 const CH_CLOCK = { 2: '21:40', 3: '21:55', 4: '22:10', 5: '22:25', 6: '22:40', 7: '22:55', 8: '23:10', 9: '23:25', 10: '23:40' };
@@ -1869,7 +1871,9 @@ function investigation(who, cfg) {
   const N = CHARS[who].name, Ng = cfg.gen || N;
   return [
     ...(cfg.pre || []),
-    Q(`Проникнуть в кабинет: ${Ng}`, () => Flags.has('in_cab_' + who), `Кабинеты — на 2 этаже. Лестница — в левом верхнем углу холла. Ищи табличку «${N.toUpperCase()}».`),
+    who === 'dima' ? Q('Открыть кабинет Димы', () => Flags.has('in_cab_dima'), () => Inv.has('dima_key') ? 'Кабинет Димы — в нижнем коридоре 2 этажа, справа. Ключ у тебя.' : 'Кабинет заперт. У Марка на столе хранятся запасные ключи от всех дверей.')
+      : who === 'nikita' ? Q('Подняться к кабинету Никиты', () => Flags.has('in_cab_nikita'), 'Кабинет Никиты — на отдельном верхнем этаже. Туда можно попасть только на лифте.')
+      : Q(`Подойти к столу: ${Ng}`, () => Flags.has('in_cab_' + who), `Рабочие места — на 2 этаже, у колонн. На колонне табличка «${N.toUpperCase()}». Лестница наверх — в левом верхнем углу холла.`),
     Q(`Осмотреть стол: ${Ng}`, () => (cfg.desk || []).every(Ev.has) && (cfg.deskFlags || []).every(Flags.has), cfg.deskHint),
     Q(`Открыть ноутбук: ${Ng}`, () => Puzzle.compOpen(who), () => { const L = COMPUTERS[who].lock.hints; const k = 'hint_' + who; const n = G.s.seen[k] = Math.min(1, (G.s.seen[k] == null ? -1 : G.s.seen[k]) + 1); return L[n]; }),
     Q(cfg.compGoal || 'Найти в ноутбуке, где он был на самом деле', () => cfg.comp.every(Ev.has), cfg.compHint),
@@ -1930,7 +1934,7 @@ const EPISODES = {
       ],
     }),
     done: () => ['mark_calendar', 'mark_geo', 'mark_chat', 'mark_flowers', 'mark_says_call'].every(Ev.has),
-    grants: { ev: ['mark_planner', 'mark_says_call', 'mark_calendar', 'mark_geo', 'mark_flowers', 'mark_chat', 'mark_camlog'], flags: ['planner_hint', 'mark_computer_unlocked', 'in_cab_mark', 'hint_mark_pin'], comps: ['mark'], puzzles: ['mark_receipt'], items: ['flowers_receipt'] },
+    grants: { ev: ['mark_planner', 'mark_says_call', 'mark_calendar', 'mark_geo', 'mark_flowers', 'mark_chat', 'mark_camlog'], flags: ['planner_hint', 'mark_computer_unlocked', 'in_cab_mark', 'hint_mark_pin'], comps: ['mark'], puzzles: ['mark_receipt'], items: ['flowers_receipt', 'dima_key'] },
   },
   5: {
     title: 'Андрей', who: 'andrey', date: '18 октября', short: 'Кадр 20:03',
@@ -2378,7 +2382,7 @@ const LOC = {
     props: [
       wp('stairsUp', 16, 32, {}, { flatish: true }),
       wp('stairsLink', 16, 112, {}, { act: 'stairs', label: 'Лестница на 2 этаж', ix: 40, iy: 118 }),
-      wp('board', 74, 10, {}, { act: 'board', label: 'Доска', ix: 91, iy: 40 }), wp('elevator', 120, 2, { floor: '1' }, { act: 'elevator', label: 'Лифт', ix: 135, iy: 40 }),
+      wp('board', 74, 10, {}, { act: 'board', label: 'Доска', ix: 91, iy: 40 }), wp('elevator', 120, 2, { floor: '1' }, { act: 'lift', label: 'Лифт', ix: 135, iy: 40 }),
       wp('winBlinds', 164, 8, { night: 1 }), wp('clock', 228, 9, { hh: 9, mm: 0 }, { act: 'clock', label: 'Часы', ix: 235, iy: 40 }), wp('winBlinds', 252, 8, { night: 1 }), wp('tvWall', 316, 8, {}, { act: 'tv_office', label: 'Телевизор', ix: 331, iy: 40 }),
       wp('kitchenWall', 390, 12, {}), wp('counter', 392, 30, {}, { act: 'coffee', label: 'Кофемашина', ix: 410, iy: 62 }), wp('fridge', 532, 18, {}, { act: 'fridge', label: 'Холодильник', ix: 541, iy: 62 }),
       wp('table', 428, 70, { cups: 1, col: '#e0e0da' }), wp('chair', 416, 74, { col: '#8a8e96' }), wp('chair', 472, 74, { col: '#8a8e96' }),
@@ -2396,7 +2400,7 @@ const LOC = {
       wp('mat', 272, 284, {}, { act: 'office_exit', label: 'Выход', ix: 288, iy: 280 }),
     ],
     walls: [[16, 32, 4, 80], [60, 32, 4, 80]],
-    triggers: [{ x: 20, y: 30, w: 40, h: 8, go: 'office2', at: [40, 124], dir: 'up' }],
+    triggers: [{ x: 20, y: 30, w: 40, h: 8, go: 'office2', at: [407, 830], dir: 'up' }],
     lights: () => [{ x: 39, y: 154, r: 26, a: 0.7, col: '#4a7ab0' }, { x: 91, y: 154, r: 26, a: 0.7, col: '#4a7ab0' }, { x: 143, y: 154, r: 26, a: 0.7, col: '#4a7ab0' }, { x: 273, y: 200, r: 44, a: 0.9, col: '#3a6a9a' }, { x: 349, y: 46, r: 46, a: 0.9, col: '#e04450' }, { x: 331, y: 16, r: 30, a: 0.8, col: '#4a8ae0' }, { x: 539, y: 186, r: 34, a: 0.8, col: '#3a8a5a' }, { x: 515, y: 190, r: 40, a: 0.8, col: '#f4d35e' }, { x: 235, y: 16, r: 24, a: 0.6, col: '#efe9da' }, { x: 188, y: 16, r: 34, a: 0.5, col: '#6f8ab0' }, { x: 276, y: 16, r: 34, a: 0.5, col: '#6f8ab0' }, { x: 288, y: 290, r: 30, a: 0.6, col: '#5f5' }, { x: 40, y: 70, r: 40, a: 0.5, col: '#cfd8e8' }],
   },
   office2: {
@@ -2464,7 +2468,8 @@ const World = {
     const [cv, c] = mk(TW, TH);
     const at = (i, j) => (M[j] && M[j][i]) || ' ';
     const isW = ch => ch === '#' || ch === 'X' || ch === ' ';
-    for (let j = 0; j < M.length; j++) for (let i = 0; i < M[0].length; i++) {
+    if (L.drawBase) L.drawBase(c);
+    else for (let j = 0; j < M.length; j++) for (let i = 0; i < M[0].length; i++) {
       const ch = at(i, j), x = i * 16, y = j * 16;
       if (ch === '#' || ch === ' ') {
         const below = at(i, j + 1), below2 = at(i, j + 2);
@@ -2503,7 +2508,7 @@ const World = {
     this.bg = cv;
     this.solids = [];
     for (const p of this.props) { if (p.d.box && !p.d.flat && !p.d.wall && !p.flatish) { const [bx, by, bw, bh] = p.d.box; this.solids.push({ x: p.x + bx, y: p.y + by, w: (p.o.w || bw), h: bh, if: p.if }); } }
-    for (const w of (L.walls || [])) this.solids.push({ x: w[0], y: w[1], w: w[2], h: w[3] });
+    for (const w of (L.walls || [])) this.solids.push({ x: w[0], y: w[1], w: w[2], h: w[3], wall: true });
     this.buildGrid();
     const iss = this.validate(); if (iss.length) console.warn('[декор] ' + this.locId + ': ' + iss.join('; ')); this.issues = iss;
   },
@@ -2541,7 +2546,7 @@ const World = {
     const L = this.L, issues = []; if (L.type !== 'top') return issues;
     const sol = this.solids.filter(s => !s.if);
     for (const s of sol) { for (let y = s.y; y < s.y + s.h; y += 2) for (let x = s.x; x < s.x + s.w; x += 2) if (this.solidAt(x, y)) { issues.push(`предмет в стене @${s.x},${s.y}`); y = 1e9; break; } }
-    for (let i = 0; i < sol.length; i++) for (let j = i + 1; j < sol.length; j++) { const a = sol[i], b = sol[j]; if (a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y) issues.push(`предметы пересекаются @${a.x},${a.y} и ${b.x},${b.y}`); }
+    for (let i = 0; i < sol.length; i++) for (let j = i + 1; j < sol.length; j++) { const a = sol[i], b = sol[j]; if (a.wall && b.wall) continue; if (a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y) issues.push(`предметы пересекаются @${a.x},${a.y} и ${b.x},${b.y}`); }
     const reach = new Uint8Array(this.grid.W * this.grid.H); const { g, W, H, s } = this.grid; const st = L.spawn || [this.player.x, this.player.y];
     const k0 = Math.floor(st[1] / s) * W + Math.floor(st[0] / s); const q = [k0]; reach[k0] = 1; let qi = 0;
     while (qi < q.length) { const k = q[qi++]; const x = k % W, y = (k / W) | 0; for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const nx = x + dx, ny = y + dy; if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue; const nk = ny * W + nx; if (reach[nk] || !g[nk]) continue; reach[nk] = 1; q.push(nk); } }
@@ -2634,7 +2639,9 @@ const World = {
     }
     const cx = L.mw <= View.W ? -(View.W - L.mw) / 2 : clamp(p.x - View.W / 2, 0, L.mw - View.W);
     const cy = L.mh <= View.H ? -(View.H - L.mh) / 2 : clamp(p.y - 14 - View.H / 2, 0, L.mh - View.H);
-    return { x: Math.round(cx), y: Math.round(cy) };
+    // мягкое движение камеры
+    const s = this._camS; if (!s || s.loc !== this.locId || Math.abs(s.x - cx) > 200 || Math.abs(s.y - cy) > 200) this._camS = { loc: this.locId, x: cx, y: cy }; else { s.x += (cx - s.x) * 0.14; s.y += (cy - s.y) * 0.14; }
+    return { x: Math.round(this._camS.x), y: Math.round(this._camS.y) };
   },
   draw() {
     const L = this.L; if (!L) return;
@@ -2722,6 +2729,153 @@ const World = {
   },
   toScreen(wx, wy) { const c = this.cam || { x: 0, y: 0 }; return [(wx - c.x) * View.css, (wy - c.y) * View.css]; },
 };
+
+/* ---- 42_office2 ---- */
+/* =====================================================================
+   42 OFFICE 2 — второй этаж строго по схеме заказчика (масштаб 0.75)
+   Колонны: локальная коллизия только у основания, визуально перекрывают
+   героя, когда он проходит за ними (сортировка по Y отдельно от коллизии).
+   Рабочие зоны у колонн — места шести друзей. Кабинет Димы — на ключе.
+   Лифт — на этаж Никиты (EXECUTIVE), закрыт до эпизода 9.
+   ===================================================================== */
+const O2W = 815, O2H = 925;
+// зоны-столы у колонн: [x колонны, y верха колонны, хозяин]
+const O2_PODS = [[257, 202, 'tigran'], [520, 202, 'taras'], [257, 346, 'mark'], [520, 346, 'andrey'], [257, 487, 'kirill'], [520, 487, 'sasha']];
+const O2_STAIRS = { x: 315, y: 848, w: 184, h: 63 };
+// кто где сидит / откуда выходить
+const DOORS2 = { dima: { loc: 'office2', x: 780, y: 790 }, nikita: { loc: 'exec', x: 250 } };
+
+// --- предметы этажа ---
+PROPS.pillar = { w: 38, h: 140, box: [3, 124, 32, 14], sortY: 138, draw(c, o) {
+  R(c, 2, 0, 34, 138, '#2a2f37'); R(c, 2, 0, 34, 6, '#3a414b'); R(c, 4, 6, 30, 128, '#323842'); R(c, 4, 6, 3, 128, '#3e4650'); R(c, 31, 6, 3, 128, '#262b32');
+  R(c, 6, 14, 26, 2, '#e8f0ff'); R(c, 6, 16, 26, 1, '#9ab0d0'); // световая полоса
+  R(c, 2, 134, 34, 4, '#1a1d22'); R(c, 0, 137, 38, 3, 'rgba(0,0,0,.35)');
+  if (o.plate) { R(c, 7, 64, 24, 9, '#0d0f13'); outlineRect(c, 7, 64, 24, 9, '#5a6a80'); ptext(c, o.plate.slice(0, 6), 19, 66, '#cfe0ff', 1, 'center'); }
+} };
+PROPS.pod = { w: 54, h: 50, box: [0, 10, 54, 30], draw(c, o) {
+  const r = mulberry(o.seed || 1);
+  R(c, 0, 10, 54, 26, '#c9ccd0'); R(c, 0, 10, 54, 1, '#eef0f2'); R(c, 0, 36, 54, 6, '#7a7e86'); R(c, 2, 42, 3, 6, '#3a3d44'); R(c, 49, 42, 3, 6, '#3a3d44');
+  R(c, o.flip ? 2 : 40, 22, 12, 20, '#4a4f58'); R(c, o.flip ? 4 : 42, 26, 8, 1, '#8a8e96'); R(c, o.flip ? 4 : 42, 32, 8, 1, '#8a8e96'); // тумба
+  const mx = o.flip ? 22 : 12; R(c, mx, 0, 20, 14, '#16181c'); R(c, mx + 1, 1, 18, 11, o.lit ? '#4a8ad0' : '#1e2a3a'); if (o.lit) for (let i = 0; i < 4; i++) R(c, mx + 3, 3 + i * 2, 6 + (i * 5) % 9, 1, '#bfe0ff');
+  R(c, mx + 8, 14, 4, 3, '#2a2c30'); R(c, mx - 1, 19, 22, 5, '#2a2d34'); for (let i = 0; i < 9; i++) P(c, mx + i * 2, 21, '#6a6e78'); R(c, mx + 23, 20, 3, 4, '#2a2d34');
+  if (r() < 0.7) { R(c, o.flip ? 44 : 3, 14, 4, 4, ['#e3343a', '#f2efe6', '#3a7bd5', '#1c1c22'][(r() * 4) | 0]); }
+  if (r() < 0.6) { R(c, o.flip ? 2 : 46, 13, 7, 9, '#efece2'); R(c, o.flip ? 3 : 47, 15, 5, 1, '#999'); }
+  if (r() < 0.5) { R(c, o.flip ? 46 : 2, 12, 5, 4, '#a0522d'); R(c, o.flip ? 45 : 1, 7, 7, 5, '#3f8a44'); }
+  if (r() < 0.4) { R(c, o.flip ? 34 : 34, 12, 3, 8, '#d9c38a'); }
+  for (let x = 0; x < 30; x += 2) P(c, (o.flip ? 10 : 20) + x * 0.6, 36 + Math.sin(x) * 1.5, '#111');
+} };
+PROPS.chair2 = { w: 12, h: 14, box: null, draw(c, o) { const col = o.col || '#2a2e36'; R(c, 2, 0, 8, 6, col); R(c, 2, 0, 8, 1, shade(col, 0.25)); R(c, 1, 6, 10, 5, shade(col, -0.15)); R(c, 5, 11, 2, 2, '#111'); R(c, 2, 13, 8, 1, '#111'); } };
+PROPS.cabinetTall = { w: 40, h: 40, box: [0, 26, 40, 14], draw(c) { R(c, 0, 0, 40, 40, '#1e2228'); R(c, 0, 0, 40, 2, '#3a414b'); R(c, 19, 2, 2, 38, '#14171b'); R(c, 15, 18, 2, 6, '#8a8e96'); R(c, 23, 18, 2, 6, '#8a8e96'); } };
+PROPS.sofaDark = { w: 64, h: 24, box: [0, 6, 64, 17], draw(c) { R(c, 0, 4, 64, 8, '#1e2228'); R(c, 0, 4, 64, 1, '#3a414b'); R(c, 4, 10, 56, 9, '#262b32'); R(c, 0, 8, 5, 13, '#1a1d22'); R(c, 59, 8, 5, 13, '#1a1d22'); R(c, 0, 21, 64, 2, '#0a0b0e'); } };
+PROPS.lowTable = { w: 44, h: 30, box: [0, 4, 44, 24], draw(c) { R(c, 0, 4, 44, 22, '#3a3024'); R(c, 0, 4, 44, 1, '#5a4a38'); R(c, 0, 26, 44, 3, '#1a140e'); R(c, 8, 8, 8, 6, '#efece2'); R(c, 26, 12, 9, 7, '#e8e4d8'); R(c, 18, 16, 4, 4, '#3a7bd5'); } };
+PROPS.printers = { w: 42, h: 30, box: [0, 10, 42, 18], draw(c) { for (let i = 0; i < 2; i++) { const x = i * 22; R(c, x, 8, 20, 20, '#c9ccd2'); R(c, x, 8, 20, 1, '#eef0f2'); R(c, x + 3, 4, 14, 5, '#f4f1ea'); R(c, x + 3, 14, 14, 2, '#333'); P(c, x + 17, 11, '#3f3'); } } };
+PROPS.boardStand = { w: 50, h: 46, box: [4, 38, 42, 6], draw(c) { R(c, 0, 0, 50, 36, '#8a8e96'); R(c, 2, 2, 46, 32, '#eef0f2'); for (let i = 0; i < 6; i++) R(c, 6 + (i % 3) * 14, 6 + (i / 3 | 0) * 14, 10, 10, ['#f4d35e', '#f49ac1', '#9ad0f0'][i % 3]); R(c, 6, 36, 2, 10, '#555'); R(c, 42, 36, 2, 10, '#555'); } };
+PROPS.lift2 = { w: 70, h: 92, wall: true, draw(c, o) {
+  R(c, 0, 0, 70, 92, '#2a2f37'); R(c, 6, 10, 58, 82, '#5a626c'); R(c, 8, 12, 26, 80, '#8a929c'); R(c, 36, 12, 26, 80, '#8a929c'); R(c, 34, 12, 2, 80, '#3a414b');
+  R(c, 8, 12, 54, 2, '#c0c8d2'); R(c, 18, 2, 34, 6, '#0d0f13'); ptext(c, o.floor || '2', 35, 2, '#f44', 1, 'center'); R(c, 64, 46, 5, 12, '#14171b'); disc(c, 66, 50, 1, '#f4a52c'); disc(c, 66, 55, 1, '#555');
+} };
+
+// --- фон этажа: окна с городом, плитка, блоки стен ---
+function o2block(c, x, y, w, hh, face = 26) { R(c, x, y, w, hh, '#1c2026'); R(c, x, y, w, 2, '#3a414b'); const f = Math.min(face, hh); R(c, x, y + hh - f, w, f, '#2c323a'); R(c, x, y + hh - f, w, 1, '#46505c'); R(c, x, y + hh - 2, w, 2, '#15181d'); }
+function o2door(c, x, y, w, hh, o = {}) {
+  R(c, x - 2, y - 2, w + 4, hh + 2, '#14171b'); R(c, x, y, w, hh, o.lit ? '#d8b878' : '#3a414b');
+  if (o.lit) { R(c, x + 3, y + 4, w - 6, hh - 8, '#f4d39a'); R(c, x + 5, y + hh - 18, 8, 10, '#6a4a2a'); R(c, x + w - 12, y + 8, 6, 8, '#3a2a1c'); }
+  else { R(c, x + 2, y + 2, w / 2 - 3, hh - 2, '#4a525c'); R(c, x + w / 2 + 1, y + 2, w / 2 - 3, hh - 2, '#4a525c'); }
+  if (o.lock) { R(c, x + w - 6, y + hh / 2, 3, 5, '#c0392b'); } else R(c, x + w - 6, y + hh / 2, 2, 3, '#d4b26a');
+  if (o.plate) { const tw = textW(o.plate) + 6; R(c, x + w / 2 - tw / 2, y - 10, tw, 8, '#0d0f13'); outlineRect(c, x + w / 2 - tw / 2, y - 10, tw, 8, '#5a6a80'); ptext(c, o.plate, x + w / 2, y - 9, '#cfe0ff', 1, 'center'); }
+}
+function drawOffice2Base(c) {
+  // небо и город за панорамными окнами
+  const g = c.createLinearGradient(0, 0, 0, 146); g.addColorStop(0, '#0a1222'); g.addColorStop(1, '#22304a'); c.fillStyle = g; c.fillRect(0, 0, O2W, 146);
+  skyline(c, 0, 30, O2W, 110, '#141e30', true, 77); skyline(c, 0, 60, O2W, 82, '#1a2638', true, 91);
+  const fog = c.createLinearGradient(0, 90, 0, 146); fog.addColorStop(0, 'rgba(120,150,190,0)'); fog.addColorStop(1, 'rgba(120,150,190,.18)'); c.fillStyle = fog; c.fillRect(0, 90, O2W, 56);
+  R(c, 0, 0, O2W, 10, '#14171b'); for (let x = 11; x < O2W; x += 34) R(c, x, 10, 2, 132, '#1a1d22'); R(c, 0, 138, O2W, 8, '#2a2f37'); R(c, 0, 138, O2W, 1, '#4a525c');
+  // пилястры окон
+  for (const [x, w] of [[210, 45], [569, 42]]) { R(c, x, 0, w, 169, '#2a2f37'); R(c, x + 2, 0, w - 4, 169, '#343a44'); R(c, x + 6, 6, w - 12, 2, '#e8f0ff'); R(c, x + 8, 126, w - 16, 12, '#efece2'); R(c, x + 10, 128, w - 20, 1, '#999'); }
+  // пол: крупная холодная плитка, лёгкие отражения
+  R(c, 0, 146, O2W, O2H - 146, '#323840'); const r = mulberry(4);
+  for (let y = 146; y < O2H; y += 24) for (let x = 0; x < O2W; x += 24) { R(c, x, y, 24, 24, shade('#323840', (r() - 0.5) * 0.06)); R(c, x, y, 24, 1, '#2a2f36'); R(c, x, y, 1, 24, '#2a2f36'); }
+  for (const [x, y] of [[180, 200], [420, 180], [640, 200], [180, 420], [420, 420], [650, 420], [300, 760], [520, 760], [140, 860], [640, 860]]) { c.fillStyle = 'rgba(200,220,255,.06)'; c.fillRect(x, y, 34, 6); c.fillRect(x + 6, y + 10, 22, 3); }
+  // стены и блоки по схеме
+  R(c, 0, 0, 11, O2H, '#14171b'); R(c, 803, 0, 12, O2H, '#14171b'); R(c, 0, 911, O2W, 14, '#14171b');
+  o2block(c, 11, 146, 41, 34); o2block(c, 11, 214, 94, 94); o2block(c, 11, 518, 60, 97); o2block(c, 11, 622, 139, 188, 92);
+  o2block(c, 735, 146, 68, 23); o2block(c, 761, 360, 42, 60); o2block(c, 709, 622, 94, 158, 80);
+  // стеклянная перегородка к нижнему коридору с проходом по центру
+  for (const [x0, x1] of [[150, 356], [461, 705]]) { R(c, x0, 649, x1 - x0, 52, '#1c2026'); R(c, x0, 670, x1 - x0, 31, 'rgba(140,170,210,.22)'); for (let x = x0; x < x1; x += 30) R(c, x, 668, 2, 33, '#3a414b'); R(c, x0, 668, x1 - x0, 2, '#4a525c'); R(c, x0, 699, x1 - x0, 2, '#15181d'); }
+  R(c, 287, 672, 26, 22, '#2c323a'); R(c, 292, 676, 16, 6, '#f4e8c8'); R(c, 488, 672, 26, 22, '#2c323a'); R(c, 493, 676, 16, 6, '#f4e8c8');
+  // двери/кабинеты по схеме: лишние помещения — служебные (закрыты)
+  o2door(c, 18, 150, 28, 28, { plate: 'АРХИВ' }); o2door(c, 52, 236, 34, 70, { lit: true, plate: 'ПЕРЕГОВОРНАЯ' }); o2door(c, 20, 552, 34, 60, { plate: 'СЕРВЕРНАЯ' });
+  o2door(c, 761, 98, 30, 68, { lit: true, plate: 'КУХНЯ' }); o2door(c, 770, 372, 26, 46, { plate: 'КОПИ' }); o2door(c, 764, 712, 30, 66, { lit: true, lock: true, plate: 'ДИМА' });
+  // лестница вниз — широкая, со ступенями, перилами и тенью
+  const S = O2_STAIRS; for (let i = 0; i < 8; i++) { const y = S.y + i * 8; const sh = -0.07 * i; R(c, S.x, y, S.w, 8, shade('#5a606a', sh)); R(c, S.x, y, S.w, 1, shade('#9aa3ad', sh)); R(c, S.x, y + 7, S.w, 1, '#1e2228'); }
+  const sg = c.createLinearGradient(0, S.y, 0, S.y + S.h); sg.addColorStop(0, 'rgba(5,6,9,0)'); sg.addColorStop(1, 'rgba(5,6,9,.8)'); c.fillStyle = sg; c.fillRect(S.x, S.y, S.w, S.h);
+  for (const [x0, x1] of [[142, 315], [499, 671]]) { R(c, x0, 868, x1 - x0, 3, '#9aa3ad'); R(c, x0, 868, x1 - x0, 1, '#d0d6dc'); for (let x = x0; x < x1; x += 10) R(c, x, 871, 1, 10, '#5a626c'); R(c, x0, 880, x1 - x0, 2, '#3a414b'); }
+  R(c, 314, 846, 3, 36, '#9aa3ad'); R(c, 498, 846, 3, 36, '#9aa3ad'); R(c, 330, 905, 10, 3, '#f4e8c8'); R(c, 476, 905, 10, 3, '#f4e8c8');
+  // ковровые зоны рабочих мест (отделяют личные зоны друзей)
+  for (const [x, y] of O2_PODS) { c.fillStyle = 'rgba(90,110,140,.10)'; c.fillRect(x - 60, y + 14, 158, 120); }
+}
+LOC.office2 = {
+  type: 'top', viewH: 236, minW: 300, name: 'Офис · 2 этаж', spawn: [407, 830],
+  map: Array.from({ length: Math.ceil(O2H / 16) }, () => '.'.repeat(Math.ceil(O2W / 16))), floorPal: { '.': '#323840' }, wall: '#2c323a', drawBase: drawOffice2Base,
+  music: () => Time.isNight() ? 'night' : 'day', dark: () => Time.isNight() ? 0.58 : 0.08,
+  walls: [[0, 0, O2W, 146], [0, 0, 11, O2H], [803, 0, 12, O2H], [0, 911, O2W, 14], [210, 146, 45, 23], [569, 146, 42, 23],
+    [11, 146, 41, 34], [11, 214, 94, 94], [11, 518, 60, 97], [11, 622, 139, 188], [735, 146, 68, 23], [761, 360, 42, 60], [709, 622, 94, 158],
+    [150, 649, 206, 52], [461, 649, 244, 52], [142, 866, 173, 16], [499, 866, 172, 16], [312, 846, 5, 20], [497, 846, 5, 20]],
+  props: [
+    wp('cabinetTall', 259, 120, {}), wp('cabinetTall', 300, 120, {}), wp('plant', 120, 140, { seed: 2 }), wp('plant', 380, 136, { seed: 5 }), wp('plant', 450, 136, { seed: 9 }), wp('plant', 540, 136, { seed: 13 }), wp('plant', 700, 140, { seed: 17 }),
+    wp('sofaDark', 619, 142, {}), wp('boardStand', 62, 128, {}, { act: 'board2', label: 'Доска задач', ix: 87, iy: 182 }),
+    wp('cooler', 106, 240, {}, { act: 'cooler', label: 'Кулер', ix: 112, iy: 272 }), wp('cooler', 80, 548, {}, { act: 'cooler', label: 'Кулер', ix: 86, iy: 580 }),
+    wp('printers', 738, 276, {}, { act: 'printer2', label: 'Принтеры', ix: 759, iy: 312 }), wp('plant', 718, 268, { seed: 21 }),
+    wp('cabinetTall', 11, 372, {}), wp('sofaDark', 52, 382, {}), wp('lowTable', 56, 422, {}), wp('sofaDark', 44, 480, {}),
+    wp('sofaDark', 690, 412, {}), wp('lowTable', 707, 450, {}), wp('sofaDark', 697, 518, {}), wp('bigplant', 760, 430, { seed: 6 }),
+    wp('lift2', 37, 718, { floor: '2' }, { act: 'lift', label: 'Лифт', ix: 71, iy: 822 }),
+    wp('cabinetTall', 161, 752, {}), wp('plant', 220, 712, { seed: 30 }), wp('plant', 248, 712, { seed: 31 }), wp('plant', 505, 712, { seed: 32 }), wp('plant', 560, 712, { seed: 33 }), wp('cabinetTall', 650, 722, {}),
+    wp('stairsLink', O2_STAIRS.x, O2_STAIRS.y, {}, { act: 'stairs', label: 'Спуститься на 1 этаж', ix: 407, iy: 852 }),
+  ],
+  triggers: [{ x: 330, y: 896, w: 154, h: 14, go: 'office1', at: [40, 124], dir: 'down' }],
+  lights: () => {
+    const L = [{ x: 105, y: 180, r: 50, a: 0.5, col: '#cfe0ff' }, { x: 69, y: 270, r: 40, a: 0.8, col: '#f4d39a' }, { x: 776, y: 132, r: 40, a: 0.8, col: '#f4d39a' }, { x: 779, y: 745, r: 40, a: 0.8, col: '#f4d39a' },
+      { x: 300, y: 682, r: 34, a: 0.8, col: '#f4e8c8' }, { x: 500, y: 682, r: 34, a: 0.8, col: '#f4e8c8' }, { x: 407, y: 880, r: 70, a: 0.7, col: '#cfd8e8' }, { x: 71, y: 760, r: 44, a: 0.6, col: '#e8eef6' },
+      { x: 232, y: 60, r: 70, a: 0.4, col: '#6a8ab8' }, { x: 590, y: 60, r: 70, a: 0.4, col: '#6a8ab8' }, { x: 400, y: 80, r: 120, a: 0.35, col: '#4a6a98' }];
+    for (const [x, y] of O2_PODS) { L.push({ x: x + 19, y: y + 16, r: 30, a: 0.8, col: '#e8f0ff' }, { x: x - 25, y: y + 30, r: 24, a: 0.6, col: '#4a8ad0' }, { x: x + 63, y: y + 30, r: 24, a: 0.6, col: '#4a8ad0' }); }
+    return L;
+  },
+};
+// рабочие станции: колонна по центру, стол слева и справа; зона принадлежит другу
+for (const [x, y, id] of O2_PODS) {
+  const N = CHARS[id].name;
+  LOC.office2.props.push(
+    wp('pillar', x, y, { plate: N.toUpperCase() }),
+    wp('pod', x - 54, y + 26, { seed: x + y, lit: true }, { act: 'desk:' + id, label: 'Стол: ' + N, ix: x - 27, iy: y + 74 }),
+    wp('pod', x + 38, y + 26, { seed: x * 3 + y, flip: true, lit: (x + y) % 2 === 0 }, { act: 'desk:' + id, label: 'Стол: ' + N, ix: x + 65, iy: y + 74 }),
+    wp('chair2', x - 33, y + 64, { col: '#2a2e36' }), wp('chair2', x + 59, y + 64, { col: '#2a2e36' }),
+  );
+}
+// Дима — кабинет на ключе
+LOC.office2.props.push(wp('stairsLink', 764, 712, {}, { act: 'cab:dima', label: 'Кабинет: Дима', ix: 779, iy: 788 }), wp('stairsLink', 52, 236, {}, { act: 'room_meet', label: 'Переговорная', ix: 69, iy: 314 }), wp('stairsLink', 761, 98, {}, { act: 'room_kitchen', label: 'Кухня', ix: 776, iy: 176 }), wp('stairsLink', 20, 552, {}, { act: 'room_server', label: 'Серверная', ix: 37, iy: 622 }), wp('stairsLink', 770, 372, {}, { act: 'room_copy', label: 'Копировальная', ix: 783, iy: 426 }), wp('stairsLink', 18, 150, {}, { act: 'room_archive', label: 'Архив', ix: 32, iy: 186 }));
+NPC_ROUTES.office2 = {
+  tigran: [[230, 296], [300, 300], [200, 200], [420, 200]], taras: [[490, 296], [560, 300], [640, 230], [660, 340]],
+  andrey: [[490, 440], [570, 444], [660, 600], [440, 600]], kirill: [[230, 580], [300, 584], [180, 600], [420, 620]],
+  sasha: [[490, 580], [570, 584], [640, 620], [700, 590]], dima: [[620, 800], [700, 820], [500, 760], [260, 820]],
+};
+NPC_ROUTES.office1 = { mark: [[228, 236], [300, 240], [250, 262], [200, 270]], nikita: [[452, 108], [500, 110], [420, 112], [488, 136]] };
+// Этаж Никиты — EXECUTIVE (только через лифт)
+LOC.exec = {
+  type: 'side', viewH: 130, minW: 240, w: 340, H: 130, floor: 120, minX: 24, maxX: 320, name: 'EXECUTIVE FLOOR', charScale: 1.6,
+  key: () => 'exec', music: () => 'night', dark: () => 0.5,
+  drawBg(c) {
+    R(c, 0, 0, 340, 130, '#0e1218'); R(c, 0, 0, 340, 104, '#1a2028'); for (let x = 0; x < 340; x += 20) R(c, x, 8, 1, 96, '#141a22');
+    for (let i = 0; i < 3; i++) { const x = 80 + i * 60; R(c, x, 20, 44, 50, '#0a1222'); skyline(c, x, 34, 44, 36, '#141e30', true, 5 + i); R(c, x - 2, 18, 48, 2, '#3a414b'); R(c, x - 2, 70, 48, 2, '#3a414b'); }
+    R(c, 0, 104, 340, 26, '#2a2026'); for (let x = 0; x < 340; x += 6) R(c, x, 104, 1, 26, '#241c22'); R(c, 0, 104, 340, 2, '#3a2a32');
+    R(c, 6, 40, 44, 64, '#2a2f37'); R(c, 10, 46, 17, 58, '#8a929c'); R(c, 29, 46, 17, 58, '#8a929c'); ptext(c, 'EXEC', 28, 41, '#f4a52c', 1, 'center');
+    R(c, 270, 34, 40, 70, '#14171b'); R(c, 273, 37, 34, 67, '#3a2a1c'); R(c, 276, 40, 28, 28, '#5a3a24'); R(c, 300, 70, 3, 5, '#d4b26a'); R(c, 272, 24, 36, 8, '#0d0f13'); ptext(c, 'НИКИТА', 290, 26, '#f4d39a', 1, 'center');
+    plantSide(c, 240, 104, 2, 9); plantSide(c, 60, 104, 1.6, 3); R(c, 140, 84, 60, 20, '#2a2f37'); R(c, 140, 84, 60, 2, '#4a525c'); ptext(c, 'EXECUTIVE', 170, 90, '#9ab0d0', 1, 'center');
+  },
+  lights: () => [{ x: 28, y: 50, r: 40, a: 0.6, col: '#f4a52c' }, { x: 290, y: 60, r: 50, a: 0.7, col: '#f4d39a' }, { x: 170, y: 40, r: 120, a: 0.3, col: '#4a6a98' }],
+  objs: [{ x0: 8, x1: 48, ly: 36, label: 'Лифт', act: 'lift' }, { x0: 266, x1: 314, ly: 22, label: 'Кабинет: Никита', act: 'cab:nikita' }, { x0: 138, x1: 202, ly: 76, label: 'Стойка', act: 'exec_desk' }],
+  exits: {},
+};
+LOC.cab_nikita.objs[0].label = 'Выйти на этаж';
 
 /* ---- 50_ui ---- */
 /* =====================================================================
@@ -3499,10 +3653,10 @@ const Interact = {
   async talk(id) { G.lockMove = true; await UI.dialog(talkScript(id)); G.lockMove = false; Game.onChange(); if (G.pendingCams) { G.pendingCams = false; Mini.open('cams', () => { Game.onChange(); if (!G.s.seen.mk_after) { G.s.seen.mk_after = 1; UI.think('Лицо закрыто. Рост средний. Это может быть кто угодно. Даже кто-то из своих. Надо узнать, где все были вчера вечером.'); } }); } },
   async run(act, tg) {
     if (act.startsWith('cab:')) return this.cab(act.slice(4));
-    if (act.startsWith('desk:')) return Desk.open(act.slice(5));
+    if (act.startsWith('desk:')) return this.deskZone(act.slice(5));
     if (act === 'say' && tg && tg.o) { UI.think(tg.o.text); return; }
     if (SAY[act]) { const t = typeof SAY[act] === 'function' ? SAY[act]() : SAY[act]; UI.think(t); return; }
-    const f = this[act]; if (f) return f.call(this, tg);
+    const f = this[act]; if (typeof f === 'string') { UI.think(f); return; } if (f) return f.call(this, tg);
     console.warn('no act', act);
   },
   // --- квартира ---
@@ -3545,7 +3699,7 @@ const Interact = {
   },
   metro() { UI.think(G.s.episode === 10 ? 'Я только что из метро. Гараж — налево, за воротами.' : 'Метро. Мне сейчас нужен автобус 36.'); },
   mailbox() { UI.think('Почтовый ящик. Внутри — рекламка пиццерии «Мама Мия». На обороте ручкой: «19.10 — 10 пицц». Странно.'); },
-  stairs() { if (World.locId === 'office1') Game.goto('office2', 40, 124, 'up', { sound: 'step' }); else Game.goto('office1', 40, 124, 'down', { sound: 'step' }); },
+  stairs() { if (World.locId === 'office1') Game.goto('office2', 407, 830, 'up', { sound: 'step' }); else Game.goto('office1', 40, 124, 'down', { sound: 'step' }); },
   tv_office() { UI.think('Телевизор на стене. Логотип компании крутится по кругу. Никто его никогда не выключает.'); },
   // --- офис ---
   async office_exit() {
@@ -3576,13 +3730,43 @@ const Interact = {
     UI.think(`${G.s.clock}. Ночь. Время уходит.`);
   },
   cab(id) {
-    if (!Time.isNight()) { UI.think(`Кабинет: ${CHARS[id].name}. Днём туда не попасть — сначала нужно поговорить со всеми.`); return; }
-    if (CHARS[id].ep > G.s.episode) { UI.think(`Кабинет: ${CHARS[id].name}. До него очередь ещё дойдёт.`); return; }
-    Flags.set('in_cab_' + id);
+    if (id === 'dima') {
+      if (!Inv.has('dima_key')) { SND.sfx('fail'); UI.think('Дверь заперта. Нужен ключ.'); return; }
+      if (!Time.isNight()) { UI.think('Днём Дима сидит у себя. Сейчас туда не зайти.'); return; }
+      if (G.s.episode < 8) { UI.think('Ключ подходит. Но до кабинета Димы очередь ещё дойдёт.'); return; }
+      if (!Flags.has('dima_door_open')) { Flags.set('dima_door_open'); SND.sfx('unlock'); UI.toast('', 'Ключ подошёл. Дверь открыта.'); }
+    }
+    if (id === 'nikita' && G.s.episode < 9) { UI.think('Заперто.'); return; }
+    Flags.set('in_cab_' + id); SND.sfx('door');
     Game.goto('cab_' + id, 40, null, 'right', { quiet: false });
     if (CHARS[id].ep === G.s.episode && !G.s.seen['cabthink' + id]) { G.s.seen['cabthink' + id] = 1; setTimeout(() => UI.think(CAB_THINK[id]), 900); }
   },
-  cab_exit() { const id = World.L.owner; const [x, y, row] = CAB_DOORS[id]; Game.goto('office2', x + 9, row === 'A' ? 44 : 124, 'down'); },
+  deskZone(id) {
+    if (!Time.isNight()) { UI.think(`Стол: ${CHARS[id].name}. Днём он здесь сам — не стоит рыться в его вещах.`); return; }
+    if (CHARS[id].ep > G.s.episode) { UI.think(`Стол: ${CHARS[id].name}. До него очередь ещё дойдёт.`); return; }
+    Flags.set('in_cab_' + id);
+    if (CHARS[id].ep === G.s.episode && !G.s.seen['cabthink' + id]) { G.s.seen['cabthink' + id] = 1; UI.think(CAB_THINK[id]); }
+    Desk.open(id);
+  },
+  cab_exit() { const id = World.L.owner; const d = DOORS2[id]; if (d.loc === 'exec') Game.goto('exec', 290, null, 'left'); else Game.goto('office2', d.x, d.y, 'down'); },
+  // лифт: панель этажей; EXECUTIVE закрыт до эпизода 9
+  async lift() {
+    SND.sfx('ping'); const here = World.locId; const ex = G.s.episode >= 9;
+    const opts = [['1 — ЛОББИ', 'office1'], ['2 — ОФИС', 'office2'], [ex ? '3 — EXECUTIVE FLOOR' : '3 — EXECUTIVE FLOOR · ACCESS DENIED', 'exec']].filter(o => o[1] !== here);
+    G.lockMove = true; const r = await choose('ЛИФТ', [...opts, ['Отмена', null]]); G.lockMove = false;
+    if (!r) return;
+    if (r === 'exec' && !ex) { SND.sfx('fail'); UI.think('Кнопка не горит. «ACCESS DENIED». Сюда пускают не всех.'); return; }
+    G.lockMove = true; await UI.fade(true, 400); SND.sfx('whoosh'); await wait(700); G.lockMove = false;
+    if (r === 'office1') World.enter('office1', 135, 52, 'down'); else if (r === 'office2') World.enter('office2', 71, 830, 'down'); else World.enter('exec', 40, null, 'right');
+    SND.sfx('ping'); await UI.fade(false, 400); UI.toast('', LOC[r].name);
+  },
+  board2: 'Доска задач: стикеры «отчёт», «созвон», «бюджет Q4». И один, наклеенный криво: «19.10 — НЕ ПЛАНИРОВАТЬ НИЧЕГО».',
+  room_meet: 'Переговорная. Свет горит, но внутри пусто. На доске стёрто что-то длинное. Остался только угол: «…ГАРАЖ».',
+  room_kitchen: 'Офисная кухня. Пахнет остывшим кофе. В холодильнике подписанный контейнер: «КИРИЛЛ — ЭТО ТОРТ, НЕ ТРОГАТЬ».',
+  room_server: 'Серверная. Заперто. За дверью гудят сервера.',
+  room_copy: 'Копировальная. Заперто. Через щель видно стопку свежих распечаток.',
+  room_archive: 'Архив. Заперто. Табличка: «Ключ — у Марка». Ну разумеется.',
+  exec_desk: 'Стойка администратора этажа. Пусто. На стойке — визитница: «Никита. Звук. Музыка. Тишина».',
   // --- гараж ---
   garage_cam() { Ev.add('mat_camera'); UI.think('Камера. Над моим гаражом. Красный огонёк. Кто-то снимает дверь… или того, кто к ней подойдёт.'); },
   async garage_door() {
@@ -3591,12 +3775,12 @@ const Interact = {
   },
 };
 const CAB_THINK = {
-  tigran: 'Кабинет Тиграна. Гудит сервер, мигают диоды. Если он что-то прячет — то в компьютере.',
-  taras: 'Кабинет Тараса. Пахнет резиной от гантелей и победой. В основном резиной.',
-  mark: 'Кабинет Марка. Всё по линейке. Если здесь что-то не на своём месте — это улика.',
-  andrey: 'Кабинет Андрея. Фотографии повсюду. Он видит всё. Что он видел в тот вечер?',
-  kirill: 'Кабинет Кирилла. Неон, мемы, маска fsociety. Как будто зашёл в чужую игру.',
-  sasha: 'Кабинет Саши. Гирлянды, свечи, фотографии с Варей. Слишком много Вари.',
+  tigran: 'Стол Тиграна. Два монитора, флешки, провода. Если он что-то прячет — то в компьютере.',
+  taras: 'Стол Тараса. Пахнет резиной от гантелей и победой. В основном резиной.',
+  mark: 'Стол Марка. Всё по линейке. Если здесь что-то не на своём месте — это улика.',
+  andrey: 'Стол Андрея. Фотографии повсюду. Он видит всё. Что он видел в тот вечер?',
+  kirill: 'Стол Кирилла. Конфеты, геймпад, наклейки. Как будто подошёл к чужой игре.',
+  sasha: 'Стол Саши. Свечка, фотографии с Варей. Слишком много Вари.',
   dima: 'Кабинет Димы. Даже пыль здесь лежит по плану.',
   nikita: 'Кабинет Никиты. Звукоизоляция. Здесь никто не услышит… ничего.',
 };
