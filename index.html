@@ -22,7 +22,7 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--txt);overflow:hi
   touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;overscroll-behavior:none}
 button{font:inherit;color:inherit}
 input{font:inherit;user-select:text;-webkit-user-select:text}
-#cv{position:fixed;inset:0;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;display:block;background:#000}
+#cv{position:fixed;left:0;top:0;width:100%;height:100%;image-rendering:pixelated;display:block;background:#000}
 #crt{position:fixed;inset:0;pointer-events:none;z-index:70;
   background:repeating-linear-gradient(0deg,rgba(0,0,0,.16) 0 1px,transparent 1px 3px);}
 #crt::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 58%,rgba(0,0,0,.6) 100%)}
@@ -305,8 +305,8 @@ body.touch .hbtn .k{display:none}
 /* ---------- touch ---------- */
 #touch{position:fixed;inset:0;z-index:19;pointer-events:none}
 #joyZone{position:absolute;left:0;top:18%;bottom:0;width:50%;pointer-events:auto;touch-action:none}
-#joy{position:absolute;width:132px;height:132px;border-radius:50%;border:2px solid rgba(255,255,255,.2);background:rgba(10,10,14,.35);pointer-events:none;transform:translate(-50%,-50%);transition:opacity .2s}
-#joy .knob{position:absolute;width:56px;height:56px;border-radius:50%;background:rgba(240,235,220,.28);border:2px solid rgba(240,235,220,.6);left:50%;top:50%;transform:translate(-50%,-50%)}
+#joy{position:absolute;width:132px;height:132px;border-radius:50%;border:2px solid rgba(255,255,255,.2);background:rgba(10,10,14,.35);pointer-events:none;transform:translate(-50%,-50%);will-change:transform}
+#joy .knob{will-change:transform;position:absolute;width:56px;height:56px;border-radius:50%;background:rgba(240,235,220,.28);border:2px solid rgba(240,235,220,.6);left:50%;top:50%;transform:translate(-50%,-50%)}
 #actBtn{position:absolute;right:max(22px,env(safe-area-inset-right));bottom:max(26px,env(safe-area-inset-bottom));width:88px;height:88px;border-radius:50%;
   background:rgba(227,52,58,.22);border:2px solid var(--red);font-family:var(--f-pix);font-size:9px;pointer-events:auto;touch-action:none;color:#fff;text-shadow:1px 1px 0 #000;line-height:1.5}
 #actBtn.hot{background:rgba(227,52,58,.55);box-shadow:0 0 18px rgba(227,52,58,.6)}
@@ -554,23 +554,34 @@ const Input = {
     addEventListener('blur', () => { this.keys = {}; });
     const zone = $('#joyZone'), joy = $('#joy'), knob = $('#joy .knob');
     const R = 52;
-    const start = (id, x, y) => { this.joy = { active: true, id, ox: x, oy: y, x: 0, y: 0 }; joy.style.left = x + 'px'; joy.style.top = y + 'px'; joy.style.opacity = 1; knob.style.transform = 'translate(-50%,-50%)'; };
+    // Джойстик на неблокирующих событиях: прокрутку запрещает CSS (touch-action:none), а не preventDefault,
+    // поэтому браузер не ждёт наш обработчик на каждом движении пальца и не душит отрисовку кадров.
+    // Внешний вид джойстика обновляется раз в кадр (Input.paint), а не на каждое событие.
+    const start = (id, x, y) => { this.joy = { active: true, id, ox: x, oy: y, x: 0, y: 0, dx: 0, dy: 0, moved: true, shown: false }; };
     const move = (x, y) => {
       let dx = x - this.joy.ox, dy = y - this.joy.oy; const d = Math.hypot(dx, dy);
       if (d > R) { dx = dx / d * R; dy = dy / d * R; }
-      this.joy.x = dx / R; this.joy.y = dy / R;
-      knob.style.transform = `translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`;
+      this.joy.x = dx / R; this.joy.y = dy / R; this.joy.dx = dx; this.joy.dy = dy; this.joy.moved = true;
     };
-    const end = () => { this.joy.active = false; this.joy.x = this.joy.y = 0; joy.style.opacity = 0.0; };
-    zone.addEventListener('touchstart', e => { const t = e.changedTouches[0]; start(t.identifier, t.clientX, t.clientY); e.preventDefault(); }, { passive: false });
-    zone.addEventListener('touchmove', e => { if (typeof Dbg !== 'undefined') Dbg.tm++; for (const t of e.changedTouches) if (t.identifier === this.joy.id) move(t.clientX, t.clientY); e.preventDefault(); }, { passive: false });
-    zone.addEventListener('touchend', e => { for (const t of e.changedTouches) if (t.identifier === this.joy.id) end(); });
-    zone.addEventListener('touchcancel', end);
-    // мышь — для теста джойстика на ПК
-    zone.addEventListener('mousedown', e => { if (!IS_TOUCH) return; start('m', e.clientX, e.clientY); });
+    const end = () => { this.joy.active = false; this.joy.x = this.joy.y = 0; this.joy.moved = true; };
+    this.paint = () => { const j = this.joy; if (!j.moved) return; j.moved = false;
+      if (j.active) { if (!j.shown) { j.shown = true; joy.style.left = j.ox + 'px'; joy.style.top = j.oy + 'px'; joy.style.opacity = 1; } knob.style.transform = `translate(calc(-50% + ${j.dx | 0}px),calc(-50% + ${j.dy | 0}px))`; }
+      else { joy.style.opacity = 0; } };
+    const dbg = () => { if (typeof Dbg !== 'undefined') Dbg.tm++; };
+    if (window.PointerEvent) {
+      zone.addEventListener('pointerdown', e => { if (this.joy.active) return; try { zone.setPointerCapture(e.pointerId); } catch (_) { } start(e.pointerId, e.clientX, e.clientY); SND.init(); }, { passive: true });
+      zone.addEventListener('pointermove', e => { dbg(); if (this.joy.active && e.pointerId === this.joy.id) move(e.clientX, e.clientY); }, { passive: true });
+      const up = e => { if (e.pointerId === this.joy.id) end(); };
+      zone.addEventListener('pointerup', up, { passive: true }); zone.addEventListener('pointercancel', up, { passive: true }); zone.addEventListener('lostpointercapture', up, { passive: true });
+    } else {
+      zone.addEventListener('touchstart', e => { const t = e.changedTouches[0]; start(t.identifier, t.clientX, t.clientY); }, { passive: true });
+      zone.addEventListener('touchmove', e => { dbg(); for (const t of e.changedTouches) if (t.identifier === this.joy.id) move(t.clientX, t.clientY); }, { passive: true });
+      zone.addEventListener('touchend', e => { for (const t of e.changedTouches) if (t.identifier === this.joy.id) end(); }, { passive: true });
+      zone.addEventListener('touchcancel', end, { passive: true });
+    }
     const ab = $('#actBtn');
-    ab.addEventListener('touchstart', e => { this.act = true; e.preventDefault(); }, { passive: false });
-    ab.addEventListener('click', () => { this.act = true; });
+    // кнопка действия: срабатывает сразу при касании, без ожидания click
+    if (window.PointerEvent) ab.addEventListener('pointerdown', () => { this.act = true; }, { passive: true }); else { ab.addEventListener('touchstart', () => { this.act = true; }, { passive: true }); ab.addEventListener('click', () => { this.act = true; }); }
   },
   take(code) { if (this.pressed.has(code)) { this.pressed.delete(code); return true; } return false; },
   takeAct() { const k = this.take('KeyE') | this.take('Space') | this.take('Enter') | this.act; this.act = false; return !!k; },
@@ -2404,7 +2415,15 @@ const CAB_OBJS = {
    41 WORLD — локации, движение, камера, свет
    ===================================================================== */
 const View = { W: 320, H: 180, k: 3 };
-const cv = $('#cv'), ctx = cv.getContext('2d', { alpha: false }); // непрозрачный кадр — быстрее композитинг на телефонах
+// мир рисуется в маленький закадровый холст, а на экран он растягивается нами (а не CSS):
+// на iPhone CSS-растяжение с image-rendering:pixelated может делаться процессором и душить кадры
+const cv = document.createElement('canvas'), ctx = cv.getContext('2d');
+const cvOut = $('#cv'), ctxOut = cvOut.getContext('2d', { alpha: false });
+let upscaleSelf = true;
+function present() {
+  if (!upscaleSelf) { ctxOut.drawImage(cv, 0, 0); return; }
+  ctxOut.imageSmoothingEnabled = false; ctxOut.drawImage(cv, 0, 0, cvOut.width, cvOut.height);
+}
 let lightCv, lightCx;
 function resize() {
   const L = World.L; const tH = L ? (L.viewH || 170) : 170; const minW = L ? (L.minW || 230) : 230;
@@ -2413,10 +2432,14 @@ function resize() {
   const k = Math.max(1, Math.floor(Math.min(ph / tH, pw / minW)));
   const W = Math.ceil(pw / k), H = Math.ceil(ph / k); View.css = k / DPR;
   // размер не изменился — ничего не пересоздаём (Safari шлёт resize при каждом движении адресной строки)
-  if (lightCv && View.W === W && View.H === H && View.k === k) return;
+  if (lightCv && View.W === W && View.H === H && View.k === k && cvOut._mode === upscaleSelf) return;
   Dbg.resizes++;
   View.k = k; View.W = W; View.H = H;
   cv.width = View.W; cv.height = View.H; ctx.imageSmoothingEnabled = false;
+  cvOut._mode = upscaleSelf;
+  if (upscaleSelf) { cvOut.width = View.W * k; cvOut.height = View.H * k; cvOut.style.width = (View.W * k / DPR) + 'px'; cvOut.style.height = (View.H * k / DPR) + 'px'; }
+  else { cvOut.width = View.W; cvOut.height = View.H; cvOut.style.width = (View.W * k / DPR) + 'px'; cvOut.style.height = (View.H * k / DPR) + 'px'; }
+  ctxOut.imageSmoothingEnabled = false;
   // свет и блики — в половинном разрешении (они мягкие), так в разы быстрее на телефонах
   [lightCv, lightCx] = mk(Math.ceil(View.W / 2), Math.ceil(View.H / 2)); [reflCv, reflCx] = mk(View.W, View.H); [lrCv, lrCx] = mk(Math.ceil(View.W / 2), Math.ceil(View.H / 2));
   for (const x of [lightCx, lrCx]) { x.imageSmoothingEnabled = true; x.setTransform(0.5, 0, 0, 0.5, 0, 0); }
@@ -4483,6 +4506,7 @@ const Dbg = { on: false, el: null, fr: [], resizes: 0, rzEv: 0, tm: 0, snd: 0, u
     const btn = (lbl, fn) => { const b = h('button', { style: 'font:10px monospace;padding:3px 6px;background:#132;color:#9f9;border:1px solid #3a3', onclick: e => { e.stopPropagation(); fn(b); } }, lbl); row.append(b); };
     btn('ЗВУК: вкл', b => { SND.muted = !SND.muted; if (SND.ac) SND.muted ? SND.ac.suspend() : SND.ac.resume(); b.textContent = 'ЗВУК: ' + (SND.muted ? 'выкл' : 'вкл'); });
     btn('СВЕТ: вкл', b => { this.noLight = !this.noLight; b.textContent = 'СВЕТ: ' + (this.noLight ? 'выкл' : 'вкл'); });
+    btn('РАСТЯЖЕНИЕ: игра', b => { upscaleSelf = !upscaleSelf; resize(); b.textContent = 'РАСТЯЖЕНИЕ: ' + (upscaleSelf ? 'игра' : 'браузер'); });
     btn('КАДР: вкл', b => { this.noDraw = !this.noDraw; b.textContent = 'КАДР: ' + (this.noDraw ? 'выкл' : 'вкл'); });
     el.append(txt, row); this.txt = txt; document.body.append(el); this.tmLast = performance.now();
   },
@@ -4494,13 +4518,14 @@ const Dbg = { on: false, el: null, fr: [], resizes: 0, rzEv: 0, tm: 0, snd: 0, u
 /* ---------------- Цикл ---------------- */
 let _last = performance.now();
 function loop(now) {
+  Input.paint && Input.paint();
   const raw = (now - _last) / 1000; _last = now; const dt = Math.min(0.1, raw); Dbg.frame(raw * 1000);
   try {
     if (G.mode === 'menu') Menu.draw(dt);
     else {
       // движение мелкими шагами: при низком fps герой идёт с нормальной скоростью и не проходит сквозь стены
       const u0 = performance.now(); let left = dt; while (left > 0.0001) { const s = Math.min(0.034, left); World.update(s); left -= s; }
-      const f0 = performance.now(); Dbg.upd = f0 - u0; if (!Dbg.noDraw) World.draw(); Dbg.drw = performance.now() - f0; Perf.frame(Math.max(raw * 1000 > 40 ? raw * 1000 : 0, performance.now() - f0)); UI.dlgTick(dt); UI.frame(dt); Game.checkChapter();
+      const f0 = performance.now(); Dbg.upd = f0 - u0; if (!Dbg.noDraw) { World.draw(); present(); } Dbg.drw = performance.now() - f0; Perf.frame(Math.max(raw * 1000 > 40 ? raw * 1000 : 0, performance.now() - f0)); UI.dlgTick(dt); UI.frame(dt); Game.checkChapter();
       if (UI.dq && Input.act) { Input.act = false; UI.dlgAdvance(); }
       if (UI.dq && !UI.dq.choices && (Input.take('KeyE') || Input.take('Space') || Input.take('Enter'))) UI.dlgAdvance();
     }
