@@ -608,7 +608,7 @@ const Input = {
 /* ---------------- Sound (процедурный WebAudio) ---------------- */
 const NOTE = n => { const m = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }; const r = /^([A-G])(#|b)?(\d)$/.exec(n); if (!r) return 0; let s = m[r[1]] + (r[2] === '#' ? 1 : r[2] === 'b' ? -1 : 0) + (+r[3] + 1) * 12; return 440 * Math.pow(2, (s - 69) / 12); };
 const SND = {
-  ac: null, master: null, mus: null, fx: null, track: null, step: 0, nextT: 0, timer: null, loops: [], noiseBuf: null,
+  ac: null, master: null, mus: null, fx: null, track: null, beat: 0, nextT: 0, timer: null, loops: [], noiseBuf: null,
   init() {
     if (this.ac) { if (this.ac.state === 'suspended' && !this.muted) this.ac.resume(); return; }
     try {
@@ -731,14 +731,14 @@ const SND = {
   },
   music(name) {
     if (!this.ac || this.track === name) return;
-    this.track = name; this.step = 0; this.nextT = this.ac.currentTime + 0.1; this.stopLoops();
+    this.track = name; this.beat = 0; this.nextT = this.ac.currentTime + 0.1; this.stopLoops();
     const T = TRACKS[name]; if (T && T.init) T.init(this);
   },
   tick() {
     if (this.ac && this.ambName) this.ambTick();
     if (!this.ac || !this.track) return; const T = TRACKS[this.track]; if (!T || !T.step) return;
     const sd = 60 / T.bpm / 4;
-    while (this.nextT < this.ac.currentTime + 0.25) { T.step(this, this.step, this.nextT); this.step++; this.nextT += sd; }
+    while (this.nextT < this.ac.currentTime + 0.25) { T.step(this, this.beat, this.nextT); this.beat++; this.nextT += sd; }
   },
 };
 const TRACKS = {
@@ -4544,7 +4544,8 @@ const Menu = {
 
 /* ---------------- Диагностика (?debug или Настройки → Диагностика) ---------------- */
 const Dbg = { on: false, el: null, fr: [], resizes: 0, rzEv: 0, tm: 0, snd: 0, upd: 0, drw: 0, noDraw: false, noLight: false, t: 0, fc: 0, oldSpr: false, skip: {}, xs: [], xt: 0, dot: null,
-  pc: 0, lc: 0, T: null, report: 'ещё не касался',
+  pc: 0, lc: 0, T: null, report: 'ещё не касался', errN: 0, errMsg: '',
+  err(e) { this.errN++; this.errMsg = String(e && e.message || e); },
   frame(ms) { if (!this.on) return; this.track(ms); this.touchFrame(ms); this.fr.push(ms); if (this.fr.length > 120) this.fr.shift(); this.t += ms; if (this.t > 500) { this.t = 0; this.show(); } },
   // отчёт о касании джойстика, как в lab.html: сколько кадров прошло, самая долгая пауза, шёл ли герой
   touch(on) { if (!this.on) return; const now = performance.now();
@@ -4574,7 +4575,7 @@ const Dbg = { on: false, el: null, fr: [], resizes: 0, rzEv: 0, tm: 0, snd: 0, u
   track(ms) { const p = World.player; if (!p) return; this.xt += ms; if (this.xt >= 100) { this.xt = 0; this.xs.push(Math.round(World.L && World.L.type === 'side' ? p.x : p.x + p.y)); if (this.xs.length > 10) this.xs.shift(); }
     if (this.dot && World.L && World.L.type !== 'cut') { const [sx, sy] = World.toScreen(p.x, World.L.type === 'side' ? World.L.floor : p.y); this.dot.style.transform = `translate(${sx | 0}px,${sy | 0}px)`; } },
   show() { const f = this.fr; if (!f.length || !this.txt) return; const avg = f.reduce((a, b) => a + b, 0) / f.length, mx = Math.max(...f), dtm = (performance.now() - this.tmLast) / 1000; this.tmLast = performance.now();
-    const p = World.player, vv = window.visualViewport, de = document.documentElement; this.txt.textContent = `fps ${(1000 / avg).toFixed(0)} · худший кадр ${mx.toFixed(0)}мс · логика ${this.upd.toFixed(1)} · рисование ${this.drw.toFixed(1)}мс\nкасаний/с ${(this.tm / dtm).toFixed(0)} · resize событий ${this.rzEv} · пересозданий ${this.resizes} · звук ${SND.ac ? SND.ac.state : 'нет'} · звуков/с ${(this.snd / dtm).toFixed(0)}\nэкран ${innerWidth}x${innerHeight} dpr ${devicePixelRatio} · кадр ${View.W}x${View.H}·${View.k} · графика ${Perf.level} · ${World.locId} ${p ? (p.x | 0) + ',' + (p.y | 0) : ''}\nпозиция каждые 0.1с: ${this.xs.join(' ')}\nкадров нарисовано: ${this.fc}\nстраница: зум ${vv ? vv.scale.toFixed(2) : '?'} · видимая ${vv ? Math.round(vv.width) + 'x' + Math.round(vv.height) : '?'} · документ ${de.scrollWidth}x${de.scrollHeight} · экран устройства ${screen.width}x${screen.height}\nотмен касания ${this.pc} · потерь захвата ${this.lc}${this.T ? ' · ИДЁТ КАСАНИЕ' : ''}\nпоследнее касание: ${this.report}`;
+    const p = World.player, vv = window.visualViewport, de = document.documentElement; this.txt.textContent = `fps ${(1000 / avg).toFixed(0)} · худший кадр ${mx.toFixed(0)}мс · логика ${this.upd.toFixed(1)} · рисование ${this.drw.toFixed(1)}мс\nкасаний/с ${(this.tm / dtm).toFixed(0)} · resize событий ${this.rzEv} · пересозданий ${this.resizes} · звук ${SND.ac ? SND.ac.state : 'нет'} · звуков/с ${(this.snd / dtm).toFixed(0)}\nэкран ${innerWidth}x${innerHeight} dpr ${devicePixelRatio} · кадр ${View.W}x${View.H}·${View.k} · графика ${Perf.level} · ${World.locId} ${p ? (p.x | 0) + ',' + (p.y | 0) : ''}\nпозиция каждые 0.1с: ${this.xs.join(' ')}\nкадров нарисовано: ${this.fc}\nстраница: зум ${vv ? vv.scale.toFixed(2) : '?'} · видимая ${vv ? Math.round(vv.width) + 'x' + Math.round(vv.height) : '?'} · документ ${de.scrollWidth}x${de.scrollHeight} · экран устройства ${screen.width}x${screen.height}\nотмен касания ${this.pc} · потерь захвата ${this.lc}${this.T ? ' · ИДЁТ КАСАНИЕ' : ''}\nпоследнее касание: ${this.report}${this.errN ? `\nОШИБОК В КАДРЕ: ${this.errN} · ${this.errMsg}` : ''}`;
     this.txt.style.whiteSpace = 'pre-wrap'; this.tm = 0; this.snd = 0; },
 };
 
@@ -4592,7 +4593,7 @@ function loop(now) {
       if (UI.dq && Input.act) { Input.act = false; UI.dlgAdvance(); }
       if (UI.dq && !UI.dq.choices && (Input.take('KeyE') || Input.take('Space') || Input.take('Enter'))) UI.dlgAdvance();
     }
-  } catch (e) { console.error(e); }
+  } catch (e) { console.error(e); Dbg.err(e); }
   requestAnimationFrame(loop);
 }
 function boot() {
