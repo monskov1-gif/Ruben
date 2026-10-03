@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,shrink-to-fit=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#07080b">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -26,6 +26,9 @@ input{font:inherit;user-select:text;-webkit-user-select:text}
    иначе страница на iOS становится шире экрана, браузер её отдаляет и касания начинают тормозить кадры */
 #stage{position:fixed;inset:0;overflow:hidden;background:#000}
 #cv{position:absolute;left:0;top:0;width:100%;height:100%;display:block;background:#000}
+/* весь интерфейс — в одном слое, увеличенном на --ui (настройка «Размер интерфейса»): внутри он раскладывается
+   в «виртуальном» экране размером экран/--ui, поэтому вместо vw/vh внутри используются cqw/cqh этого слоя */
+#ui{position:fixed;left:0;top:0;width:calc(100% / var(--ui,1));height:calc(100% / var(--ui,1));transform:scale(var(--ui,1));transform-origin:0 0;container-type:size;z-index:10}
 #crt{position:fixed;inset:0;pointer-events:none;z-index:70;
   background:repeating-linear-gradient(0deg,rgba(0,0,0,.16) 0 1px,transparent 1px 3px);}
 #crt::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 58%,rgba(0,0,0,.6) 100%)}
@@ -45,7 +48,7 @@ body.touch #crt::before{animation:none;display:none}
 /* ---------- HUD ---------- */
 #hud{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;
   padding:max(10px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) 0 max(12px,env(safe-area-inset-left));pointer-events:none;z-index:20}
-#hud .info{background:linear-gradient(90deg,rgba(7,8,11,.88),rgba(7,8,11,.55) 70%,rgba(7,8,11,0));padding:8px 28px 9px 10px;border-left:3px solid var(--red);max-width:58vw}
+#hud .info{background:linear-gradient(90deg,rgba(7,8,11,.88),rgba(7,8,11,.55) 70%,rgba(7,8,11,0));padding:8px 28px 9px 10px;border-left:3px solid var(--red);max-width:58cqw}
 #hud .ep{font-family:var(--f-pix);font-size:9px;color:var(--red);letter-spacing:1px;line-height:1.5}
 #hud .when{font-family:var(--f-pix);font-size:8px;color:var(--dim);margin-top:5px}
 #hud .goal{font-size:13px;margin-top:7px;color:var(--txt);line-height:1.35}
@@ -62,13 +65,13 @@ body.touch .hbtn .k{display:none}
 #prompt{position:fixed;z-index:24;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none}
 #prompt .lbl{font-size:12px;color:#f3ead7;text-shadow:0 1px 0 #000,0 0 6px #000,0 0 2px #000;white-space:nowrap}
 #prompt .key{min-width:22px;height:22px;padding:0 5px;border-radius:11px;background:#0d0e12;border:2px solid #f3ead7;color:#f3ead7;font-family:var(--f-pix);font-size:8px;display:grid;place-items:center}
-#thought{position:fixed;z-index:26;transform:translate(-50%,-100%);max-width:min(360px,72vw);font-style:italic;font-size:14px;line-height:1.4;color:#efe8d8;
+#thought{position:fixed;z-index:26;transform:translate(-50%,-100%);max-width:min(360px,72cqw);font-style:italic;font-size:14px;line-height:1.4;color:#efe8d8;
   background:rgba(10,10,14,.78);padding:7px 12px 9px;border:1px dashed rgba(239,232,216,.35);pointer-events:none;transition:opacity .35s;text-align:center;opacity:0}
 #thought.on{opacity:1}
 #thought::before{content:'— мысли —';display:block;font-style:normal;font-family:var(--f-pix);font-size:7px;color:var(--amber);margin-bottom:5px;letter-spacing:1px}
 
 /* ---------- dialogue ---------- */
-#dlg{position:fixed;left:50%;transform:translateX(-50%);bottom:max(14px,env(safe-area-inset-bottom));width:min(880px,calc(100vw - 24px));
+#dlg{position:fixed;left:50%;transform:translateX(-50%);bottom:max(14px,env(safe-area-inset-bottom));width:min(880px,calc(100cqw - 24px));
   background:rgba(9,10,14,.95);border:1px solid var(--line);border-top:3px solid var(--red);display:flex;gap:14px;padding:14px 16px 16px;z-index:30;animation:pop .2s}
 #dlg .portrait{width:104px;height:104px;flex:none;image-rendering:pixelated;background:#0b0c10;border:1px solid var(--line)}
 #dlg .main{flex:1;min-width:0;position:relative}
@@ -160,7 +163,7 @@ body.touch .hbtn .k{display:none}
 #menu .mbtns{position:absolute;display:flex;flex-direction:column;gap:2px}
 #menu .mtitle{position:absolute;pointer-events:none}
 #titleCv{display:block;width:100%;image-rendering:pixelated;filter:drop-shadow(0 0 14px rgba(227,52,58,.35)) drop-shadow(4px 4px 0 #000)}
-#menu .msub{font-family:var(--f-pix);font-size:clamp(8px,1.1vw,12px);color:#cfc4ac;margin-top:14px;letter-spacing:2px;text-shadow:2px 2px 0 #000;text-transform:uppercase}
+#menu .msub{font-family:var(--f-pix);font-size:clamp(8px,1.1cqw,12px);color:#cfc4ac;margin-top:14px;letter-spacing:2px;text-shadow:2px 2px 0 #000;text-transform:uppercase}
 .mbtn{font-family:var(--f-pix);color:#efe6d2;background:none;border:none;text-align:left;padding:10px 4px;cursor:pointer;text-shadow:3px 3px 0 #000;letter-spacing:1px;white-space:nowrap}
 .mbtn:hover,.mbtn:focus,.mbtn.sel{color:var(--red);outline:none}
 .mbtn:hover::before,.mbtn:focus::before,.mbtn.sel::before{content:'▸ '}
@@ -176,7 +179,7 @@ body.touch .hbtn .k{display:none}
 .epc .d{font-size:12px;color:var(--dim)}
 .epc:disabled{opacity:.35;cursor:default}
 .set{display:grid;grid-template-columns:1fr auto;gap:14px 18px;align-items:center;font-size:14px}
-.set input[type=range]{width:min(220px,40vw);accent-color:var(--red)}
+.set input[type=range]{width:min(220px,40cqw);accent-color:var(--red)}
 .toggle{width:54px;height:28px;border:1px solid var(--line);background:#1a1d27;position:relative;cursor:pointer}
 .toggle::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;background:var(--dim);transition:.15s}
 .toggle.on{border-color:var(--red)} .toggle.on::after{left:29px;background:var(--red)}
@@ -194,7 +197,7 @@ body.touch .hbtn .k{display:none}
 #desk .dtop{position:absolute;top:max(10px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));display:flex;justify-content:space-between;align-items:center;gap:10px;pointer-events:none}
 #desk .dtop>*{pointer-events:auto}
 #desk .dtitle{font-family:var(--f-pix);font-size:10px;background:rgba(0,0,0,.75);padding:9px 12px;border-left:3px solid var(--red)}
-#desk .dinfo{position:absolute;left:50%;transform:translateX(-50%);bottom:max(12px,env(safe-area-inset-bottom));width:min(760px,calc(100vw - 24px));background:rgba(9,10,14,.95);border:1px solid var(--line);border-top:3px solid var(--amber);padding:12px 14px;font-size:15px;line-height:1.5;display:none}
+#desk .dinfo{position:absolute;left:50%;transform:translateX(-50%);bottom:max(12px,env(safe-area-inset-bottom));width:min(760px,calc(100cqw - 24px));background:rgba(9,10,14,.95);border:1px solid var(--line);border-top:3px solid var(--amber);padding:12px 14px;font-size:15px;line-height:1.5;display:none}
 #desk .dinfo.on{display:block;animation:pop .15s}
 #desk .dinfo.top{bottom:auto;top:max(58px,calc(env(safe-area-inset-top) + 52px))}
 .ph .asks{display:flex;flex-direction:column;gap:6px;padding:10px;border-top:1px solid #222838;flex:none;max-height:45%;overflow:auto}
@@ -221,7 +224,7 @@ body.touch .hbtn .k{display:none}
 .lock{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:14px;text-align:center;padding:6px 0}
 .lock .avatar{width:84px;height:84px;image-rendering:pixelated;border:2px solid var(--scr)}
 .lock .u{font-family:var(--f-pix);font-size:11px;letter-spacing:2px}
-.lock input{background:#000;border:1px solid var(--scr);color:var(--scr);padding:10px 12px;width:min(280px,70vw);text-align:center;font-size:16px;outline:none}
+.lock input{background:#000;border:1px solid var(--scr);color:var(--scr);padding:10px 12px;width:min(280px,70cqw);text-align:center;font-size:16px;outline:none}
 .lock .err{color:#ff6b6b;min-height:1.2em;font-size:13px}
 .lock .hint{font-size:12px;opacity:.6}
 .keypad{display:grid;grid-template-columns:repeat(3,58px);gap:8px}
@@ -233,7 +236,7 @@ body.touch .hbtn .k{display:none}
 .piano{display:flex;gap:3px;position:relative}
 .pkey{width:40px;height:120px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;font-size:8px;background:#e9e4d8;color:#222;border-color:#000}
 .pkey.dn{background:var(--scr);color:#000}
-.screen .wallp{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--f-pix);font-size:clamp(20px,5vw,54px);opacity:.08;pointer-events:none;letter-spacing:4px;text-align:center}
+.screen .wallp{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--f-pix);font-size:clamp(20px,5cqw,54px);opacity:.08;pointer-events:none;letter-spacing:4px;text-align:center}
 .screen .wallp small{font-size:.35em;margin-top:16px}
 .desktop{position:relative;z-index:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:14px;align-content:start}
 .ico{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;padding:8px 4px;border:1px solid transparent;text-align:center;font-size:12px;word-break:break-all;background:none;color:var(--scr)}
@@ -263,7 +266,7 @@ body.touch .hbtn .k{display:none}
 
 /* ---------- phone ---------- */
 #phone{z-index:51}
-.ph{width:min(350px,94vw);height:min(680px,92vh);height:min(680px,92dvh);background:#0b0b0d;border-radius:38px;padding:12px;border:2px solid #2c2c33;box-shadow:0 20px 60px #000,inset 0 0 0 2px #000;display:flex;position:relative;animation:pop .2s}
+.ph{width:min(350px,94cqw);height:min(680px,92cqh);background:#0b0b0d;border-radius:38px;padding:12px;border:2px solid #2c2c33;box-shadow:0 20px 60px #000,inset 0 0 0 2px #000;display:flex;position:relative;animation:pop .2s}
 .ph .scr{background:linear-gradient(#141826,#0b0d13);border-radius:28px;flex:1;overflow:hidden;display:flex;flex-direction:column;position:relative}
 .ph .notch{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:90px;height:20px;background:#000;border-radius:12px;z-index:3}
 .ph .sbar{display:flex;justify-content:space-between;padding:12px 22px 6px;font-size:12px;color:#ccd;flex:none}
@@ -300,7 +303,7 @@ body.touch .hbtn .k{display:none}
 .orditem .n{font-family:var(--f-pix);font-size:9px;color:var(--dim);width:18px}
 .orditem.sel{border-color:var(--amber);background:#1e1a10}
 .orditem.ok{border-color:#2f7b49}
-.tilegrid{display:grid;gap:3px;width:min(360px,80vw);margin:0 auto}
+.tilegrid{display:grid;gap:3px;width:min(360px,80cqw);margin:0 auto}
 .tilegrid canvas{width:100%;image-rendering:pixelated;cursor:pointer;border:2px solid transparent;display:block}
 .tilegrid canvas.sel{border-color:var(--amber)}
 .mcv{display:block;margin:0 auto;image-rendering:pixelated;max-width:100%;touch-action:none}
@@ -319,21 +322,21 @@ body.touch .hbtn .k{display:none}
 
 /* ---------- toast/card/fade ---------- */
 #toasts{position:fixed;right:max(12px,env(safe-area-inset-right));top:max(66px,calc(env(safe-area-inset-top) + 56px));z-index:65;display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:none}
-.toast{background:#0f1117;border:1px solid var(--line);border-left:3px solid var(--amber);padding:9px 12px;font-size:13px;max-width:min(320px,80vw);animation:tin .3s;transition:opacity .5s;line-height:1.4}
+.toast{background:#0f1117;border:1px solid var(--line);border-left:3px solid var(--amber);padding:9px 12px;font-size:13px;max-width:min(320px,80cqw);animation:tin .3s;transition:opacity .5s;line-height:1.4}
 .toast b{display:block;font-family:var(--f-pix);font-size:8px;color:var(--amber);margin-bottom:5px;letter-spacing:1px}
 .toast.ev{border-left-color:var(--red)} .toast.ev b{color:var(--red)}
 #fade{position:fixed;inset:0;background:#000;z-index:60;pointer-events:none;opacity:0;transition:opacity .6s}
 #fade.on{opacity:1;pointer-events:auto}
 #card{position:fixed;inset:0;z-index:62;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:opacity .9s;padding:20px}
 #card .n{font-family:var(--f-pix);color:var(--red);font-size:11px;letter-spacing:4px}
-#card .t{font-family:var(--f-pix);font-size:clamp(16px,4vw,34px);margin:20px 0;color:#eee;line-height:1.4}
+#card .t{font-family:var(--f-pix);font-size:clamp(16px,4cqw,34px);margin:20px 0;color:#eee;line-height:1.4}
 #card .d{color:var(--dim);font-size:15px;line-height:1.6}
 #card .c{margin-top:28px;font-size:12px;color:#666;animation:blink 1.2s steps(2) infinite}
-#sub{position:fixed;left:50%;bottom:12%;transform:translateX(-50%);z-index:63;font-size:clamp(14px,2.2vw,20px);color:#fff;text-shadow:0 2px 0 #000,0 0 8px #000;text-align:center;width:min(900px,90vw);pointer-events:none;line-height:1.45}
+#sub{position:fixed;left:50%;bottom:12%;transform:translateX(-50%);z-index:63;font-size:clamp(14px,2.2cqw,20px);color:#fff;text-shadow:0 2px 0 #000,0 0 8px #000;text-align:center;width:min(900px,90cqw);pointer-events:none;line-height:1.45}
 #rotate{position:fixed;inset:0;z-index:90;background:#000;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;text-align:center;padding:30px;font-size:14px;color:var(--dim)}
 #rotate b{font-family:var(--f-pix);color:var(--red);font-size:11px;line-height:1.6}
 
-@media (max-width:760px),(max-height:520px){
+@container (max-width:760px) or (max-height:520px){
   #dlg{padding:10px 12px 12px;gap:10px}
   #dlg .portrait{width:68px;height:68px}
   #dlg .text{font-size:14px}
@@ -349,9 +352,9 @@ body.touch .hbtn .k{display:none}
   .win .wb{font-size:13px}
   #desk .dinfo{font-size:14px}
 }
-@media (max-height:440px){
+@container (max-height:440px){
   .lock{gap:8px} .lock .avatar{width:52px;height:52px} .pkey{height:84px;width:34px} .keypad button,.dpad button{height:38px} .lock .hint{display:none}
-  #hud .goal{font-size:11px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:50vw}
+  #hud .goal{font-size:11px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:50cqw}
   #hud .info{padding:5px 18px 6px 8px}
   #hud .when{margin-top:3px}
   #dlg .text{min-height:0}
@@ -362,6 +365,7 @@ body.touch .hbtn .k{display:none}
 <body>
 <div id="stage"><canvas id="cv"></canvas></div>
 
+<div id="ui">
 <div id="hud" class="hidden">
   <div class="info"><div class="ep" id="hudEp"></div><div class="when" id="hudWhen"></div><div class="goal" id="hudGoal"></div></div>
   <div class="btns" id="hudBtns"></div>
@@ -378,6 +382,7 @@ body.touch .hbtn .k{display:none}
 <div id="sub" class="hidden"></div>
 <div id="fade"></div>
 <div id="card" class="hidden"></div>
+</div>
 <div id="crt"></div>
 <script>
 /* ---- 10_core ---- */
@@ -428,10 +433,31 @@ const tmin = s => { if (!s) return 9999; const [a, b] = s.split(':').map(Number)
 
 /* ---------------- Settings ---------------- */
 const Settings = {
-  music: 0.55, sfx: 0.8, crt: true, textSpeed: 2, gfx: 'auto', debug: false,
+  music: 0.55, sfx: 0.8, crt: true, textSpeed: 2, gfx: 'auto', debug: false, zoom: 1, ui: 1,
   load() { let o = {}; try { o = JSON.parse(store.get('mrruben_settings') || '{}'); } catch (e) { } Object.assign(this, o); if (!(o.v >= 2) && IS_TOUCH) this.crt = false; /* на телефонах сканлайны по умолчанию выключены: полноэкранный слой дорого композитить */ this.apply(); },
-  save() { store.set('mrruben_settings', JSON.stringify({ v: 2, music: this.music, sfx: this.sfx, crt: this.crt, textSpeed: this.textSpeed, gfx: this.gfx, debug: this.debug })); this.apply(); },
-  apply() { document.body.classList.toggle('nocrt', !this.crt); if (typeof SND !== 'undefined') SND.applyVol(); },
+  save() { store.set('mrruben_settings', JSON.stringify({ v: 2, music: this.music, sfx: this.sfx, crt: this.crt, textSpeed: this.textSpeed, gfx: this.gfx, debug: this.debug, zoom: this.zoom, ui: this.ui })); this.apply(); },
+  apply() { document.body.classList.toggle('nocrt', !this.crt); if (typeof SND !== 'undefined') SND.applyVol(); Scale.apply(); },
+};
+/* ---------------- Масштаб ----------------
+   Картинка: размер героя на экране постоянен в «физических» пикселях, а не в доле высоты экрана —
+   на iPad видно больше мира, а не тот же кусок крупнее; на iPhone — крупнее, чем раньше.
+   Интерфейс: --ui = настройка «Размер интерфейса», с поправкой, если браузер отдалил страницу. */
+const Scale = {
+  z: 1,
+  // во сколько раз браузер уменьшил страницу (iPad в режиме «полная версия сайта» показывает её отдалённой)
+  page() { const land = innerWidth > innerHeight, sw = screen.width || innerWidth, sh = screen.height || innerHeight; const dw = land ? Math.max(sw, sh) : Math.min(sw, sh); return clamp(dw / innerWidth, 0.3, 1); },
+  ui() { return clamp((Settings.ui || 1) / this.page(), 0.5, 3); },
+  apply() { const z = this.ui(); if (z === this.z && document.documentElement.style.getPropertyValue('--ui')) return; this.z = z; document.documentElement.style.setProperty('--ui', String(z));
+    if (typeof World !== 'undefined' && World.L && G.mode !== 'menu') resize(true); if (typeof Desk !== 'undefined') Desk.layout(); if (typeof Menu !== 'undefined' && G.mode === 'menu') Menu.resize(); },
+  // css-пикселей экрана на пиксель мира
+  world(L, cw, ch) {
+    const tH = L ? (L.viewH || 170) : 170, minW = L ? (L.minW || 230) : 230, port = ch > cw;
+    const fill = Math.min(ch / tH, cw / (minW * (port ? 0.7 : 1)));            // локация во всю высоту (или ширину в портрете)
+    const short = Math.min(cw, ch) * this.page();                              // короткая сторона в настоящих css-пикселях устройства
+    let s = fill * clamp(400 / short, 0.4, 1.4);                              // большой экран — больше мира, маленький — крупнее
+    if (L && L.type === 'side') s = Math.min(Math.max(s, ch / (L.H * (port ? 3 : 2))), ch / L.H); // комнату сбоку не обрезаем по высоте и не мельчим
+    return Math.max(0.25, s * clamp(Settings.zoom || 1, 0.4, 2.5));
+  },
 };
 
 /* ---------------- Game state ----------------
@@ -565,12 +591,12 @@ const Input = {
     const start = (id, x, y) => { this.joy = { active: true, id, ox: x, oy: y, x: 0, y: 0, dx: 0, dy: 0, moved: true, shown: false }; Dbg.touch(true); };
     const move = (x, y) => {
       let dx = x - this.joy.ox, dy = y - this.joy.oy; const d = Math.hypot(dx, dy);
-      if (d > R) { dx = dx / d * R; dy = dy / d * R; }
-      this.joy.x = dx / R; this.joy.y = dy / R; this.joy.dx = dx; this.joy.dy = dy; this.joy.moved = true; Dbg.move();
+      const r = R * Scale.z; if (d > r) { dx = dx / d * r; dy = dy / d * r; }
+      this.joy.x = dx / r; this.joy.y = dy / r; this.joy.dx = dx; this.joy.dy = dy; this.joy.moved = true; Dbg.move();
     };
     const end = () => { if (!this.joy.active) return; this.joy.active = false; this.joy.x = this.joy.y = 0; this.joy.moved = true; Dbg.touch(false); };
     this.paint = () => { const j = this.joy; if (!j.moved) return; j.moved = false;
-      if (j.active) { if (!j.shown) { j.shown = true; joy.style.left = j.ox + 'px'; joy.style.top = j.oy + 'px'; joy.style.opacity = 1; } knob.style.transform = `translate(calc(-50% + ${j.dx | 0}px),calc(-50% + ${j.dy | 0}px))`; }
+      if (j.active) { if (!j.shown) { j.shown = true; joy.style.left = j.ox / Scale.z + 'px'; joy.style.top = j.oy / Scale.z + 'px'; joy.style.opacity = 1; } knob.style.transform = `translate(calc(-50% + ${j.dx / Scale.z | 0}px),calc(-50% + ${j.dy / Scale.z | 0}px))`; }
       else { joy.style.opacity = 0; } };
     if (window.PointerEvent) {
       // Движение и отпускание пальца слушаем на всём окне, без захвата указателя: они доходят всегда,
@@ -2466,21 +2492,19 @@ function present() {
   ctxOut.imageSmoothingEnabled = false; ctxOut.drawImage(cv, 0, 0, cvOut.width, cvOut.height);
 }
 let lightCv, lightCx;
-function resize() {
-  const L = World.L; const tH = L ? (L.viewH || 170) : 170; const minW = L ? (L.minW || 230) : 230;
-  const DPR = Math.min(window.devicePixelRatio || 1, 3);
-  const pw = Math.round(innerWidth * DPR), ph = Math.round(innerHeight * DPR);
-  const k = Math.max(1, Math.floor(Math.min(ph / tH, pw / minW)));
-  const W = Math.ceil(pw / k), H = Math.ceil(ph / k); View.css = k / DPR;
+function resize(force) {
+  const L = World.L; const DPR = Math.min(window.devicePixelRatio || 1, 3);
+  const cw = innerWidth, ch = innerHeight, s = Scale.world(L, cw, ch);
+  const W = Math.ceil(cw / s), H = Math.ceil(ch / s);
   // размер не изменился — ничего не пересоздаём (Safari шлёт resize при каждом движении адресной строки)
-  if (lightCv && View.W === W && View.H === H && View.k === k && cvOut._mode === upscaleSelf) return;
+  if (!force && lightCv && View.W === W && View.H === H && View.css === s && cvOut._mode === upscaleSelf) return;
   Dbg.resizes++;
-  View.k = k; View.W = W; View.H = H;
+  View.css = s; View.k = s * DPR; View.W = W; View.H = H;
   cv.width = View.W; cv.height = View.H; ctx.imageSmoothingEnabled = false;
   const self = upscaleSelf || !!gl; cvOut._mode = upscaleSelf;
   cvOut.style.imageRendering = self ? 'auto' : 'pixelated'; // CSS-растяжение — только в запасном режиме
-  if (self) { cvOut.width = View.W * k; cvOut.height = View.H * k; cvOut.style.width = (View.W * k / DPR) + 'px'; cvOut.style.height = (View.H * k / DPR) + 'px'; }
-  else { cvOut.width = View.W; cvOut.height = View.H; cvOut.style.width = (View.W * k / DPR) + 'px'; cvOut.style.height = (View.H * k / DPR) + 'px'; }
+  cvOut.width = self ? Math.round(W * s * DPR) : W; cvOut.height = self ? Math.round(H * s * DPR) : H;
+  cvOut.style.width = (W * s) + 'px'; cvOut.style.height = (H * s) + 'px';
   if (ctxOut) ctxOut.imageSmoothingEnabled = false;
   // свет и блики — в половинном разрешении (они мягкие), так в разы быстрее на телефонах
   [lightCv, lightCx] = mk(Math.ceil(View.W / 2), Math.ceil(View.H / 2)); [reflCv, reflCx] = mk(View.W, View.H); [lrCv, lrCx] = mk(Math.ceil(View.W / 2), Math.ceil(View.H / 2));
@@ -3437,11 +3461,11 @@ const UI = {
     // мысли
     if (this.thoughtT > 0) { this.thoughtT -= dt; if (this.thoughtT <= 0) this.nextThought(); }
     const th = $('#thought');
-    if (World.player && World.L && World.L.type !== 'cut') { const p = World.player; const [sx, sy] = World.toScreen(p.x, World.L.type === 'side' ? World.L.floor - 30 * (World.L.charScale || 1) : p.y - 32 * (World.L.charScale || 1)); setSt(th, 'left', Math.round(clamp(sx, 120, innerWidth - 120)) + 'px'); setSt(th, 'top', Math.round(Math.max(120, sy - 46)) + 'px'); }
+    if (World.player && World.L && World.L.type !== 'cut') { const p = World.player; const [sx, sy] = World.toScreen(p.x, World.L.type === 'side' ? World.L.floor - 30 * (World.L.charScale || 1) : p.y - 32 * (World.L.charScale || 1)); const z = Scale.z; setSt(th, 'left', Math.round(clamp(sx / z, 120, innerWidth / z - 120)) + 'px'); setSt(th, 'top', Math.round(Math.max(120, sy / z - 46)) + 'px'); }
     // подсказка взаимодействия
     const pr = $('#prompt'); const tg = World.target;
     if (tg && G.mode === 'play' && !this.busy()) {
-      const [sx, sy] = World.toScreen(tg.wx, tg.wy); if (pr.classList.contains('hidden')) { pr.classList.remove('hidden'); $('#actBtn').classList.add('hot'); } setSt(pr, 'left', Math.round(sx) + 'px'); setSt(pr, 'top', Math.round(Math.max(40, sy)) + 'px');
+      const [sx, sy] = World.toScreen(tg.wx, tg.wy); if (pr.classList.contains('hidden')) { pr.classList.remove('hidden'); $('#actBtn').classList.add('hot'); } setSt(pr, 'left', Math.round(sx / Scale.z) + 'px'); setSt(pr, 'top', Math.round(Math.max(40, sy / Scale.z)) + 'px');
       if (pr._lbl !== tg.label) { pr._lbl = tg.label; $('.lbl', pr).textContent = tg.label; $('.key', pr).textContent = IS_TOUCH ? '●' : 'E'; }
     } else if (!pr.classList.contains('hidden')) { pr.classList.add('hidden'); $('#actBtn').classList.remove('hot'); }
   },
@@ -3638,7 +3662,7 @@ function notebookThought() {
 }
 function drawLinks(c) {
   const box = c.parentNode.parentNode.getBoundingClientRect(); const DPR = Math.min(2, window.devicePixelRatio || 1);
-  const W = Math.max(320, box.width), H = Math.max(300, box.height - 4); c.width = W * DPR; c.height = H * DPR; c.style.width = W + 'px'; c.style.height = H + 'px';
+  const W = Math.max(320, box.width / Scale.z), H = Math.max(300, box.height / Scale.z - 4); c.width = W * DPR; c.height = H * DPR; c.style.width = W + 'px'; c.style.height = H + 'px';
   const x = c.getContext('2d'); x.scale(DPR, DPR); x.imageSmoothingEnabled = false;
   x.fillStyle = '#3a2a1c'; x.fillRect(0, 0, W, H); const r = mulberry(5); for (let i = 0; i < W * H / 60; i++) { x.fillStyle = r() < 0.5 ? 'rgba(0,0,0,.12)' : 'rgba(255,255,255,.04)'; x.fillRect(r() * W, r() * H, 2, 2); }
   const cx = W / 2, cy = H / 2, R0 = Math.min(W, H) * 0.38; const ps = Math.max(44, Math.min(72, Math.min(W, H) / 7));
@@ -3672,6 +3696,11 @@ UI.pause = function () {
 UI.settings = function (fromMenu) {
   const tog = (on, fn) => { const t = h('div', { class: 'toggle' + (on ? ' on' : ''), role: 'switch', onclick: () => { t.classList.toggle('on'); fn(t.classList.contains('on')); SND.sfx('click'); } }); return t; };
   const range = (v, fn) => h('input', { type: 'range', min: 0, max: 100, value: Math.round(v * 100), oninput: e => fn(e.target.value / 100) });
+  // ползунок в процентах; картинка меняется сразу, интерфейс — когда палец отпущен (иначе ползунок уезжает из-под пальца)
+  const pct = (v, mn, mx, fn, live) => { const lab = h('span', { style: 'min-width:46px;text-align:right;font-size:13px' }, Math.round(v * 100) + '%'); const inp = h('input', { type: 'range', min: mn, max: mx, step: 5, value: Math.round(v * 100) });
+    inp.addEventListener('input', () => { lab.textContent = inp.value + '%'; if (live) fn(inp.value / 100); }); inp.addEventListener('change', () => fn(inp.value / 100));
+    const reset = h('button', { class: 'btn', style: 'padding:6px 8px', title: 'Как было', onclick: () => { inp.value = 100; lab.textContent = '100%'; fn(1); } }, '↺');
+    return h('div', { class: 'row', style: 'gap:8px;flex-wrap:nowrap' }, inp, lab, reset); };
   const sp = h('select', { style: 'background:#151821;color:inherit;border:1px solid var(--line);padding:6px', onchange: e => { Settings.textSpeed = +e.target.value; Settings.save(); } }, ...[['1', 'медленно'], ['2', 'нормально'], ['3', 'быстро']].map(([v, n]) => { const o = h('option', { value: v }, n); if (+v === Settings.textSpeed) o.selected = true; return o; }));
   const body = h('div', {}, h('div', { class: 'set' },
     h('span', {}, 'Музыка'), range(Settings.music, v => { Settings.music = v; Settings.save(); }),
@@ -3679,6 +3708,8 @@ UI.settings = function (fromMenu) {
     h('span', {}, 'CRT / сканлайны'), tog(Settings.crt, v => { Settings.crt = v; Settings.save(); }),
     h('span', {}, 'Диагностика'), tog(!!Settings.debug, v => { Settings.debug = v; Settings.save(); location.reload(); }),
     h('span', {}, 'Графика'), (() => { const L = { auto: 'АВТО', high: 'ВЫСОКАЯ', low: 'ЭКОНОМНАЯ' }, order = ['auto', 'high', 'low']; const b = h('button', { class: 'btn', onclick: () => { Settings.gfx = order[(order.indexOf(Settings.gfx) + 1) % 3]; b.textContent = L[Settings.gfx]; Settings.save(); } }, L[Settings.gfx] || 'АВТО'); return b; })(),
+    h('span', {}, 'Масштаб картинки'), pct(Settings.zoom, 40, 200, v => { Settings.zoom = v; Settings.save(); if (World.L && G.mode !== 'menu') resize(true); }, true),
+    h('span', {}, 'Размер интерфейса'), pct(Settings.ui, 60, 200, v => { Settings.ui = v; Settings.save(); }, false),
     h('span', {}, 'Скорость текста'), sp,
     h('span', {}, 'Полноэкранный режим'), h('button', { class: 'btn', onclick: () => { try { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); } catch (e) { } } }, '⛶'),
   ), h('div', { class: 'sect', style: 'margin-top:22px' }, 'ОПАСНАЯ ЗОНА'), h('button', { class: 'btn red', onclick: e => { if (e.target.dataset.c) { Save.wipe(); this.toast('', 'Прогресс удалён'); this.closeAll(); Menu.show(); } else { e.target.dataset.c = 1; e.target.textContent = 'ТОЧНО? НАЖМИ ЕЩЁ РАЗ'; } } }, 'СБРОСИТЬ ПРОГРЕСС'));
@@ -3707,7 +3738,7 @@ const Desk = {
   },
   layout() {
     if ($('#desk').classList.contains('hidden')) return;
-    const s = Math.min(innerWidth / DW, innerHeight / DH); const w = DW * s, hh = DH * s, ox = (innerWidth - w) / 2, oy = (innerHeight - hh) / 2;
+    const VW = innerWidth / Scale.z, VH = innerHeight / Scale.z; const s = Math.min(VW / DW, VH / DH); const w = DW * s, hh = DH * s, ox = (VW - w) / 2, oy = (VH - hh) / 2;
     const cvs = $('#deskCv'); Object.assign(cvs.style, { width: w + 'px', height: hh + 'px', left: ox + 'px', top: oy + 'px' });
     const hw = $('#desk .hots'); Object.assign(hw.style, { left: ox + 'px', top: oy + 'px', width: w + 'px', height: hh + 'px' });
     for (const [b] of this.hots) Object.assign(b.style, { left: b.dataset.x * s + 'px', top: b.dataset.y * s + 'px', width: Math.max(28, b.dataset.w * s) + 'px', height: Math.max(28, b.dataset.h * s) + 'px' });
@@ -3996,7 +4027,7 @@ const Mini = {
     if (Puzzle.solved('mark_receipt')) { UI.toast('', 'Чек уже собран: «Флора», 19:51.'); return; }
     const [src, sx] = mk(96, 120); R(sx, 0, 0, 96, 120, '#efece2'); ptext(sx, 'ЦВЕТОЧНАЯ', 48, 6, '#333', 1, 'center'); ptext(sx, 'ЛАВКА ФЛОРА', 48, 14, '#333', 1, 'center'); R(sx, 8, 24, 80, 1, '#999'); ptext(sx, '17.10  19:51', 48, 30, '#111', 1, 'center'); ptext(sx, 'ТЮЛЬПАНЫ  X15', 10, 44, '#222'); ptext(sx, 'ЛЕНТА', 10, 54, '#222'); R(sx, 8, 66, 80, 1, '#999'); ptext(sx, 'ИТОГО  2 450', 10, 72, '#111'); ptext(sx, 'СПАСИБО!', 48, 92, '#333', 1, 'center'); for (let i = 0; i < 12; i++) R(sx, 20 + i * 5, 104, 2 + (i % 3), 10, '#222');
     const strips = [0, 1, 2, 3];
-    this.order('СКЛЕИТЬ ЧЕК', 'Чек порван на четыре полоски. Расставь их по порядку.', [2, 0, 3, 1], strips, i => { const [c, x] = mk(96, 30); x.drawImage(src, 0, i * 30, 96, 30, 0, 0, 96, 30); c.style.cssText = 'width:min(320px,70vw);image-rendering:pixelated'; return c; }, () => { Ev.add('mark_flowers'); Inv.add('flowers_receipt'); this.win('mark_receipt', done, 'Чек собран'); });
+    this.order('СКЛЕИТЬ ЧЕК', 'Чек порван на четыре полоски. Расставь их по порядку.', [2, 0, 3, 1], strips, i => { const [c, x] = mk(96, 30); x.drawImage(src, 0, i * 30, 96, 30, 0, 0, 96, 30); c.style.cssText = 'width:min(320px,70cqw);image-rendering:pixelated'; return c; }, () => { Ev.add('mark_flowers'); Inv.add('flowers_receipt'); this.win('mark_receipt', done, 'Чек собран'); });
   },
   /* Эп.5 — фотоаппарат */
   camroll(done) {
@@ -4048,7 +4079,7 @@ const Mini = {
   },
   /* Эп.9 — восстановить аудио */
   wave(done) {
-    const seg = ['A', 'B', 'C']; const draw = k => { const [c, x] = mk(120, 24); R(x, 0, 0, 120, 24, '#000'); const r = mulberry(k.charCodeAt(0) * 9); const amp = { A: [2, 8], B: [6, 11], C: [9, 2] }[k]; for (let i = 0; i < 120; i++) { const a = lerp(amp[0], amp[1], i / 120) * (0.4 + r() * 0.6); R(x, i, 12 - a, 1, a * 2, '#ff7a8a'); } ptext(x, { A: 'РУБЕН,', B: 'ЕСЛИ ТЫ', C: 'ЭТО СЛЫ…' }[k], 3, 2, '#fff'); c.style.cssText = 'width:min(360px,70vw);image-rendering:pixelated'; return c; };
+    const seg = ['A', 'B', 'C']; const draw = k => { const [c, x] = mk(120, 24); R(x, 0, 0, 120, 24, '#000'); const r = mulberry(k.charCodeAt(0) * 9); const amp = { A: [2, 8], B: [6, 11], C: [9, 2] }[k]; for (let i = 0; i < 120; i++) { const a = lerp(amp[0], amp[1], i / 120) * (0.4 + r() * 0.6); R(x, i, 12 - a, 1, a * 2, '#ff7a8a'); } ptext(x, { A: 'РУБЕН,', B: 'ЕСЛИ ТЫ', C: 'ЭТО СЛЫ…' }[k], 3, 2, '#fff'); c.style.cssText = 'width:min(360px,70cqw);image-rendering:pixelated'; return c; };
     this.order('ВОССТАНОВИТЬ ЗАПИСЬ', 'Три фрагмента записи перепутаны. Громкость нарастает к середине и обрывается в конце.', ['C', 'A', 'B'], seg, draw, () => this.win('nik_wave', done, 'Запись восстановлена'));
   },
 };
@@ -4477,7 +4508,7 @@ const Menu = {
   layout() {
     const box = $('#menu .mbtns'); const L = this.lay; if (!L) return;
     const fs = Math.round(L.btnSize);
-    let by = L.by; if (!this.port) { const r = $('#menu .mtitle').getBoundingClientRect(); by = r.bottom + Math.max(16, innerHeight * 0.05); }
+    let by = L.by; if (!this.port) { const r = $('#menu .mtitle').getBoundingClientRect(); by = r.bottom / Scale.z + Math.max(16, innerHeight / Scale.z * 0.05); }
     box.style.left = L.bx + 'px'; box.style.top = by + 'px';
     $$('.mbtn', box).forEach(b => b.style.fontSize = fs + 'px');
   },
@@ -4521,9 +4552,9 @@ const Menu = {
     // позиция заголовка и кнопок (в CSS-пикселях) — заголовок рисуется отдельным чётким холстом
     const tc = $('#titleCv'), sc = 10; tc.width = titleW('MR. RUBEN', sc) + 4; tc.height = sc * 6 + 4; const tx = tc.getContext('2d'); tx.clearRect(0, 0, tc.width, tc.height); drawTitle(tx, 'MR. RUBEN', 2, 2, sc);
     const mt = $('#menu .mtitle');
-    if (this.port) { mt.style.left = '8vw'; mt.style.top = 'max(3vh, env(safe-area-inset-top))'; mt.style.width = '84vw'; }
-    else { mt.style.left = '4.5vw'; mt.style.top = '12vh'; mt.style.width = 'min(34vw, 560px)'; }
-    this.lay = this.port ? { css: true, bx: innerWidth * 0.1, by: innerHeight * 0.73, btnSize: 15 } : { css: true, bx: innerWidth * 0.045, by: 0, btnSize: Math.min(22, Math.max(13, innerWidth * 0.016)) };
+    if (this.port) { mt.style.left = '8%'; mt.style.top = 'max(3%, env(safe-area-inset-top))'; mt.style.width = '84%'; }
+    else { mt.style.left = '4.5%'; mt.style.top = '12%'; mt.style.width = 'min(34%, 560px)'; }
+    const VW = innerWidth / Scale.z, VH = innerHeight / Scale.z; this.lay = this.port ? { css: true, bx: VW * 0.1, by: VH * 0.73, btnSize: 15 } : { css: true, bx: VW * 0.045, by: 0, btnSize: Math.min(22, Math.max(13, VW * 0.016)) };
     if (this.port) { R(c, 0, Math.round(H * 0.71), W, H, 'rgba(0,0,0,.35)'); }
   },
   draw(dt) {
