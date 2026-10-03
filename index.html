@@ -141,6 +141,65 @@ body.touch .hbtn .k{display:none}
 .evc .who{font-size:11px;color:#6b5b45;margin-bottom:4px}
 .evc .time{position:absolute;right:8px;top:8px;font-size:11px;background:#1d1810;color:var(--paper);padding:1px 5px}
 .evc.new{outline:2px solid var(--red)}
+.evc{animation:evIn .45s ease-out both;animation-delay:var(--d,0ms)}
+@keyframes evIn{from{opacity:0;transform:translateY(10px) rotate(var(--r,0deg))}to{opacity:1;transform:rotate(var(--r,0deg))}}
+.evsearch{width:100%;margin:0 0 12px;background:#14161d;border:1px solid var(--line);color:inherit;padding:8px 10px;font:inherit;font-size:14px}
+/* Дело */
+.case{display:flex;flex-direction:column;gap:10px;flex:1}.case .carea{flex:1}.ccard .clm{font-size:11px;color:#2c5a8e;font-style:italic;margin-bottom:2px}
+.casebar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.casebar .sp{flex:1}
+.casehelp{font-size:12px;color:#d8c8a8;opacity:.75}
+.caseq{background:rgba(10,10,14,.55);padding:8px 12px;border-left:3px solid var(--amber)}
+.caseq:empty{display:none}.caseq .sect{margin:6px 0 6px}
+.qq{font-size:14px;line-height:1.45;margin:4px 0;animation:evIn .4s ease-out both}.qq .m{display:inline-block;width:18px;color:var(--amber);font-weight:bold}
+.qq.res{opacity:.6}.qq.res .m{color:#7be39a}.qq small{color:#9aa}
+.hyp{font-size:13px;margin:5px 0;line-height:1.5}.hyp small{color:#8a90a0}
+.cst{display:inline-block;font-family:var(--f-pix);font-size:7px;padding:2px 6px;border:1px solid;margin-right:8px;vertical-align:1px;letter-spacing:.5px}
+.carea{position:relative}
+.clines{position:absolute;left:0;top:0;pointer-events:none;z-index:2;overflow:visible}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;position:relative}
+.ccard{background:var(--paper);color:#1d1810;padding:8px 9px 9px;position:relative;box-shadow:2px 3px 0 rgba(0,0,0,.45);transform:rotate(var(--r,0deg));font-size:12px;line-height:1.35;cursor:grab;user-select:none;-webkit-user-select:none;animation:evIn .4s ease-out both;animation-delay:var(--d,0ms);min-height:78px}
+.ccard .top{display:flex;gap:6px;align-items:center;font-size:10px;color:#6b5b45;margin-bottom:4px}
+.ccard .top .tm{background:#1d1810;color:var(--paper);padding:0 4px}.ccard .top .tm.cl{background:#2c5a8e;max-width:9em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ccard .grip{margin-left:auto;font-size:15px;line-height:1;padding:2px 4px;cursor:grab;touch-action:none;color:#6b5b45}
+.ccard b{display:block;font-size:13px;margin-bottom:3px}
+.ccard .s{font-size:11px;color:#6b5b45}
+.ccard .ln{position:absolute;right:6px;bottom:4px;font-size:10px;color:#8e1c22}
+.ccard.stmt{background:#dfe6ee}.ccard.stmt b::before{content:'❝ ';color:#2c5a8e}
+.ccard.unseen::after{content:'';position:absolute;top:-4px;right:-4px;width:9px;height:9px;border-radius:50%;background:var(--red)}
+.ccard.new{outline:2px solid var(--red);animation:evNew .7s ease-out both}
+@keyframes evNew{0%{opacity:0;transform:translateY(-30px) scale(1.15) rotate(-4deg)}70%{opacity:1;transform:translateY(2px) scale(.98)}100%{transform:rotate(var(--r,0deg))}}
+.ccard.over{outline:3px dashed var(--amber);transform:scale(1.04)}
+.ccard.pick{outline:3px solid var(--amber)}
+.ccard.lift{opacity:.35}
+.ccard.ghost{position:fixed;z-index:10000;pointer-events:none;opacity:.92;box-shadow:6px 10px 0 rgba(0,0,0,.4);animation:none}
+.ccard.flash{animation:cflash .9s ease-out}
+@keyframes cflash{0%{box-shadow:0 0 0 0 var(--fc)}30%{box-shadow:0 0 0 6px var(--fc)}100%{box-shadow:2px 3px 0 rgba(0,0,0,.45)}}
+.cban{position:absolute;left:50%;top:10px;transform:translateX(-50%);z-index:3;background:#0d0f14;border:1px solid;padding:8px 14px;font-family:var(--f-pix);font-size:9px;letter-spacing:1px;animation:cban 1.9s ease both;white-space:nowrap}
+@keyframes cban{0%{opacity:0;transform:translate(-50%,-6px)}12%,80%{opacity:1;transform:translate(-50%,0)}100%{opacity:0}}
+.cthink{position:sticky;bottom:-14px;display:flex;gap:10px;align-items:center;background:#0d0f14;border-top:1px solid var(--line);padding:8px 10px;margin:4px -14px -14px;z-index:4}
+.cthink canvas{width:40px;height:40px;image-rendering:pixelated;flex:none}
+.cthink .tx{font-size:14px;line-height:1.45;font-style:italic;color:#e8e2d0;min-height:2.9em;display:flex;align-items:center}
+.cthink .tx .ln{animation:evIn .35s ease-out both}
+.cthink.contra{border-top-color:#ff6b6b}.cthink.sup{border-top-color:#7be39a}.cthink.con{border-top-color:#f4d35e}
+.cdet{background:#12141b;border:1px solid var(--line);padding:12px 14px;animation:evIn .25s ease-out both}
+.cdet.hidden{display:none}
+.cdet .dh{display:flex;justify-content:space-between;align-items:center;font-family:var(--f-pix);font-size:8px;color:var(--dim)}
+.cdet h3{margin:6px 0 4px;font-size:16px}.cdet .meta{font-size:12px;color:var(--amber);margin-bottom:8px}
+.cdet .claim{font-size:13px;color:#9ac8ff;margin-bottom:6px}.cdet p{margin:0 0 10px;font-size:14px;line-height:1.5}
+.cdet .dl{font-size:13px;margin:4px 0}.cdet .dl .x{background:none;border:0;color:var(--dim);cursor:pointer;margin-left:6px}
+.tle.conf{border-color:#8e1c22;box-shadow:inset 3px 0 0 #ff6b6b}.tle.conf .tt{color:#ff6b6b}.tle.unk{opacity:.6;font-style:italic}
+.cslist{display:flex;flex-direction:column;gap:8px}
+.csrow{display:grid;grid-template-columns:48px 1fr;gap:10px;align-items:start;background:#12141b;border:1px solid var(--line);padding:8px;cursor:pointer}
+.csrow:hover{border-color:var(--red)}.csrow canvas{width:48px;height:48px;image-rendering:pixelated}
+.csrow .nm{font-family:var(--f-pix);font-size:9px;margin-bottom:6px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}.csrow .nm .cst{margin:0}
+.csrow .cl{font-size:13px;line-height:1.4}.csrow .red{color:#ff8a8a}.csrow .q{color:var(--amber)}.csrow .dim{color:var(--dim);font-size:12px}
+.evfly{position:fixed;left:50%;top:40%;z-index:9999;pointer-events:none;width:min(320px,78vw);background:#efe6cc;color:#1d1810;padding:12px 16px 14px;box-shadow:0 0 0 2px #8e1c22,6px 8px 0 rgba(0,0,0,.5);transform:translate(-50%,-50%) scale(.85);opacity:0;transition:transform .3s ease-out,opacity .3s;font-family:'IBM Plex Mono',monospace}
+.evfly.in{opacity:1;transform:translate(-50%,-50%)}
+.evfly.out{transition:transform .5s cubic-bezier(.6,0,.8,.4),opacity .5s;opacity:.15}
+.evfly .k{font-family:var(--f-pix);font-size:9px;color:#8e1c22;letter-spacing:1px;margin-bottom:6px}
+.evfly .no{font-size:11px;color:#6b5b45}.evfly b{display:block;font-size:16px;margin:2px 0 4px}.evfly .s{font-size:12px;color:#6b5b45}
+.hbtn.pulse{animation:hpulse .6s ease-out}
+@keyframes hpulse{0%{transform:scale(1)}40%{transform:scale(1.25);box-shadow:0 0 0 4px rgba(227,52,58,.5)}100%{transform:scale(1)}}
 .evfilter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
 .chip{background:#1a1d27;border:1px solid var(--line);padding:5px 9px;font-size:12px;cursor:pointer}
 .chip.on{border-color:var(--amber);color:var(--amber)}
@@ -497,7 +556,7 @@ const Scale = {
     const short = Math.min(cw, ch) * this.page();                              // короткая сторона в настоящих css-пикселях устройства
     const f = 400 / short;                                                    // большой экран — больше мира, маленький — крупнее
     let s = fill * (L && L.type === 'top' ? clamp(Math.pow(f, 0.5), 0.6, 1.3) : clamp(f, 0.4, 1.4)); // офис на больших экранах отдаляем мягче
-    if (L && L.type === 'side') s = Math.min(Math.max(s, ch / (L.H * (port ? 3 : 2))), ch / L.H); // комнату сбоку не обрезаем по высоте и не мельчим
+    if (L && L.type === 'side') s = L.fill ? ch / L.H : Math.min(Math.max(s, ch / (L.H * (port ? 3 : 2))), ch / L.H); // комнаты — во всю высоту экрана
     return Math.max(0.25, s * clamp(Settings.zoom || 1, 0.4, 2.5));
   },
 };
@@ -522,13 +581,14 @@ function freshState() {
     seen: {},                // DialogueState: просмотренные реплики/выборы
     deskSeen: {},            // осмотренные предметы на столах
     phoneNew: [],            // непрочитанные чаты
+    links: [], qs: {}, insp: {}, // Дело: сделанные связки, открытые вопросы, осмотренные карточки
     luxUntil: 0,
   };
 }
 
 const Flags = {
   has: f => !!G.s.flags[f],
-  set(f, v = true) { if (G.s.flags[f] === v) return; G.s.flags[f] = v; Game.onChange(); },
+  set(f, v = true) { if (G.s.flags[f] === v) return; G.s.flags[f] = v; if (/_alibi$/.test(f)) Case.sync(); Game.onChange(); },
   all: (...fs) => fs.every(f => G.s.flags[f]),
 };
 
@@ -540,7 +600,7 @@ const Ev = { // EvidenceState
     G.s.evidence.push(id); G.s.evNew.push(id);
     const e = EVIDENCE[id];
     if (e.who && CHARS[e.who] && !Sus.has(e.who) && e.who !== 'varya' && e.who !== 'ruben') Sus.add(e.who, true);
-    if (!quiet) { UI.toast('НОВАЯ УЛИКА', e.title, 'ev'); SND.sfx('evidence'); UI.markBtn('inv2', true); }
+    if (!quiet) { Case.arrive(id); SND.sfx('evidence'); UI.markBtn('inv2', true); }
     Game.onChange();
     return true;
   },
@@ -720,6 +780,8 @@ const SND = {
       case 'hover': this.tone(1320, t, 0.03, 'square', 0.03); break;
       case 'type': this.noise(t, 0.035, 0.12, 2500 + Math.random() * 2000, null, 'bandpass', 3); this.tone(200 + Math.random() * 80, t, 0.02, 'square', 0.03); break;
       case 'blip': this.tone(520 + Math.random() * 60, t, 0.03, 'square', 0.035); break;
+      case 'link': this.tone(110, t, 0.5, 'sine', 0.12); this.tone(165, t + 0.08, 0.45, 'sine', 0.07); this.tone(330, t + 0.16, 0.25, 'triangle', 0.03); break;
+      case 'contra': this.tone(147, t, 0.35, 'sawtooth', 0.05); this.tone(208, t + 0.05, 0.3, 'square', 0.035); this.tone(98, t + 0.12, 0.5, 'sine', 0.1); break;
       case 'ping': this.tone(1046, t, 0.12, 'sine', 0.2); this.tone(1568, t + 0.1, 0.25, 'sine', 0.18); break;
       case 'vibrate': for (let i = 0; i < 3; i++) this.tone(90, t + i * 0.14, 0.1, 'sawtooth', 0.08); break;
       case 'ok': [523, 659, 784, 1046].forEach((f, i) => this.tone(f, t + i * 0.07, 0.18, 'square', 0.07)); break;
@@ -1146,7 +1208,7 @@ function portrait(pal, opt = {}) {
   if (_por[key]) return _por[key];
   const [cv, c] = mk(48, 48);
   const bg = opt.bg || shade(pal.top, -0.75);
-  R(c, 0, 0, 48, 48, bg); dither(c, 0, 0, 48, 48, shade(bg, 0.06));
+  if (!opt.clear) { R(c, 0, 0, 48, 48, bg); dither(c, 0, 0, 48, 48, shade(bg, 0.06)); }
   const skin = opt.mask ? '#9fdcb4' : pal.skin, sk2 = shade(pal.skin, -0.16), sk3 = shade(pal.skin, -0.32);
   const hc = pal.hair, hd = shade(hc, -0.3), top = pal.top;
   // плечи
@@ -1343,10 +1405,24 @@ function customSprite(id, dir, f, opt = {}) {
   const [cv, c] = mk(D.w, D.h); paintRows(c, D.frames[name], D.pal, opt, flip, D.w);
   return _cspr[key] = cv;
 }
+// фон портрета в диалогах: свой спокойный цвет у каждого, а не прозрачная тьма
+// девушки с фото: Лиза (Марк), Алина (Дима), Алина (Андрей) — перекрашенный портрет из того же набора
+const GIRLS = { liza: { hair: '#b0602a', top: '#e8a0b8' }, alina_d: { hair: '#1e1618', top: '#4a6ab0' }, alina_a: { hair: '#d8b468', top: '#3f7a54' } };
+const _girl = {};
+function picPortrait(id) {
+  if (CHARS[id]) return portrait(CHARS[id], { clear: true, smile: true });
+  if (_girl[id]) return _girl[id];
+  const D = SPR_DATA.varya.por, g = GIRLS[id], pal = { ...D.pal }, lum = hx => { const [r, gg, b] = hex2rgb(hx); return (r + gg + b) / 765; };
+  const base = lum(D.pal.j);
+  for (const k of 'deghijklmno') pal[k] = shade(g.hair, clamp((lum(D.pal[k]) - base) * 3, -0.8, 0.8));
+  for (const k of 'bcf') pal[k] = shade(g.top, clamp((lum(D.pal[k]) - lum(D.pal.c)) * 4, -0.6, 0.6));
+  const [cv, c] = mk(48, 48); paintRows(c, D.rows, pal, {}, false, 48); return _girl[id] = cv;
+}
+const PORTRAIT_BG = { ruben: '#2e3a52', varya: '#5a3a44', mark: '#3a5a6e', tigran: '#4a5a3a', taras: '#5a4a2e', andrey: '#3e5a50', kirill: '#5a3a5a', sasha: '#5a503a', dima: '#2e4a6a', nikita: '#4a3e5e', matvey: '#6a5a2a' };
 function customPortrait(id, opt = {}) {
   const key = id + JSON.stringify(opt); if (_cpor[key]) return _cpor[key];
   const D = SPR_DATA[id].por, pal = CHARS[id]; const [cv, c] = mk(48, 48);
-  const bg = opt.bg || shade(pal.top, -0.6); R(c, 0, 0, 48, 48, bg); dither(c, 0, 0, 48, 48, shade(bg, 0.06));
+  const bg = opt.bg || PORTRAIT_BG[id] || shade(pal.top, -0.6); if (!opt.clear) { R(c, 0, 0, 48, 48, bg); dither(c, 0, 0, 48, 48, shade(bg, 0.06)); }
   paintRows(c, D.rows, D.pal, opt, false, 48);
   if (opt.lux) { for (const [x, y] of [[36, 6], [37, 5], [35, 5], [36, 4], [38, 6]]) P(c, x, y, '#fffbe0'); c.fillStyle = 'rgba(0,0,0,.22)'; for (let i = 0; i < 6; i++) { c.fillRect(16 + i, 33 + i, 1, 1); c.fillRect(31 - i, 33 + i, 1, 1); } }
   return _cpor[key] = cv;
@@ -1380,7 +1456,7 @@ const CHARS = {
     desc: 'Бывший одноклассник Рубена из Воронежа. Видятся нечасто. Главный антитоксик компании.', ep: 7,
     alibi: '«Я весь вечер был дома. Сериал, чай, плед».' },
   dima: { id: 'dima', name: 'Дима', skin: '#ecc6a6', hair: '#3a2a1a', hairStyle: 'messy', top: '#1c1c20', pants: '#1c1c20',
-    desc: 'Тоже из Воронежа. Ходил в зал с Сашей и Рубеном. Всё планирует — и может шуткануть жёстко. Встречается с Алиной по интернету: ни разу не виделись, но всё по плану.', ep: 8,
+    desc: 'Тоже из Воронежа. Ходил в зал с Сашей и Рубеном. Всё планирует — и может шуткануть жёстко. Встречается с Алиной: познакомились в интернете, недавно наконец увиделись вживую.', ep: 8,
     alibi: '«Я весь вечер работал с документами. Можешь проверить историю файла».' },
   nikita: { id: 'nikita', name: 'Никита', skin: '#e6c0a4', hair: '#5a3a24', hairStyle: 'longm', top: '#c8ccd2', pants: '#3a4a64',
     desc: 'Учится в Австрии: физика, математика, вечные экзамены. Очень добрый, шарит за философию. Любит пиво. И музыку.', ep: 9,
@@ -1683,6 +1759,16 @@ const D = {
   usb(c, x, y) { const cols = ['#e3343a', '#3a7bd5', '#f4d35e']; cols.forEach((cl, i) => { R(c, x + i * 9, y + i, 6, 12, cl); R(c, x + i * 9 + 1, y + i - 3, 4, 3, '#bbb'); }); },
   screwdriver(c, x, y) { R(c, x, y, 14, 5, '#e3343a'); R(c, x, y, 14, 1, '#ff6b6b'); R(c, x + 14, y + 2, 18, 1, '#c0c8d2'); },
   frame(c, x, y, w, hh, fn, col = '#3a2a1c') { R(c, x, y, w, hh, col); R(c, x + 2, y + 2, w - 4, hh - 4, '#ddd'); if (fn) fn(c, x + 2, y + 2, w - 4, hh - 4); R(c, x, y + hh, w, 2, shade(col, -0.4)); },
+  // фото с людьми: уменьшенные портреты на фоне сцены
+  pic(c, x, y, w, hh, ids, bg = ['#8ab4d8', '#b89a70']) {
+    c.save(); c.beginPath(); c.rect(x, y, w, hh); c.clip();
+    R(c, x, y, w, hh, bg[0]); R(c, x, y + Math.round(hh * 0.62), w, hh, bg[1]); for (let i = 0; i < w; i += 3) P(c, x + i, y + Math.round(hh * 0.62), shade(bg[1], 0.15));
+    const n = ids.length, sz = Math.round(Math.min(hh * 1.15, w / n * 1.45));
+    c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high';
+    ids.forEach((id, i) => { const px = Math.round(x + (i + 0.5) * w / n - sz / 2), py = Math.round(y + hh - sz * 0.9); c.drawImage(picPortrait(id), 0, 0, 48, 48, px, py, sz, sz); });
+    c.imageSmoothingEnabled = false; c.fillStyle = 'rgba(255,255,255,.18)'; c.fillRect(x, y, w, 1); c.fillRect(x, y, 1, Math.round(hh / 2));
+    c.restore();
+  },
   group(c, x, y, w, hh, crown) { R(c, x, y, w, hh, '#7aa0c0'); R(c, x, y + hh * 0.6, w, hh * 0.4, '#5a8a4a'); const cols = ['#1d2130', '#d9b8a8', '#e8e8ec', '#1c1c22', '#b8262e', '#5a6040', '#2f7a4a', '#4a6a9a', '#24304a', '#6a2a3a', '#e0a020']; const n = Math.min(cols.length, Math.floor(w / 3)); for (let i = 0; i < n; i++) { const px = x + 1 + i * (w - 2) / n; R(c, px, y + hh * 0.45, 2, hh * 0.5, cols[i]); R(c, px, y + hh * 0.3, 2, 2, '#e8c0a0'); } if (crown) { R(c, x + 1, y + hh * 0.18, 3, 2, '#f4d35e'); } },
   receipt(c, x, y, lines = 6, rot = 0) { c.save(); c.translate(x, y); c.rotate(rot); R(c, 0, 0, 18, 26, '#efece2'); for (let i = 0; i < 26; i += 2) P(c, i % 4 ? 0 : 17, i, '#c9c4b0'); for (let i = 0; i < lines; i++) R(c, 2, 3 + i * 3, 6 + (i * 7) % 9, 1, '#777'); R(c, 2, 22, 14, 1, '#333'); c.restore(); },
   bag(c, x, y, col = '#22242c', acc = '#e3343a') { R(c, x, y + 8, 60, 26, col); R(c, x, y + 8, 60, 2, shade(col, 0.25)); R(c, x + 4, y + 20, 52, 2, acc); c.fillStyle = shade(col, -0.3); c.fillRect(x + 14, y, 3, 10); c.fillRect(x + 43, y, 3, 10); c.fillRect(x + 14, y, 32, 3); R(c, x + 2, y + 34, 56, 2, '#111'); R(c, x + 40, y + 10, 16, 8, '#e8e8ec'); ptext(c, '23', x + 48, y + 11, '#b8262e', 1, 'center'); },
@@ -1699,13 +1785,21 @@ const D = {
   pencil(c, x, y) { R(c, x, y, 10, 3, '#f4d35e'); R(c, x + 10, y, 3, 3, '#e8c6a0'); P(c, x + 13, y + 1, '#333'); R(c, x - 2, y, 2, 3, '#e3a1c0'); },
   lamp(c, x, y, on, col = '#2a2a2a') { R(c, x, y + 44, 22, 4, col); R(c, x + 10, y + 14, 2, 30, col); c.fillStyle = col; c.beginPath(); c.moveTo(x, y + 14); c.lineTo(x + 22, y + 14); c.lineTo(x + 16, y); c.lineTo(x + 6, y); c.fill(); if (on) { R(c, x + 2, y + 14, 18, 2, '#fff2c0'); } },
   coffee(c, x, y) { ellipse(c, x + 10, y + 16, 12, 4, '#ddd'); R(c, x + 3, y, 14, 15, '#f2f2f2'); ellipse(c, x + 10, y + 1, 7, 2, '#3a2010'); R(c, x + 17, y + 4, 4, 7, '#f2f2f2'); },
-  controller(c, x, y) { R(c, x + 4, y, 28, 14, '#2a2a30'); disc(c, x + 6, y + 9, 6, '#2a2a30'); disc(c, x + 30, y + 9, 6, '#2a2a30'); R(c, x + 6, y + 4, 2, 6, '#c9c4b0'); R(c, x + 4, y + 6, 6, 2, '#888'); P(c, x + 6, y + 4, '#fff'); disc(c, x + 28, y + 5, 1, '#e3343a'); disc(c, x + 31, y + 8, 1, '#3a7bd5'); disc(c, x + 25, y + 8, 1, '#f4d35e'); disc(c, x + 28, y + 11, 1, '#55c46a'); },
+  controller(c, x, y) {
+    const B = '#16161a', B2 = '#26262c';
+    ellipse(c, x + 8, y + 12, 8, 9, B); ellipse(c, x + 30, y + 12, 8, 9, B); R(c, x + 6, y + 2, 26, 12, B); R(c, x + 6, y + 2, 26, 1, B2);
+    ellipse(c, x + 7, y + 17, 5, 4, B); ellipse(c, x + 31, y + 17, 5, 4, B);
+    R(c, x + 4, y + 7, 7, 2, '#3a3a42'); R(c, x + 6, y + 5, 2, 7, '#3a3a42'); P(c, x + 6, y + 5, '#5a5a62');
+    disc(c, x + 31, y + 5, 1, '#55c46a'); disc(c, x + 34, y + 8, 1, '#e3343a'); disc(c, x + 28, y + 8, 1, '#3a7bd5'); disc(c, x + 31, y + 11, 1, '#f4d35e');
+    disc(c, x + 13, y + 13, 3, '#0a0a0c'); disc(c, x + 13, y + 13, 2, '#2e2e34'); disc(c, x + 25, y + 13, 3, '#0a0a0c'); disc(c, x + 25, y + 13, 2, '#2e2e34');
+    R(c, x + 17, y + 6, 2, 1, '#555'); R(c, x + 20, y + 6, 2, 1, '#555'); disc(c, x + 19, y + 10, 1, '#8a3ad5');
+  },
   mic(c, x, y) { R(c, x + 8, y + 18, 3, 16, '#333'); R(c, x + 2, y + 34, 15, 3, '#222'); R(c, x + 3, y, 13, 19, '#444'); for (let j = 2; j < 18; j += 2) R(c, x + 4, y + j, 11, 1, '#666'); },
   knight(c, x, y) { R(c, x + 3, y, 6, 6, '#aab'); R(c, x + 4, y + 2, 4, 1, '#111'); R(c, x + 2, y + 6, 8, 10, '#3a5aa0'); R(c, x + 10, y + 2, 1, 12, '#ddd'); R(c, x + 9, y + 10, 3, 1, '#d4b26a'); R(c, x + 3, y + 16, 2, 5, '#555'); R(c, x + 7, y + 16, 2, 5, '#555'); R(c, x, y + 21, 12, 3, '#222'); },
   candies(c, x, y) { const cols = ['#e3a1c0', '#f4d35e', '#7ad0e0', '#e3343a', '#55c46a']; for (let i = 0; i < 9; i++) { const px = x + (i % 4) * 7 + (i > 3 ? 3 : 0), py = y + (i / 4 | 0) * 5; R(c, px, py, 5, 3, cols[i % 5]); P(c, px - 1, py + 1, cols[i % 5]); P(c, px + 5, py + 1, cols[i % 5]); } },
   paper(c, x, y, w, hh, fn, rot = 0) { c.save(); c.translate(x, y); c.rotate(rot); R(c, 0, 0, w, hh, '#f2efe6'); R(c, 0, hh, w, 1, '#a8a294'); if (fn) fn(c, w, hh); c.restore(); },
   cosmetic(c, x, y) { R(c, x, y + 4, 36, 18, '#e8a8c0'); R(c, x, y + 4, 36, 2, '#f8c8d8'); R(c, x + 4, y, 28, 5, '#d898b0'); R(c, x + 15, y + 2, 6, 3, '#d4b26a'); R(c, x + 38, y + 8, 6, 14, '#fff'); R(c, x + 38, y + 6, 6, 3, '#e3343a'); },
-  mirror(c, x, y) { ellipse(c, x + 12, y + 14, 12, 14, '#c9a96a'); ellipse(c, x + 12, y + 14, 10, 12, '#a8c8d8'); lineP(c, x + 6, y + 8, x + 10, y + 4, '#e8f4f8'); ptext(c, '♥', x + 12, y + 12, '#c0304a', 1, 'center'); R(c, x + 10, y + 28, 4, 8, '#c9a96a'); R(c, x + 5, y + 36, 14, 2, '#a8894a'); },
+  mirror(c, x, y) { ellipse(c, x + 12, y + 14, 12, 14, '#c9a96a'); ellipse(c, x + 12, y + 14, 10, 12, '#a8c8d8'); lineP(c, x + 6, y + 8, x + 10, y + 4, '#e8f4f8'); lineP(c, x + 13, y + 20, x + 17, y + 16, '#e8f4f8'); R(c, x + 10, y + 28, 4, 8, '#c9a96a'); R(c, x + 5, y + 36, 14, 2, '#a8894a'); },
   bracelet(c, x, y, txt, col) { ellipse(c, x + 16, y + 8, 16, 8, shade(col, -0.4)); ellipse(c, x + 16, y + 8, 13, 5, '#00000000'); for (let i = 0; i < txt.length; i++) { const px = x + 4 + i * 6; R(c, px, y + 10, 5, 5, '#f2efe6'); ptext(c, txt[i], px + 1, y + 10, '#222'); } for (let i = 0; i < 12; i++) { const a = Math.PI + i / 11 * Math.PI; disc(c, x + 16 + Math.cos(a) * 14, y + 8 + Math.sin(a) * 6, 1, col); } },
   candle(c, x, y, lit, col = '#f2e6c8') { R(c, x, y + 8, 12, 14, col); R(c, x, y + 8, 12, 2, shade(col, 0.2)); R(c, x + 5, y + 4, 1, 4, '#333'); if (lit) { R(c, x + 4, y, 3, 4, '#f4a52c'); P(c, x + 5, y + 1, '#fff2a0'); } R(c, x - 2, y + 22, 16, 2, '#888'); },
   shopbag(c, x, y, label, col = '#f2efe6') { R(c, x, y + 8, 34, 30, col); R(c, x, y + 8, 34, 2, shade(col, -0.15)); c.strokeStyle = '#a8a294'; c.lineWidth = 1; c.beginPath(); c.arc(x + 17, y + 8, 7, Math.PI, 0); c.stroke(); ptext(c, label, x + 17, y + 18, '#c0304a', 1, 'center'); ptext(c, 'MARKET', x + 17, y + 25, '#c0304a', 1, 'center'); },
@@ -1722,11 +1816,28 @@ const D = {
   tube(c, x, y) { R(c, x, y, 50, 9, '#3a3d46'); R(c, x, y, 50, 2, '#5a5f6a'); R(c, x - 2, y - 1, 4, 11, '#222'); R(c, x + 48, y - 1, 4, 11, '#222'); },
 };
 // фон стены и стол
+const PART_Y = 30, WALL_DY = 22;
+// за столом — офис: дальняя стена с окнами, лампы, верх соседних перегородок; сам стол отгорожен низкой перегородкой
+function officeBack(c, seed) {
+  const rnd = mulberry(seed * 7 + 1);
+  R(c, 0, 0, DW, PART_Y, '#161a22');
+  for (let x = -10; x < DW; x += 54) {
+    R(c, x + 6, 4, 42, 18, '#0b1220'); R(c, x + 26, 4, 1, 18, '#232a36'); R(c, x + 6, 12, 42, 1, '#232a36');
+    for (let i = 0; i < 9; i++) { const px = x + 7 + rnd() * 40 | 0, py = 6 + rnd() * 15 | 0; P(c, px, py, rnd() < 0.7 ? '#f4c86a' : '#9ac8ff'); }
+    R(c, x + 6, 21, 42, 1, '#2a3240');
+  }
+  for (let x = 20; x < DW; x += 80) { R(c, x, 0, 34, 2, '#dfe6f0'); glow(c, x + 17, 2, 16, '#cfe0ff', 0.12); }
+  R(c, 0, PART_Y - 9, DW, 9, '#2c323d');
+  for (let x = 0; x < DW; x += 46 + (seed % 3) * 4) { R(c, x, PART_Y - 9, 1, 9, '#3c4350'); if (rnd() < 0.7) { const mx = x + 10 + rnd() * 20 | 0; R(c, mx, PART_Y - 13, 9, 5, '#1a1d24'); R(c, mx + 1, PART_Y - 12, 7, 3, rnd() < 0.5 ? '#3a6aa0' : '#5a8ac8'); R(c, mx + 4, PART_Y - 8, 1, 1, '#1a1d24'); } }
+  R(c, 0, PART_Y - 2, DW, 2, '#8a919c'); R(c, 0, PART_Y, DW, 1, '#4a505a');
+}
 function deskBase(c, cfg) {
   const wall = cfg.wall || '#2a2e38';
-  R(c, 0, 0, DW, DESK_Y, wall);
-  speck(c, 0, 0, DW, DESK_Y, [shade(wall, 0.05), shade(wall, -0.07)], 0.25, cfg.seed || 3);
-  if (cfg.wallFn) cfg.wallFn(c);
+  officeBack(c, cfg.seed || 3);
+  R(c, 0, PART_Y + 1, DW, DESK_Y - PART_Y - 1, wall);
+  speck(c, 0, PART_Y + 1, DW, DESK_Y - PART_Y, [shade(wall, 0.05), shade(wall, -0.07)], 0.25, cfg.seed || 3);
+  for (let x = 106; x < DW; x += 106) { R(c, x, PART_Y + 1, 2, DESK_Y - PART_Y, shade(wall, -0.25)); R(c, x + 2, PART_Y + 1, 1, DESK_Y - PART_Y, shade(wall, 0.12)); }
+  if (cfg.wallFn) { c.save(); c.beginPath(); c.rect(0, PART_Y + 1, DW, DESK_Y - PART_Y); c.clip(); c.translate(0, WALL_DY); cfg.wallFn(c); c.restore(); }
   // столешница в перспективе
   const top = cfg.wood || '#6b4a33';
   for (let y = DESK_Y; y < DH; y++) {
@@ -1736,6 +1847,49 @@ function deskBase(c, cfg) {
   }
   R(c, 14, DESK_Y, DW - 28, 1, shade(top, 0.3));
   R(c, 0, DESK_Y - 4, DW, 4, 'rgba(0,0,0,.35)');
+  deskClutter(c, cfg);
+}
+// предметы на стене сдвинуты вместе с перегородкой; пересекающиеся предметы на столе раздвигаются
+function deskLayout(cfg) {
+  if (cfg._laid) return; cfg._laid = 1;
+  const its = cfg.items.filter(it => it.w);
+  for (const it of its) { it.dx = 0; it.dy = it.y + it.h < DESK_Y - 10 ? WALL_DY : 0; }
+  const box = it => [it.x + it.dx, it.y + it.dy, it.w, it.h];
+  for (let k = 0; k < 40; k++) {
+    let moved = false;
+    for (let i = 0; i < its.length; i++) for (let j = i + 1; j < its.length; j++) {
+      const A = its[i], B = its[j]; if (A.wall || B.wall) continue;
+      const [ax, ay, aw, ah] = box(A), [bx, by, bw, bh] = box(B), m = 2;
+      const ox = Math.min(ax + aw, bx + bw) - Math.max(ax, bx) + m, oy = Math.min(ay + ah, by + bh) - Math.max(ay, by) + m;
+      if (ox <= m || oy <= m) continue;
+      const mv = A.id === 'laptop' ? B : B.id === 'laptop' ? A : (A.w * A.h < B.w * B.h ? A : B), o = mv === A ? B : A;
+      const [mx, my] = box(mv), [px, py] = box(o);
+      if (ox < oy) mv.dx += (mx + mv.w / 2 < px + o.w / 2 ? -1 : 1) * Math.ceil(ox / (mv === A || o.id === 'laptop' ? 1 : 2));
+      else mv.dy += (my + mv.h / 2 < py + o.h / 2 ? -1 : 1) * Math.ceil(oy);
+      mv.dx = clamp(mv.x + mv.dx, 2, DW - mv.w - 2) - mv.x; mv.dy = clamp(mv.y + mv.dy, 2, DH - mv.h - 1) - mv.y; moved = true;
+    }
+    if (!moved) break;
+  }
+}
+// бытовые мелочи — папки, бумаги, стакан с ручками; ставятся только на свободные места
+function deskClutter(c, cfg) {
+  deskLayout(cfg);
+  const rnd = mulberry((cfg.seed || 3) * 13 + 5), taken = cfg.items.filter(it => it.w).map(it => [it.x + it.dx - 3, it.y + it.dy - 3, it.w + 6, it.h + 6]);
+  const kinds = [
+    [44, 22, (x, y) => { D.book(c, x, y + 10, 40, 9, rnd() < 0.5 ? '#3a5a8a' : '#5a6a3a', ''); D.book(c, x + 3, y + 2, 36, 9, '#a8a294', ''); }],
+    [34, 20, (x, y) => { D.paper(c, x + 2, y + 2, 26, 16, null, -0.08); D.paper(c, x + 6, y, 26, 16, (c, w) => { for (let i = 0; i < 5; i++) R(c, 3, 3 + i * 3, w - 8 - (i * 5) % 9, 1, '#9a9488'); }, 0.05); }],
+    [16, 26, (x, y) => { R(c, x + 2, y + 10, 12, 15, '#3a3d46'); R(c, x + 2, y + 10, 12, 2, '#5a5f6a'); R(c, x + 4, y + 2, 1, 9, '#e3343a'); R(c, x + 7, y, 1, 11, '#2c5a8e'); R(c, x + 10, y + 3, 1, 8, '#222'); R(c, x + 12, y + 4, 1, 7, '#f4d35e'); }],
+    [22, 10, (x, y) => { for (let i = 0; i < 3; i++) R(c, x + i * 7, y + 2 + (i % 2), 6, 6, ['#f4d35e', '#9ad0f0', '#e3a1c0'][i]); }],
+    [26, 8, (x, y) => { R(c, x, y + 2, 24, 4, '#c9c4b0'); R(c, x, y + 2, 24, 1, '#e8e4d8'); R(c, x + 24, y + 2, 2, 4, '#e3343a'); }],
+  ];
+  const spots = [[16, 100], [64, 104], [96, 100], [216, 100], [250, 104], [288, 100], [10, 150], [40, 156], [96, 158], [196, 158], [240, 156], [280, 152], [60, 130], [250, 128]];
+  let n = 0;
+  for (const [sx, sy] of spots.sort(() => rnd() - 0.5)) {
+    if (n >= 3) break; const k = kinds[(n + (cfg.seed || 0)) % kinds.length], w = k[0], hh = k[1];
+    if (sx + w > DW - 4 || sy + hh > DH - 2) continue;
+    if (taken.some(([x, y, tw, th]) => sx < x + tw && sx + w > x && sy < y + th && sy + hh > y)) continue;
+    k[2](sx, sy); taken.push([sx - 2, sy - 2, w + 4, hh + 4]); n++;
+  }
 }
 function deskLight(c, cfg) {
   // ночное освещение крупного плана
@@ -1754,14 +1908,11 @@ const DESKS = {
     title: 'СТОЛ ТИГРАНА', wall: '#2a2622', wood: '#2e2a26', seed: 4,
     wallFn(c) {
       bricks(c, 0, 0, 110, DESK_Y, '#6a5a48', '#4a3e32', 5);
-      blinds(c, 230, 6, 84, 80, '#1a2230', false);
       R(c, 120, 0, 2, 30, '#222'); R(c, 114, 30, 14, 8, '#d9c38a'); glow(c, 121, 40, 40, '#f4d35e', 0.25);
       shelfSide(c, 6, 12, 60, 3, 4);
     },
-    lights: [[110, 70, 130], [215, 70, 130], [160, 130, 130], [121, 40, 60]], glows: [[110, 62, 80, '#4aa8ff', 0.3], [215, 62, 80, '#4aa8ff', 0.3]],
+    lights: [[110, 70, 130], [215, 70, 130], [160, 130, 130], [121, 40, 60]], glows: [[164, 110, 70, '#4aff9a', 0.18]],
     items: [
-      { id: 'mon1', x: 72, y: 26, w: 80, h: 64, label: 'Левый монитор', draw: c => D.monitor(c, 74, 28, 76, 52, '#4a9ae0', (c, x, y, w, hh) => { R(c, x, y, w, hh, '#5aa8ec'); dither(c, x, y, w, hh, '#6ab4f2'); R(c, x + w / 2 - 14, y + hh / 2 - 4, 28, 3, '#2a5a8a'); R(c, x + w / 2 - 14, y + hh / 2 + 1, 28, 3, '#2a5a8a'); }), act: { text: 'Левый монитор светится ровным голубым светом. Окно входа в какую-то систему. Курсор мигает в пустом поле.' } },
-      { id: 'mon2', x: 172, y: 26, w: 84, h: 64, label: 'Правый монитор', draw: c => D.monitor(c, 174, 28, 80, 52, '#4a9ae0', (c, x, y, w, hh) => { R(c, x, y, w, hh, '#5aa8ec'); dither(c, x, y, w, hh, '#6ab4f2'); R(c, x + 30, y + 16, 20, 14, '#d8823a'); R(c, x + 30, y + 12, 5, 5, '#d8823a'); R(c, x + 45, y + 12, 5, 5, '#d8823a'); P(c, x + 35, y + 21, '#111'); P(c, x + 44, y + 21, '#111'); }), act: { text: 'Правый монитор: на голубой заставке — рыжий котик. Тигран сложнее, чем кажется.' } },
       { id: 'laptop', x: 124, y: 96, w: 80, h: 52, label: 'Ноутбук', draw: c => D.laptop(c, 132, 98, { col: '#2a2c33', scr: '#0a1f14', logo: 'LOCKED' }), act: { comp: 'tigran' } },
       { id: 'kbd', x: 38, y: 152, w: 96, h: 18, label: 'Механическая клавиатура', draw: c => { D.keyboard(c, 40, 154, 90, '#16171c', '#3a5aa0', [3, 9, 104, 110, 206, 112]); glow(c, 85, 160, 40, '#3a7bd5', 0.2); }, act: { text: 'Механическая клавиатура с синей подсветкой. Несколько клавиш стёрты сильнее остальных: R, O, B, T. Тигран явно часто набирает одно и то же слово.', flag: 'hint_tig_kbd' } },
       { id: 'mug', x: 212, y: 106, w: 34, h: 28, label: 'Кружка', draw: c => D.mug(c, 214, 108, '#1c1c22', 'DO NOT\nDISTURB', '#e3343a', 30), act: { text: 'Кружка «DO NOT DISTURB». Внутри — засохший энергетик «VOLT». Тигран говорил, что энергетиков у него «целый ящик». Ящика нигде нет.' } },
@@ -1769,7 +1920,7 @@ const DESKS = {
       { id: 'cds', x: 54, y: 104, w: 30, h: 36, label: 'Шпиндель с дисками', draw: c => { R(c, 58, 112, 22, 24, 'rgba(200,220,235,.35)'); for (let i = 0; i < 8; i++) ellipse(c, 69, 132 - i * 2.5, 11, 3, i % 2 ? '#d8dde3' : '#b8c0c8'); R(c, 68, 106, 2, 10, '#222'); }, act: { text: 'Шпиндель с болванками. На верхнем диске маркером: «ФОТО — ПЕЧАТЬ 30×40 — НЕ ТЕРЯТЬ».' } },
       { id: 'usb', x: 218, y: 148, w: 32, h: 18, label: 'Флешки', draw: c => D.usb(c, 220, 152), act: { text: 'Три флешки. На красной написано «BACKUP_2019».', item: 'usb_backup' } },
       { id: 'screw', x: 256, y: 150, w: 40, h: 12, label: 'Отвёртка', draw: c => D.screwdriver(c, 258, 154), act: { text: 'Отвёртка с битой T6. Для ноутбуков. Тигран разбирает всё, что не приклеено.' } },
-      { id: 'photo', x: 14, y: 106, w: 34, h: 30, label: 'Фото с выпускного', draw: c => D.frame(c, 16, 108, 30, 24, (c, x, y, w, hh) => D.group(c, x, y, w, hh)), act: { text: 'Выпускной в армянской школе: ты и Тигран в одинаковых пиджаках, у обоих вид «наконец-то». На обороте: «Ахпер, мы выжили».' } },
+      { id: 'photo', x: 14, y: 106, w: 34, h: 30, label: 'Фото с выпускного', draw: c => D.frame(c, 16, 108, 30, 24, (c, x, y, w, hh) => D.pic(c, x, y, w, hh, ['ruben', 'tigran'], ['#c8b88a', '#7a2a2a'])), act: { text: 'Выпускной в армянской школе: ты и Тигран в одинаковых пиджаках, у обоих вид «наконец-то». На обороте: «Ахпер, мы выжили».' } },
       { id: 'receipt', x: 92, y: 118, w: 28, h: 30, label: 'Смятый чек', draw: c => D.receipt(c, 98, 120, 5, 0.3), act: { text: 'Смятый чек: «Продукты у дома», 17.10, 20:14. Энергетик «VOLT» ×1. Тигран говорил, что вообще никуда не выходил.', ev: 'tig_receipt', item: 'receipt_volt' } },
       { id: 'cable', x: 0, y: 0, w: 0, h: 0, draw: c => D.cable(c, [[132, 150], [120, 172], [60, 178]], '#0a0a0a') },
     ],
@@ -1811,7 +1962,7 @@ const DESKS = {
       { id: 'ruler', x: 92, y: 158, w: 58, h: 14, label: 'Линейка', draw: c => D.ruler(c, 96, 162, 52), act: { text: 'Линейка. На обороте: «НЕ БРАТЬ. Я ЗНАЮ, ЧТО ЭТО ТЫ, КИРИЛЛ».', item: 'ruler' } },
       { id: 'pen', x: 156, y: 154, w: 36, h: 12, label: 'Чёрная ручка', draw: c => D.pen(c, 158, 158), act: { text: 'Чёрная ручка. Одна. Лежит строго параллельно краю стола.' } },
       { id: 'plant', x: 276, y: 96, w: 30, h: 40, label: 'Растение', draw: c => D.plant(c, 280, 100), act: { text: 'Фикус. Табличка: «Фикус Марка. Полив — вт, пт. Не трогать по ср».' } },
-      { id: 'photo', x: 46, y: 96, w: 34, h: 38, label: 'Фото в рамке', draw: c => D.frame(c, 48, 98, 28, 32, (c, x, y, w, hh) => { R(c, x, y, w, hh, '#e8c0a8'); R(c, x + 8, y + 4, 12, 12, '#6b3a22'); R(c, x + 10, y + 7, 8, 8, '#f0cdb2'); R(c, x + 6, y + 16, 16, 12, '#d9b8a8'); }), act: { text: 'Фото Марка с Лизой в рамке. Оба смеются, у обоих на запястье одинаковые браслеты. На обороте: «Лиза ♥ день рождения 10.12».', flag: 'hint_mark_photo' } },
+      { id: 'photo', x: 46, y: 96, w: 34, h: 38, label: 'Фото в рамке', draw: c => D.frame(c, 48, 98, 30, 30, (c, x, y, w, hh) => D.pic(c, x, y, w, hh, ['mark', 'liza'], ['#f0c890', '#c87a5a'])), act: { text: 'Фото Марка с Лизой в рамке. Оба смеются, у обоих на запястье одинаковые браслеты. На обороте: «Лиза ♥ день рождения 10.12».', flag: 'hint_mark_photo' } },
       { id: 'pairbr', x: 88, y: 128, w: 26, h: 16, label: 'Парный браслет', draw: c => D.bracelet(c, 90, 132, 'L+M', '#e3343a'), act: { text: 'Парный браслет «L+M». Второй такой — у Лизы. Марк снимает его только на ночь. А сейчас он лежит здесь. Ушёл в спешке?' } },
       { id: 'trash', x: 8, y: 132, w: 30, h: 40, label: 'Мусорное ведро', draw: c => D.trash(c, 10, 138), act: { mini: 'receipt', text: 'В мусорке — разорванный чек. Марк порвал его на полоски. Аккуратно, конечно.' } },
     ],
@@ -1828,6 +1979,7 @@ const DESKS = {
       { id: 'camera', x: 26, y: 112, w: 44, h: 34, label: 'Фотоаппарат', draw: c => D.camera(c, 28, 114), act: { mini: 'camroll', text: 'Плёночный? Нет, цифровой. Последние кадры ещё в памяти.' } },
       { id: 'notebook', x: 214, y: 140, w: 48, h: 30, label: 'Блокнот', draw: c => D.openbook(c, 216, 142, 44, 24, c => { ptext(c, 'П.', 222, 146, '#333'); ptext(c, '?', 252, 154, '#c0304a'); }), act: { text: 'Блокнот: «плёнка — 3 шт», «батарейки», «П. — забрать в сб». На последней странице: «PIN ноута = номер последнего кадра с той съёмки. Только цифры».', flag: 'hint_and_note' } },
       { id: 'photos', x: 82, y: 140, w: 40, h: 30, label: 'Фотографии', draw: c => D.photos(c, 84, 144, 'street'), act: { text: 'Пачка распечаток: осенние улицы, листья, Алина на фоне листьев. Много Алины. На обороте каждой — номер кадра: IMG_7990, IMG_8012, IMG_8037… Андрей подписывает всё.' } },
+      { id: 'photoA', x: 76, y: 96, w: 40, h: 36, label: 'Фото с Алиной', draw: c => D.frame(c, 78, 98, 36, 30, (c, x, y, w, hh) => D.pic(c, x, y, w, hh, ['andrey', 'alina_a'], ['#e8a860', '#8a5a3a']), '#2a2a30'), act: { text: 'Андрей и Алина на закате, на Каскаде. Снимал, конечно, не Андрей: штатив, таймер, восемь дублей. На обороте: «кадр 8 из 8. наконец-то оба смотрим в камеру».' } },
       { id: 'pencil', x: 170, y: 154, w: 24, h: 12, label: 'Карандаш', draw: c => D.pencil(c, 174, 158), act: { text: 'Карандаш, сточенный почти до основания. Андрей много рисует схемы кадров.' } },
       { id: 'lamp', x: 262, y: 70, w: 30, h: 52, label: 'Лампа', draw: c => D.lamp(c, 266, 74, true), act: { text: 'Настольная лампа включена. Андрей ушёл и забыл её выключить. Не похоже на него.' } },
       { id: 'coffee', x: 222, y: 108, w: 26, h: 24, label: 'Кофе', draw: c => D.coffee(c, 224, 110), act: { text: 'Кофе. Холодный. Андрей не допил — ушёл в спешке.' } },
@@ -1848,7 +2000,6 @@ const DESKS = {
       { id: 'mic', x: 222, y: 92, w: 22, h: 40, label: 'Микрофон', draw: c => D.mic(c, 224, 94), act: { text: 'Стримерский микрофон. Внутри решётки кто-то спрятал конфету.', item: 'candy' } },
       { id: 'phones', x: 252, y: 116, w: 34, h: 28, label: 'Наушники', draw: c => D.headphones(c, 256, 122, '#f49ac1', '#e8e8ec', '#f49ac1'), act: { text: 'Наушники с ушками котика. Розовые. Кирилл просил никому не говорить.' } },
       { id: 'knight', x: 292, y: 110, w: 18, h: 30, label: 'Фигурка', draw: c => D.knight(c, 294, 114), act: { text: 'Фигурка рыцаря, под ней студенческий МГУ. На подставке: «Кирилл — 99 lvl. Жим 140». На студенческом стикер: «пары — дистант, зал — очно».' } },
-      { id: 'candies', x: 84, y: 128, w: 34, h: 16, label: 'Конфеты', draw: c => D.candies(c, 86, 132), act: { text: 'Ириски «Кис-кис». Фантики сложены в аккуратную кучку. Для Кирилла это и есть порядок.' } },
       { id: 'doodle', x: 220, y: 146, w: 60, h: 28, label: 'Лист с каракулями', draw: c => D.paper(c, 222, 148, 56, 22, (c, w) => { ptext(c, '↑↑↓↓←→←→BA', 3, 3, '#2c5a8e'); ptext(c, 'ЧИТ НА ЖИЗНЬ', 3, 12, '#c0304a'); }, -0.04), act: { text: 'Лист с каракулями: стрелки и две буквы — вверх, вверх, вниз, вниз, влево, вправо, влево, вправо, B, A. Подпись: «чит на жизнь». И нарисованный замочек.', flag: 'hint_kir_doodle' } },
       { id: 'mask', x: 18, y: 14, w: 44, h: 56, label: 'Постер', draw: () => { }, act: { text: 'Постер fsociety. Кирилл — фанат Mr. Robot. Как и ты.', item: 'fsociety' } },
     ],
@@ -1863,10 +2014,10 @@ const DESKS = {
     items: [
       { id: 'laptop', x: 124, y: 92, w: 80, h: 58, label: 'Ноутбук', draw: c => D.laptop(c, 132, 94, { col: '#d8b8c8', scr: '#2a1424', logo: 'LOCKED' }), act: { comp: 'sasha' } },
       { id: 'cosm', x: 14, y: 140, w: 50, h: 26, label: 'Косметичка', draw: c => D.cosmetic(c, 16, 142), act: { text: 'Косметичка: патчи, крем и тканевая маска — точно такая же, как та, что Варя нанесла тебе. «Держать не более 10 минут».' } },
-      { id: 'mirror', x: 238, y: 92, w: 28, h: 42, label: 'Зеркальце', draw: c => D.mirror(c, 240, 94), act: { text: 'Зеркальце. В углу губной помадой нарисовано сердечко и «ты справишься». Это Варин почерк.' } },
-      { id: 'photos', x: 80, y: 140, w: 40, h: 30, label: 'Фотографии', draw: c => D.photos(c, 82, 144, 'concert'), act: { text: 'Фото из Воронежа: 11 «Б», ты и Саша на последней парте, оба делаете вид, что слушаете. Подпись на обороте: «самые нормальные люди класса».' } },
+      { id: 'mirror', x: 238, y: 92, w: 28, h: 42, label: 'Зеркальце', draw: c => D.mirror(c, 240, 94), act: { text: 'Зеркальце. В углу губной помадой написано «ты справишься». Это Варин почерк.' } },
+      { id: 'photos', x: 80, y: 140, w: 42, h: 32, label: 'Фото из Воронежа', draw: c => D.frame(c, 82, 142, 38, 28, (c, x, y, w, hh) => D.pic(c, x, y, w, hh, ['ruben', 'sasha', 'dima'], ['#9ab8d0', '#5a4a3a']), '#5a3a2a'), act: { text: 'Фото из Воронежа: 11 «Б», ты, Саша и Дима на последней парте, все трое делают вид, что слушают. Подпись на обороте: «самые нормальные люди класса».' } },
       { id: 'brace', x: 256, y: 144, w: 44, h: 26, label: 'Браслет', draw: c => { D.bracelet(c, 260, 148, 'RUBEN', '#2c5a8e'); R(c, 292, 160, 8, 6, '#f2efe6'); }, act: { text: 'Браслет из бусин: «RUBEN». К нему привязана бирка почерком Вари: «для Р. — отдать 19.10». Почему он лежит у Саши?', item: 'bracelet', flag: 'hint_sas_brace' } },
-      { id: 'sticky', x: 204, y: 66, w: 34, h: 28, label: 'Стикер', draw: c => D.sticky(c, 206, 68, ['ПАРОЛЬ:', 'ДЛЯ КОГО +', 'КОГДА ДДММ'], '#f49ac1', 0.06), act: { text: 'Розовый стикер на крышке ноутбука: «пароль: для кого + когда отдать (ддмм), маленькими, без пробелов». Ниже сердечко.', flag: 'hint_sas_sticky' } },
+      { id: 'sticky', x: 204, y: 66, w: 34, h: 28, label: 'Стикер', draw: c => D.sticky(c, 206, 68, ['ПАРОЛЬ:', 'ДЛЯ КОГО +', 'КОГДА ДДММ'], '#f4d35e', 0.06), act: { text: 'Жёлтый стикер на крышке ноутбука: «пароль: для кого + когда отдать (ддмм), маленькими, без пробелов».', flag: 'hint_sas_sticky' } },
       { id: 'candle', x: 52, y: 100, w: 18, h: 26, label: 'Свеча', draw: c => D.candle(c, 54, 102, true, '#f2d8c8'), act: { text: 'Свеча «Ванильное печенье». Горит. Саша ушёл и не задул её? Странно. Или кто-то зажёг её специально.' } },
       { id: 'bag', x: 206, y: 136, w: 38, h: 40, label: 'Пакет', draw: c => D.shopbag(c, 208, 138, 'DECOR'), act: { text: 'Пустой пакет «ДекорМаркет». Внутри — ценник от гирлянды «тёплая белая» и одна блёстка.', ev: 'sas_bag', item: 'decor_bag' } },
       { id: 'flower', x: 276, y: 100, w: 16, h: 30, label: 'Цветок', draw: c => D.flower(c, 270, 102), act: { text: 'Один тюльпан в стакане. Тюльпаны… Где-то я уже видел тюльпаны.' } },
@@ -1876,13 +2027,14 @@ const DESKS = {
     title: 'СТОЛ ДИМЫ', wall: '#26303e', wood: '#a08a6a', seed: 16,
     wallFn(c) {
       R(c, 20, 10, 110, 60, '#f4f4f0'); for (let i = 0; i < 8; i++) R(c, 30 + i * 12, 60 - i * 5 - (i % 2) * 4, 8, 6 + i * 5 + (i % 2) * 4, '#2c5a8e'); ptext(c, 'Q3', 30, 14, '#c0392b');
-      wallPoster(c, 220, 12, 60, 50, '#f2efe6', (c, x, y) => { for (let r = 0; r < 5; r++) for (let k = 0; k < 7; k++) outlineRect(c, x + 4 + k * 7, y + 6 + r * 8, 7, 8, '#bbb'); R(c, x + 25, y + 30, 7, 8, '#c0392b'); });
+      wallPoster(c, 222, 6, 46, 46, '#f2efe6', (c, x, y) => octCal(c, x + 2, y + 2, 6, 6, [19]));
     },
     lights: [[160, 100, 170]], glows: [[160, 80, 100, '#6fb3ff', 0.12]],
     items: [
       { id: 'laptop', x: 124, y: 92, w: 80, h: 58, label: 'Ноутбук', draw: c => D.laptop(c, 132, 94, { col: '#3a4050', scr: '#0a1424', logo: 'LOCKED' }), act: { comp: 'dima' } },
       { id: 'sticky', x: 86, y: 80, w: 34, h: 28, label: 'Стикер', draw: c => D.sticky(c, 88, 82, ['ПАРОЛЬ —', 'МОЙ', 'ОСНОВНОЙ'], '#9ad0f0', -0.06), act: { text: 'Стикер на экране: «пароль — мой основной (маленькими, через _)».', flag: 'hint_dim_sticky' } },
       { id: 'docs', x: 22, y: 128, w: 42, h: 30, label: 'Документы', draw: c => D.docs(c, 24, 136), act: { text: 'Отчёт по расходам. Ровные столбцы цифр. Последняя строка: «Непредвиденное — 0 ₽». Ну конечно.' } },
+      { id: 'photoD', x: 22, y: 94, w: 40, h: 32, label: 'Фото с Алиной', draw: c => D.frame(c, 24, 96, 36, 28, (c, x, y, w, hh) => D.pic(c, x, y, w, hh, ['dima', 'alina_d'], ['#6a8ac8', '#d8d0c0']), '#c0c4cc'), act: { text: 'Дима и Алина. Та самая Алина из интернета — теперь вживую: фото с их первой встречи, вокзал, у обоих красные носы с мороза. На рамке маркером: «не фейк :)».' } },
       { id: 'calc', x: 222, y: 120, w: 28, h: 36, label: 'Калькулятор', draw: c => D.calc(c, 224, 122, '3'), act: { text: 'Калькулятор. На дисплее — «3». Дима всегда оставляет на нём какое-то число «на память». Сегодня — тройка.', flag: 'hint_dim_calc' } },
       { id: 'folders', x: 254, y: 130, w: 60, h: 40, label: 'Папки', draw: c => { D.book(c, 256, 148, 54, 12, '#c0392b', 'ПЛАН Б'); D.book(c, 258, 134, 50, 12, '#2c5a8e', 'ПЛАН А'); }, act: { text: 'Две папки: «ПЛАН А (основной)» и «ПЛАН Б (если Рубен узнает)». Вторая заклеена скотчем. Крест-накрест.', flag: 'hint_dim_folders' } },
       { id: 'stapler', x: 70, y: 156, w: 34, h: 14, label: 'Степлер', draw: c => D.stapler(c, 72, 158), act: { text: 'Степлер. На нём наклейка: «Степлер №3. Учёт ведётся».', item: 'stapler' } },
@@ -2042,8 +2194,8 @@ const COMPUTERS = {
     ],
   },
   sasha: {
-    user: 'sasha ♥', scr: '#ff9ac8', brand: 'SOFT·OS',
-    lock: { type: 'pass', answer: 'ruben1910', prompt: 'Пароль',
+    user: 'sasha', scr: '#9ad0ff', brand: 'SOFT·OS',
+    lock: { type: 'pass', answer: ['рубен1910', 'ruben1910'], prompt: 'Пароль',
       hints: ['На ноутбуке Саши приклеен стикер с правилом пароля.', 'Браслет на столе: для кого он и когда его нужно отдать?'] },
     apps: [
       { id: 'taxi', name: 'Такси', icon: 'map', view(b) { b.append(CV.p('История поездок · 17.10'), CV.map([['20:21', 'дом', 20, 75], ['20:35', 'ДекорМаркет', 55, 40], ['20:52', 'ГСК «Северный»', 85, 70]]), CV.table(['Время', 'Маршрут'], [['20:21', 'Дом → «ДекорМаркет» → ГСК «Северный»']])); CV.ev('sas_taxi'); } },
@@ -2059,8 +2211,8 @@ const COMPUTERS = {
   },
   dima: {
     user: 'D.Plan', scr: '#8ac6ff', brand: 'SPREAD·OS',
-    lock: { type: 'pass', answer: 'plan_a', prompt: 'Пароль',
-      hints: ['На мониторе висит стикер с подсказкой.', 'Какой из планов на столе — «основной»?', 'Название папки маленькими буквами, пробел заменить на _.'] },
+    lock: { type: 'pass', answer: ['план_а', 'plan_a'], prompt: 'Пароль',
+      hints: ['На мониторе висит стикер с подсказкой.', 'Какой из планов на столе — «основной»?', 'Название папки так, как оно написано, — по-русски, маленькими буквами, пробел заменить на _.'] },
     apps: [
       { id: 'xlsx', name: 'expenses.xlsx', icon: 'sheet', view(b) {
         if (Puzzle.solved('dim_anom')) { CV.xlsxDone(b); return; }
@@ -2089,6 +2241,19 @@ const COMPUTERS = {
     ],
   },
 };
+// Discord есть на каждом компьютере: общий сервер + личка в характере хозяина
+const DSC_DM = {
+  taras: ['@ Рубен', [['taras', 'братан, как духи? зашли?', '12.10'], ['ruben', 'норм, спасибо', '12.10'], ['taras', 'я на них треть зарплаты потратил. не благодари. хотя благодари', '12.10']]],
+  mark: ['@ Лиза', [['mark', '10 декабря — столик забронировал', '16.10'], ['Лиза', 'ты в октябре бронируешь декабрь?? 😂', '16.10'], ['mark', 'заранее — значит вовремя', '16.10']]],
+  andrey: ['@ Никита', [['andrey', 'идея для чата: неделя без мемов', '14.10'], ['nikita', 'nein', '14.10'], ['andrey', 'ладно. неделя ТОЛЬКО мемов', '14.10']]],
+  sasha: ['@ Дима', [['sasha', 'зал в четверг? рубена берём', '15.10'], ['dima', 'да. только без токсичности в раздевалке', '15.10'], ['sasha', 'это ты мне говоришь??', '15.10']]],
+  dima: ['@ Алина', [['dima', 'доехал, всё ок', '16.10'], ['Алина', 'напиши, как освободишься ❤', '16.10'], ['dima', 'в понедельник расскажу, что мы тут затеяли', '16.10']]],
+  nikita: ['@ Андрей', [['nikita', 'Кант говорит: не пиши мне в 3 ночи', '13.10'], ['andrey', 'это не Кант', '13.10'], ['nikita', 'теперь Кант', '13.10']]],
+};
+for (const id in COMPUTERS) if (!COMPUTERS[id].apps.some(a => a.name === 'Discord')) COMPUTERS[id].apps.push({ id: 'discord', name: 'Discord', icon: 'chat', view(b) {
+  const feed = SERVER.posts().filter(p => p.t && !p.del && !p.ev).slice(-7).map(p => [p.w, p.t, p.tm]);
+  b.append(CV.dsc([['# гигачат · ' + SERVER.name, feed], ...(DSC_DM[id] ? [DSC_DM[id]] : [])]));
+} });
 
 /* ---- 34_data_episodes ---- */
 /* =====================================================================
@@ -2103,7 +2268,7 @@ const Q = (t, done, hint) => ({ t, done, hint });
 const CH_CLOCK = { 2: '21:40', 3: '21:55', 4: '22:10', 5: '22:25', 6: '22:40', 7: '22:55', 8: '23:10', 9: '23:25', 10: '23:40' };
 // Глава ночного расследования: кабинет → стол → ноутбук → вопросы в телефоне
 function investigation(who, cfg) {
-  const N = CHARS[who].name, Ng = cfg.gen || N;
+  const N = CHARS[who].name, Ng = cfg.gen || N, epOf = () => +Object.keys(EPISODES).find(n => EPISODES[n].who === who);
   return [
     ...(cfg.pre || []),
     who === 'dima' ? Q('Открыть кабинет Димы', () => Flags.has('in_cab_dima'), () => Inv.has('dima_key') ? 'Кабинет Димы — в нижнем коридоре 2 этажа, справа. Ключ у тебя.' : 'Кабинет заперт. У Марка на столе хранятся запасные ключи от всех дверей.')
@@ -2113,11 +2278,11 @@ function investigation(who, cfg) {
     Q(`Открыть ноутбук: ${Ng}`, () => Puzzle.compOpen(who), () => { const L = COMPUTERS[who].lock.hints; const k = 'hint_' + who; const n = G.s.seen[k] = Math.min(1, (G.s.seen[k] == null ? -1 : G.s.seen[k]) + 1); return L[n]; }),
     Q(cfg.compGoal || 'Найти в ноутбуке, где он был на самом деле', () => cfg.comp.every(Ev.has), cfg.compHint),
     ...(cfg.chat || []),
-    Q('Сопоставить факты', () => false, 'Загляни в «Расследование»: улики, хронология и связи.'),
+    Q('Сопоставить факты в «Деле»: где слова расходятся с уликами', () => Case.keyDone(epOf()), () => { const n = epOf(), L = CASE_HINTS[n] || ['Открой «Расследование» → «Дело» и сравни карточки.'], k = 'casehint_' + n; const i = G.s.seen[k] = Math.min(L.length - 1, (G.s.seen[k] == null ? -1 : G.s.seen[k]) + 1); return L.slice(0, i + 1).join(' '); }),
   ];
 }
 const askQ = (qid, text, hint) => Q(text, () => { const q = CHAT_Q.find(x => x.id === qid); return q.ev ? Ev.has(q.ev) : q.flag ? Flags.has(q.flag) : !!G.s.seen[qid]; }, hint || 'Открой телефон → «Сообщения» → выбери человека и задай вопрос.');
-const ALIBI7 = ['tigran', 'taras', 'andrey', 'kirill', 'sasha', 'dima', 'nikita'];
+const ALIBI7 = ['mark', 'tigran', 'taras', 'andrey', 'kirill', 'sasha', 'dima', 'nikita']; // все восемь, включая Марка
 
 const EPISODES = {
   1: {
@@ -2126,11 +2291,12 @@ const EPISODES = {
     objectives: [
       Q('Что-то на лице… Найти зеркало', () => Flags.has('mirror_used'), 'Зеркало висит в квартире справа, у стены.'),
       Q('Написать Варе', () => Flags.has('phone_tried'), 'Телефон лежит на журнальном столике у дивана.'),
+      Q('Лечь спать — Варя, наверное, скоро вернётся', () => Flags.has('morning'), 'Убери телефон и подойди к кровати справа.'),
       Q('Ждать новостей', () => Flags.has('mark_msg'), 'Пройдись по квартире, осмотрись. Кто-нибудь обязательно напишет.'),
       Q('Доехать до офиса на 36 автобусе', () => Flags.has('office_unlocked'), 'Выйди из дома через дверь слева. Остановка 36 — правее по улице.'),
       Q('Поговорить с Марком', () => Flags.has('mark_interrogated'), 'Марк ждёт у ресепшена в центре холла.'),
       Q('Посмотреть записи камер вместе с Марком', () => Ev.has('cam_enter') && Ev.has('cam_bag'), 'Прокручивай запись и сохраняй кадры, где в холле кто-то появляется. Запись можно открыть снова — у мониторов ресепшена.'),
-      Q(() => `Узнать у всех, где они были вчера вечером (${ALIBI7.filter(x => Flags.has(x + '_alibi')).length}/7)`,
+      Q(() => `Узнать у всех, где они были вчера вечером (${ALIBI7.filter(x => Flags.has(x + '_alibi')).length}/${ALIBI7.length})`,
         () => ALIBI7.every(x => Flags.has(x + '_alibi')),
         () => { const left = ALIBI7.filter(x => !Flags.has(x + '_alibi')); return 'Ещё не спросил: ' + left.map(x => `${CHARS[x].name} (${WHERE[x]})`).join('; ') + '.'; }),
       Q('Дождаться, пока все уйдут — часы в холле', () => false, 'Большие часы висят на стене холла, наверху по центру.'),
@@ -2226,8 +2392,9 @@ const EPISODES = {
   10: {
     title: 'Гараж', who: 'matvey', date: '18 → 19 октября', short: 'Финал',
     objectives: [
-      Q('Выйти из офиса и доехать на метро', () => Flags.has('metro_done'), 'Выход из офиса — внизу по центру 1 этажа. Оттуда — метро.'),
-      Q('Дойти до гаража — налево, за ворота ГСК', () => Flags.has('at_garage'), 'От метро иди налево по улице, мимо домов, к воротам гаражного кооператива.'),
+      Q('Выйти из офиса', () => Flags.has('left_office') || Flags.has('metro_done'), 'Выход из офиса — внизу по центру 1 этажа.'),
+      Q('Доехать на метро до гаражей', () => Flags.has('metro_done'), 'Вход в метро — справа от бизнес-центра, под красной «Մ».'),
+      Q('Дойти до гаража №13', () => Flags.has('at_garage'), 'Иди налево вдоль ряда гаражей. Тринадцатый — в самом конце.'),
       Q('Открыть файл PROJECT_RUBEN_FINAL на телефоне', () => Flags.has('final_video_unlocked'), 'Телефон — кнопка вверху справа, приложение «Файлы». Подсказка к паролю — в самом файле.'),
       Q('Открыть дверь гаража №13', () => Flags.has('ending_completed'), 'Подойди к двери гаража и открой её.'),
     ],
@@ -2282,11 +2449,11 @@ function floorSide(c, x, y, w, hh, col, kind = 'wood', seed = 1) {
 const APT_W = 240, APT_H = 180;
 const APT_IMG = { day: new Image(), night: new Image() };
 APT_IMG.day.src = 'data:image/png;base64,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';
-APT_IMG.night.src = 'data:image/png;base64,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';
+APT_IMG.night.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAAC0CAMAAACdQlHaAAABgFBMVEU1SURiapQrIiQyJyghGBkaEhMLDBQOESMiKTUoODg8QVpHSWhXVmMmHSAUDxE8PkEvQj1WXHwMCQ5VTFFOU3VKRHYVGScOFTJPREYTDA84L1s1IBwrQWtbVVpEPHAJDiI5FhkpPVYtMU1PS1hEOTw5LjNCOWwoLEQPEhg+R3NWQxoVIR8tRHFKKh6+yOHctFpAWYs+MjMQFzZFUWAaWYQiFFRKKi1PVkVYVSMWQ30nJnwjVlM5GXtPI19NJXwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY6S8ZAAAdyklEQVR42u2dCWPbNtKGVQqAQJqHSMUsZa3SyBQdO06TZu/v/P8/a2cGAAmA4OFs263bILFES4zEh+9cGFDK5rs/2Nh8A/4G/A34G/A34G/A34C/AX8D/gb8Dfgb8Dfg/xww/6MBs/KPBcyj/Lvvyj8GMGFyJr/7rij/CMBl2gO3ZflHAG5KDdw1zW8C+M0vM0p91zUpbOY8KZO2KEv9TOmMN7/UMQwvjVvqzTYvfIk34yMtzaMeB42iLd/c3oLCb5I2Ce5hv9r4lcdnRr/VSw779lbd4tgkSZKmiXerB/yS4sDNJA3skCTm2WG73ymlv20Jm5zlSXEDKqfeP7f3d37Dtw7uTc/RQZln0/FRzYzNzzuKwnsAgOFWsKoA4J/73X4Do0hDwAnPEbgYTkfxuwFuPBSZlJtCcJ5LKbuimTovr3Y0TbOxVZSsA10F4zlQR01T6NFvWONVAidt6rizYIydrkeW53nLivbQNG3b4EjxRm0WdNt2rxM4KR3gouBFWwAw4wUrkrRTI01AUbhH1hb0RnT2yoGBAokT1nUcshJjnMGTUo0yobtYAveXTll0/NqBUzJu0LUA1jzvmCiSpFDJsFR3oO2XpunQpa+v1Yd74KQsE4parGkEKdwWXZvc4EjLMr25QeID+nBxxdvXqbDomAMMsTlnkJXYCbi7LGoJOJEJbLQ3CHwg4PZwfZXAEJQj1gNT1GLovWjU1wNsRmIndrsIN+B+J9LmcGiuxaE9vFYfzkXRG3eBvDnfRujDnB3KnJc/0OBcfKKNtD204MGHw+sFjgxwhOGKsQIyEgfelrNUZor3Byb0RoqorxkY0hArlHFzGMVmHwuWMl6x5sAjlihMmf1+gDegKCBDXs0ZZZqY5Q3LBQCnYNaSeJmoLWD04VcMvNkAF8uYyAsMXwVn7QFNujikTEp8hnMpHYWLAu6a1wuM+RVLKM5AXiZkC0E6T9jhDMAl1lpwMyicpm2DwNfXCwzEmwJyMCYkLoqiBWfuGpaemYKE+C1kD3w+t831nL5mk0bgRFVZMtlIqCxbUTQpS6NEA//gKFwgcPqagTeocKLqEFl0DKgQmEGQRmT4qXvgNj1D1Dof0tds0lplpTFMhA+A06SF7AhWSgMMtUeZpqkCbl49cKHvuvaQnq+QlWSk5oaAWpsoTcBFASb92oHJqLErGncHpXCa4CSYjHrw4RKegxnT7wF4o7vABHy+tgj8gxkDMCh8/p0Aaz+OoYwCk4abNKEIHQAu0t8CsNOvl1/dxneAjchiAIZEfC0wcv3HgYWs63qHk1ZrOL8IsRL4nF7xBiNWTUPUO7WBAsOTmJv+48C1WBxyPfAZbkRdq5OGpw1OJvxIBG5+Ewrv4Zh2gUHC7Gql/EuA01Tudp/Ui4idMp4d+jAC/0oKz7X799iLmeNdDQxueoDi8ZwOryLNBgWtAwL/GqVlAVX99IEGgS3elygMwJB5jL67Wooe+IyVx/lXAcYGzHS7PxZinvclCjcQl9Je4U87CxiewNPxKwAX7HRi/EXADu9XAH/qTboPD+jDh/bXACbelymsePuxLkpDoQwzg+vBceEBGIl/FYWBl7GvAa5fDAw1R9NMA8MzzS8ftBKl74uA6wmFf3THh2IEfKa6Q7mvfqUhTEOpVTS/NHDP+wJgD7cHLk7vTu+s8WMxLi0RuHReStHuSlVbNsstHloyL4bbFy2oM23Ps8CVmAlYNrAGPb1r1P0mDJyW5fAvxc7OS2uA1eFCIqUba+BKDj00HUL5wLsaeMxrARPphw9ICzdB4DMCl5r50QbGUqtZrrRo/UINt741j/JiP2EbgsyZzgukpSjK2LJJB3gtYGT98OFDQ1u+wtcUfTjVwKWn8A4Vxj7tosL5n0LjIp9Z/fxcP4sp4ELZszGITRaVZcZkMQsc4rWBlUmTzmOFNXAZBsbSA2rLxa4lJ+Cffrr86aMNXMvnZ8kkAYdfgTUnNdCgI7bJWHlzU5ZmTSgIHOT1gd9NAWuT7i8gJJu2gFOIWud06QoAAH56+gnG08enAfnj5fki5TP8kZPAg/+SDxPwDTLLzGa2gMO8a4EhYB2uFLMwKNMwPvxJVR4E3CybNOGqMSBfLpIBcD0JDCFriG9o0hqYmNnAPABP8Ho+rHlDwFBo6Zi12xng0pkvrQO+JBffhT9eLuDBzzKe9uEN7yWOIGrZwHgxQsl84CleB/iD4Q0qDGnHLrQcH6ZqGqZLy0ErGTCtrQsErPpS14KLSeDBqF2FSWU5NADmeV3gDxCzmg9hYMizZ7vu2InHx53txClUns1i0LqEwzSN+gImvVlSGIkVsJQh4HUtHvLhk6498O8oaOFCiwP8aAWtXYkz4mZFlA4Cf7x8hFHXcb3CpDXwDQLXibwpbeDYp6vrSWArZgHwuLQsMGZ9D6Ok2+/Fo6D77z/hYxC00usKhR1dLXk/XmqIW4KzFQqDSTMFLCWuCwAwm1dYSr9rWYDAH4Zq+hRISyCyAgY8B5gewTDdnJuXFR4f0ZEvuxyEv0AWlvV80FIF6MkHrt8MwJu4H3iRYBwLGftjrycPZvbwI236CjcNKvy9NYT4bP22TuEA8EXgdck5lB5QfiwDcz4ClrcW8N6jE2FeZdJQyLzTs6YTXWI5NAN94E+ewgAMYW1xudQHhiHx4gqGZdYzAU+aNM044O9YYcukx8X11HRfm0GhTwPi4sv1wG1xhZjlKOwAl2eoPVekpcvF+O1H3Px4EXhBowTiJWDjwC7wvevD47Gmv6H3hOLCEMdFcb1qF/4UBsYrPA4rovRFJd6Pl0QC9Z/qHC8Bg0ILao8tlpaLUfplwMkC8HCCn/FiWRPuwYe/QOExo/D3CNxcF4Hv7+9RYAElMJMw/c3pmuTL5R6OHIGXo/QLFV7dgxFJUidvBuDmrLMS74OWAq6V7OWhuS6VlgUCg6xkx3q2RxNc4EXgaKaWngaufxaTjoW6JlruUfYYF/91zOJ/0cCfLWAKWzgf3i8Aox1fdkKquTxT83kWI+7264Dv69t/E7iA1Jw8q6XUW4nXeBSg8AF8WAFzbiQm2h44PawBRuJcXKwyAn7iSxx3QHx8OfC9XACGIegqDSo6nuk2rq12fAHBGSZCevG4hDIl4by74soSRSc+2DTQ1t9/HjIx+HC84MNkhBqY98wxnIVYfk3QwrQ0Dzwqu6oKZxhiaKZAeSr61fKbcpfcJIxdWwCulcBcWTL5cE0Kf6rXAwNvjiaNQYsqCQYxGoghKcbixcBSAU8aLlRvMjRn+psYGosAKMueGFJTkSTvGHbwHgEQgf9CiBrYODKuES8DAxmVtjLmFz1iAYWlrouWTZoHgScVljuRhIB3NnCSiAH4hoAZwyjNUeAyBTv+hFcAKJNWMnOOChcLwFh4oJaALbk0xIJKQHxY/rzAiUikCC4YW0tq8FKJrXAi8doQxjBKP/75kT/WHGD5Z/6IRTBPOa9V6wWjdLOosAIWeGuIVb0rtML79cC1Bg6nJXWdQnD9dCf+pweOCdhSOHnCm79rYP5n+AFizltOwDA+P8LN4yOa9Drgi1R3QhH3sxv4y+OVpSVHYBj3dRhYqIZMGFj89fmf5lMOSmHxBmxZC0zsJ4bLDo+gK2isBH3E2XX5GTXG8agV3q8Avlx6y0b3lcPg8bTCfAwcUjgmWmO54RXyv+7+6Zn0m8Gi8WKn7u8Mlw7Beh9RTEUsRFuWbfqZ7JoUhjy8GhhxY5v1K4CDsyUhhm4bxMcQ8H/txI99y0B6wOjBkJc6KD1SpWxK9/8AYPqQt6KHv/RxrXlglo+7Ebk0qy3wszhb4h4wlpbJACyc1uJOeL+b8d+7/xOJAe4wSj+5wB0rGlwT/4xs6T+UEYMPp2lt2sW41nIomgVgtW+e86kxG7T4WGEX2McLA4vd3/73/4WJFpIlfpRObiAr0SUt9qFRlP6LBXy4ts0CcMxkzLDCmByzCq8AHvVkJ9NS0gPLMfA71qTXNACs4zRlJQReMOnN3owYezF7d9ADmzkfxjdzgd8rYPHVwHtSuLZ4b8ikUeHUAQaThqj9eVD4fMVLAPb7X2T1n4DpzzgPf43Cu17hWLrANAg4PZeP4lGNz+QduAV3n/E+pSv1lhT+94GZC5wQcDKn8K13qSl2qy/CAu6wnHTHqWvO18O5nOnno0kDcDGnMLz96v6Dt6sGDs2WJGaRKeB48qravs0Jeemm9i46fvelwdXSssZFtFLgWhoadE0awyP4WWK8+BBmxDPAEj9vvZJ3y9xuT5+H2SgPvwGnmwCuRRxUByaIsQP8/r7nvVAavrYInKb2d8y0rf2bAm7ngDHGrpRYnLxdHWCmgBMkfoNLLUFgNdXvC1e0bpoL01JE73p7rDxurGvJLxSkr4cU+9IJPJW2+F01LZwG+JOm9GFx+ooZ8PL5ngd+dnMlcO7v6pg0UyaNa8N6vZT7wIa2b8xrYNYDx33nnrV21JJUSRcH8mGM2C3AJoSbJPRZcbwxwLN5CZcYLDtloE9RFJLu1M9g/TkXLAjMbeB+gdgDHsTdG+Jn17r7dibswDofGBUmYDVDTm5uzGT55kZPMjRwOwdcQPW42eu+/6ZgeEUPXdXD9X2eGBffg8CxD8y9jscEsEbSvHuFjHMxUbkxq9TAWFxKC/hN8q5TCqdyPPS8Dlt4S8Cs47jgXRRQsrDcXuI2Iz8eK4EXigjYttfG9z4wd4HJ/ON9z6puhtKGFtXcDz6gaVElFDulR02FZXFtzujD0yUhxKw1PnzE8kw3ZycHA0vIYVcfGP50pxng/aZXFrXUzUo1Kr+Zt8eVFQN8MwCrSroAWgXsl4IvAN6LK37KPGJsBlYRMw5pSdBLqWpTA/PuxMPA2lNQ19NJMzGGn0eBH1mPp2lYYJWxwkAnlrKfDXfvus4AT9Ds1ync8bxaglXjuIVdDTAO4uTsdOIsBMzNnsh7IuSKS/kTaPuEd7VkzM3EHMhSOE+oMGfuU4x3jfJhO47sra39ntrwBBzPJFcgWcXLqygnhfdmxjEAjxQWQpk0iSW4voANdga16sTccDEGbgVKjJ//zzL82DsN3MRSWgNLCZka0wfc7yXmFqxGB+BuDpj1wEyS0rKbAsY8TAa3AngrwaS1vkwDw87YfnxChX+SCdxXAWAplA/jBP14PKqEAb4jSOE2TWNZQkhOJIDjRik3GKZhM4YUrE16ATgv+3INC1IzARseLdO2pTVUoQPGArDMszzhaldwW17Be+AiO/fSiacwwzUBsHPUjVXHI/HCDYAzdiwU8BnmySW6tazxq5bK5I35yqUCgQeThgwAgdZcJxtbUbri+uv/YLT4DYBmdlmmw0gkKIw+PAydljgbAbOKMQ0snADhxCk/aFW6UlXAecScxa4jRmm8TkveJ++xYH8PG1Le3av12fv3sjPAHYbujWi6IctGYgDOKxRTlaJFMgDn5sE2UcAcgeMRsOppMUfhCtIomXShsx0L5AHmR2lzdIKAMxsY3rso8OPSaQqcBhIocU0XTwBspgQMkbqAKrV/Z9Mp2Ou0RMBJqdQtFF9v0kTcqgcJWASBmQ+c5ByBIVP0GYD1N2G50YX7EwHAEDKo7FGib+HBAi8NBmABwPWO+kj37+EXKZL3NQGfNXCH8xD/DAvjYQgsy/4bLVtgyweFU/11lwScB4BJvVHQkvKGFI77y8z15ec0Nar0fNDrAahaVuC1jgB8VNKqZfoMDrizgHeo7A4UFneJ3CXvBQKXPTAk4hg9n+dHdQCwKeMRMJXfAzBfDTyO0ljdK+BKT/8qhaqHQt+Nlkz1VBFXtI7KpA1wdnSBwax3oHBN9wQsjMJth9fEsihz1ruZ6IHhLJG7tsZladk9Vw/qrzuFm7sk5MNhYFVpYRImvGo8jtV4jbjKcV+6bs0o3I+sGoDv3++wy4DAOwS+VwobH0bgGLlElavMdgSJc8owUBTkZaKAVZTGmeYNfdksPtjiWaCHC9gL8qYFHBtgPgucA8XRH3gII2B8ohJHA3zM+eAPI+B7BSxCCtOFXuD+Q5znlTZOAObIpkgRlmbWChg17x9OkqfbpzshLGC2CBxrYHXQKKy6pUdGnxKnfUReaWAor4xRZmDYBNwBcK2A3/fAArZruBuAsZeQ5UJ/xxqWxRUXaiae35XI5o3bp8CDQHx7Z0u8CBwb4Ep7r23bogq0tSob2ElLDHz43AMLG3hHwDpKXzVwwaBaIVZ9jLTSsM8Zqvn29m7VeHi4k3jyPB/WwNwHjgfgyp2vq7udP1dChw8DMwSGQtpWuCbgCwHvFHDbqCYeVB4QnCI8PGGA1eEIUd6+aLyVQ9NiLTDKazoTZtk5juPx9cQQIyDMOMC8v8oGgVHhs3SA7w2wlPg9Hq0FrI7OARZZECo4krfk2pZRrwPmnsIhVkvhAVgpe9RpCYFTVPhsKSwt4PcE3FCLB1sp+OVq1txWmfRRC/zw1iN+ekLEJ7p7gIGP4DY8d1cMwKZ2okprFhhohuW6wNdaEG8A2MirgNMvVFr2QcsBrvETD02hgSFKC2rQqQ/eVQQsWGJZNDqpp+nTgxpvDXCSvL0Txqb5OwMcKYWTGYXt66XDAuMzFnA+XDPWKwzAByst3WvgRCuMwNfDAdcPEbg6Uo1F2U4DDx4M8ehhZM4JsSpgBQ7Ab3uj1i0e/TnNSYU5Bt94FbDjw5is+0wMhRKmpS9Nq4Hxo9IE/J4UxkgNdUdLJt10SmFmrufGCSqZeaJNGJQM+vCTWoR/eADQXus78kMAzvvy/KuAqxGvA5xjHlYjinA+3BVQJTftwShMwDsClkphBCaTRoV5Hlk+DHkYanWmATHpBkMVmvGDPZ4egBwkhtAbAE7WAcdTAitgboAtH46w40HAaNLvQVGYDsOPAoa/Qpk0XRShgVUe1scIs7bmxI+uqLYHo+0SMnFiBr7TEoOzS9bhTHG1wpUHHMsgrg5aPJCHlUkT8JkKKwxadKmBxF9gegg/+H1azRf6usfepCFk0c2R49LYcToRKTiQlMbDA5k0/qDmkr6FcAmYOVHaG0N7By37eRKYW8BXZdJ0iYFuAEgFrh4gYDgrxqSV/6qpn+Codz7wQmZ6sFU2DkubmIPNYw8ETImcr1O4B5ZBZqsgcUz6yOzCI1fA2+LQpmDJICopK9W92hwU7pRJ5xUFaJqTwPSB58lsTTX1ONg7Zjh4ScZX+HBufNjnxcU04X6GyYnS1lQW8nCmgtYVbBrghMAfMud7AT4saoxZkJQImKK0+eD7UX3MHYLWMb/9ugHEOLtcAuYQ31UtLajwsFDlEL2kqTR7k66C82Edpa8tOHFftb0X/aXmUk2HjcJJwtR10WpRJ1fHKDA8371oQHkC/wZdQyQLwLhOEssA8CAx1Fuuwgic4wmRFG1yWtTCb/43UfraNvjNtKGB3z10UN8/TMDUU5L0V+RHqrjE7d1XjQcMe8kY+MYDhuAhA5WWlZ/wEhckl+oMVJgstQ9zFd5p8ox2TcBb/GSLnBgQsWDeAEHrCiZdQKVlN1PgiGEqdveVA0PBIjDX1jSeHjqNePd3MmlJ/XgQV1CfQBkkmnTTYak1wZvSf/XQYT3d4SWieZVTK171Hjgmqdx5Mynv4M+aIRC1kvPAN6pfQSYtKt2bdnvSuelGmyKQ1BQVdSvtiyHheFnFi67DH3jdSDVvImfKzOApVsBtpy5LcC6mrCgrHzFiw7nD6fVLRkW9TuYBux2PBJfAMkYmDSBOT52NWvCVak6qoFVhOVkxs5aGJSbnMH1gEfzBTxbhTz+2wwaL8AnYD26yYyatNxVMraLZLQXOAoMPB8mswlQBnwxyAFjmBJyhwqOXlnabdmetOlC2JGCkjfpaWlEQ6vbEGC5F0voc/Mr0vbq1T0U2DG1FVT5zDW1w5GRqFf4fMcdsOAk+MOQE81YE7A3VdUfUqu/Ma+vEbryMssgZ237gIoQ9GP0dnrSfdV4CmCME5i8dmCuQAIGP/YKRA5zIARcwKvLJ/kTTPfAys5xEuDth9gerjsbDIEVbdwBh5P0ewsWRK4VdlnXMGPO4VtiUfwY4sdWdGgwFRWEz9d3gSGxsVzrqZp7ErqVEyMci+wH3fIyBbYx8vNl//5AHfMSVsCzDVV/rOwA4Xi0lF3EzLbIY+hmodUaGF9SWbglo6ytsmzTt6tq8eQ146aMNjJ2Q6njU6064DuKtixxV89wAoyPDEWLrJc9tYFTXChcmdBi1siGcVAo4o8sZCFj9ywnnNXjjRyIPuDdrjHGWrfRBiwqDdVe1HPXyB54oiKUqFrBcVb34WQKWGTKLWAs3/KKdVfS7AH4VFFiL6/vn3IgmLFopTMs5uZmDDRHXypmjKz1UraeShzp6hvkNr8TL7IzgAngs9snIRi474M7rGxyeifcq55RK8WjZ3ODOnR4VfSZksFV4lWO+8YgifTpGMGPSgOuOmScEZr6+0Qh5CFruasYU7PhX8mHyVivybrxjDdpz5NlAYH8/SOtjdjBYyIADJ0Q5hbo5ksJrBucjI7CBzcFtosmRrXgk+FjYNyOFp5/HgtMMqjxGAtNddqRU6kqc2b/rJmnoFJDCTpjJZoHXIkfTBdakOZ8mrTxy3fiIuYhl+jI3RWgKIrcI7U9GNgBjAWj7IIzNNGmWzSua+XFZw04WWHqclgL18DJQ0eAkNVQR+ME0NDBSZ55IUwrPRqSAqIOy0Qvj88ggrNek07oNBJLMi6jkqH3g6BVRf4LAmQuE7jNtsd4cz4s3Hm+0mHiH6iP02gseZOokY17e2RoZ42bKC2Gv0Ztl5gBMVAGTs4gdJ2ZTcGxJ4e1Qa03SbntD9kKHF0oUa7YArHkm3nCAdWoq73y91J57he2X0yl6UV8r849dzQu1m5XheRtEDlSDs4a8vr405ch2fPiR2zuJsigaFWhBD7SA5/NPEIpefHxWnQnhdpQaTz2L2eGk+lon0xlxka1WkOc31rkYeYIrkHuIG/gtW0yro9BtigP/hW2ZJq06ilYKHsDdjjT36+8JOxgUnlM30HOZeMqFWfDgaBXyhLpD2Rn1Rr+1N+bLqE2ULZRM4UlEuLiKnB4Wm58aMic+s9HeE8ZsdRcmQulkYssCQWu7nXiXbEUt6dbJRm29wymaCWZEHEVOeTlxIN4ptuAm5bWf2EwWF6Es7AeELAo5pXbuYPCNVuar6TRgK2hNrtwDziahN4GkM5H9+ug2OvtuHcwCTr1dbPuEMvEcrq55hmCy3crZ+lcf9ma+onHP1zbY1vCQWBjXmliMA7qJv8x9uUDUnHSoYPgJCL3JZqs4u0CbSFiOO00x+qbAAs4cqeZl0EdnqwkvkURD/gr8+83cFNc6lmyhlWOZjW/mtgpsPkcz5rnLivwxmrTOp6eNo142EQgn3jvQSt4OUcDiNk9E81MoS+Ipq+vjWRg5G8VrP55tJrw1VCNM9Sb7Yi8iBx7P5bd2YWCKZK83O4StaJXJOW+eWUV1SB3rMOfS0jgYz2RC9RDzS+JoNP9xmP09o2jaWEfvGTqCcIi29tzMnMWJ2iJUZetcyAItvKC1sHDBGfTPuYOwHsmy7Qq/327cUzkZHIMFX2Cd0NQDfV0Qzfc5fD2mFk4nD83p+gWez7xX2GR+2RQ+R9l2nH5Gx8LYQl8+8ox5vK+7qJaFTvg2QDQ5Hx7nYTuijw0mC5tUyKpMzWEfva8Qs0P21saMqABnjI1z+yhaBcvM7Zzz22lp6/yjuWn/rBNtIx+Yjf+9NVdGNu+8MDNhCs5IXAm3YTta0X/dDDONcJgK23XA0MiirVXuaCS7Pf+zF8gHcGUD4VXXgXe73JbKJqXehEKHe3anMlogFgUgWGT9FuB17Z+NJ76+I81U16FJO+me+cCTGVZtZJEMzKudyaCqC3Ury8a17qzprul5Da/KtFFPzXz9RY51Y+hO2cB4xNlsbo+y6ZInGto6ah3f8mLPcG176Pdk/XKa48TjWOL2StfgZn3DOeuhN+Pm9dDWyYZDzMKuPE6uSKCaFxaF3vQaX5FzHpxefOCKgtkiaL4ctY9947flJlq+23GNN1RydjOr59saznBx5ey6nSy8/N74qCcyW2c4uWfrTA9D75M5HZBt5p4F27zWMlizIt2WXmhuji5UtOxqlEi9RtTgCH4jPpvvLgxHKp239GtH03pfXFzog9Zif8ubEYx62zMtkW0IGH75F4X7Tcbxo429AAAAAElFTkSuQmCC'; // та же комната, что днём, — ночной свет
 const aptReady = () => Promise.all(Object.values(APT_IMG).map(im => im.decode ? im.decode().catch(() => { }) : Promise.resolve()));
 function drawAptImg(c, night) { const im = APT_IMG[night ? 'night' : 'day']; if (im.complete && im.naturalWidth) c.drawImage(im, 0, 0); else drawApt(c, APT_W, APT_H, night); }
 // координаты предметов комнаты (днём и ночью картинки чуть сдвинуты)
-const aptPt = () => nightApt() ? { tv: [32, 62, 26, 19], phone: [147, 115], mon: [57, 101] } : { tv: [27, 52, 33, 19], phone: [148, 107], mon: [55, 94] };
+const aptPt = () => ({ tv: [27, 52, 33, 19], phone: [148, 107], mon: [55, 94] });
 function drawApt(c, W, H, night) {
   const F = 92;
   R(c, 0, 0, W, 8, '#14161c');
@@ -2320,7 +2487,8 @@ function drawApt(c, W, H, night) {
   R(c, 0, 8, W, 1, '#0d0e12');
 }
 /* ---------------- Улица ---------------- */
-const STREET_W = 1500;
+const STREET_W = 1400;
+const ostNight = () => Time.isNight() || G.s.episode >= 10;
 function drawStreetFar(c, W, H, night) {
   const g = c.createLinearGradient(0, 0, 0, H); if (night) { g.addColorStop(0, '#05070e'); g.addColorStop(1, '#1a1a2e'); } else { g.addColorStop(0, '#8a9aae'); g.addColorStop(1, '#c8ccd2'); }
   c.fillStyle = g; c.fillRect(0, 0, W, H);
@@ -2341,32 +2509,55 @@ function smallHouse(c, x, w, base, col, roof, night, seed, door) {
   else win(x + w - 26, top + 60);
   R(c, x - 4, base - 2, w + 8, 2, '#3a3028');
 }
+// армянская подпись на вывеске (пиксельный шрифт армянских букв не знает)
+function armSign(c, txt, x, y, col, px = 12) { c.save(); c.fillStyle = col; c.font = `bold ${px}px "Noto Sans Armenian","Arial",sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(txt, x, y); c.restore(); }
 function drawStreet(c, W, H, night, ep) {
   const SW = 140;
-  // ГСК — гаражный кооператив
-  R(c, 0, 70, 250, 70, night ? '#12141a' : '#5a6068');
-  for (let i = 0; i < 5; i++) { const x = 8 + i * 40; R(c, x, 88, 34, 52, night ? '#22262e' : '#6a727c'); R(c, x + 2, 92, 30, 46, night ? '#2c313a' : '#7d8794'); for (let j = 0; j < 46; j += 3) R(c, x + 2, 92 + j, 30, 1, night ? '#262a32' : '#6f7884'); }
-  for (let x = 0; x < 250; x += 24) R(c, x, 100, 3, 40, '#555b66'); R(c, 0, 100, 250, 2, '#6a727c'); for (let x = 0; x < 250; x += 4) R(c, x, 102, 1, 38, night ? '#2a2e36' : '#8a929c');
-  const open = ep >= 10; R(c, 196, 96, 50, 44, open ? (night ? '#0a0b10' : '#3a3e48') : '#3a3e48'); if (!open) for (let x = 198; x < 246; x += 4) R(c, x, 98, 2, 42, '#5a626c');
-  R(c, 186, 78, 74, 14, '#1a2a4a'); ptext(c, 'ГСК СЕВЕРНЫЙ', 223, 82, '#cfd8e8', 1, 'center');
-  // дома
+  // соседские домики — тихая улочка в Кентроне
+  smallHouse(c, 10, 110, SW, night ? '#5a4a42' : '#c8a88a', '#5a2a22', night, 3, false);
+  smallHouse(c, 146, 104, SW, night ? '#3e4a5a' : '#9ab0c0', '#3a3a44', night, 5, true);
+  R(c, 140, SW - 20, 2, 20, '#3a3028');
   smallHouse(c, 280, 120, SW, night ? '#4a5a6a' : '#8aa0b4', '#7a3a2a', night, 11, true);   // дом Рубена
   R(c, 266, SW - 14, 4, 14, '#5a4030'); for (let x = 266; x < 412; x += 8) R(c, x, SW - 12, 5, 12, night ? '#3a3226' : '#c8b490'); // штакетник
   R(c, 412, SW - 22, 8, 10, '#3a5a8a'); R(c, 415, SW - 12, 2, 12, '#333'); ptext(c, '7', 416, SW - 20, '#fff', 1, 'center');
+  R(c, 292, SW - 76, 40, 11, '#1a4a8a'); outlineRect(c, 292, SW - 76, 40, 11, '#e8eef8'); armSign(c, 'Արամի 7', 312, SW - 70, '#fff', 8);
   smallHouse(c, 460, 110, SW, night ? '#5a4a3e' : '#c8b08a', '#3a4a3a', night, 17, false);
-  // аптека
-  R(c, 620, 64, 150, 76, night ? '#d8dcd8' : '#eef0ec'); R(c, 620, 64, 150, 3, '#3a7a4a'); R(c, 632, 92, 70, 48, night ? '#cfeee0' : '#a8c8b8'); R(c, 712, 100, 24, 40, '#2a3a30'); R(c, 714, 102, 20, 38, '#9ac8b0');
-  R(c, 640, 70, 110, 16, '#1e5a36'); R(c, 646, 73, 10, 10, '#fff'); R(c, 649, 71, 4, 14, '#55e07a'); R(c, 644, 76, 14, 4, '#55e07a'); ptext(c, 'АПТЕКА «ЗДОРОВЬЕ»', 700, 75, '#fff', 1, 'center');
-  // магазин «Մթերք»
-  R(c, 800, 70, 140, 70, night ? '#3a3028' : '#b89a78'); R(c, 800, 68, 140, 4, '#5a3a22'); R(c, 812, 96, 64, 44, night ? '#f4d39a' : '#d8c8a8'); for (let i = 0; i < 5; i++) R(c, 816 + i * 12, 104, 8, 30, ['#e3343a', '#f4d35e', '#55c46a', '#f49ac1', '#3a7bd5'][i]); R(c, 886, 100, 24, 40, '#4a3022'); R(c, 888, 102, 20, 38, '#6a4430');
-  R(c, 820, 74, 100, 18, '#7a1a1a'); c.save(); c.fillStyle = '#f4d35e'; c.font = 'bold 13px "Noto Sans Armenian","Arial",sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('Մթերք', 870, 83); c.restore();
+  // аптека — первый этаж обычного домика
+  smallHouse(c, 620, 130, SW, night ? '#c8ccc4' : '#e8ece4', '#2a5a3a', night, 19, true);
+  R(c, 628, SW - 52, 84, 15, '#1e5a36'); R(c, 632, SW - 49, 9, 9, '#fff'); R(c, 635, SW - 50, 3, 11, '#55e07a'); R(c, 631, SW - 46, 11, 3, '#55e07a'); armSign(c, 'Դեղատուն', 676, SW - 44, '#fff', 11);
+  // магазин «Մթերք» — тоже домик, витрина внизу
+  smallHouse(c, 800, 130, SW, night ? '#4a3a30' : '#c8a07a', '#5a2a1a', night, 21, true);
+  R(c, 808, SW - 52, 84, 15, '#7a1a1a'); armSign(c, 'Մթերք', 850, SW - 44, '#f4d35e', 12);
+  R(c, 810, SW - 34, 50, 32, night ? '#f4d39a' : '#d8c8a8'); for (let i = 0; i < 4; i++) R(c, 814 + i * 11, SW - 28, 8, 24, ['#e3343a', '#f4d35e', '#55c46a', '#3a7bd5'][i]);
   smallHouse(c, 980, 120, SW, night ? '#4a4a5e' : '#a8a0c0', '#5a2a2a', night, 23, false);
-  // остановка и метро
+  // остановка 36
   R(c, 1150, 96, 3, 44, '#555'); disc(c, 1151, 92, 9, '#1a5aa0'); disc(c, 1151, 92, 7, '#fff'); ptext(c, '36', 1151, 90, '#1a5aa0', 1, 'center');
   R(c, 1170, 100, 90, 3, '#9aa3ad'); R(c, 1172, 103, 2, 37, '#9aa3ad'); R(c, 1256, 103, 2, 37, '#9aa3ad'); R(c, 1176, 104, 78, 26, 'rgba(160,200,220,.2)'); R(c, 1190, 124, 50, 3, '#3a3e48');
-  R(c, 1300, 86, 150, 54, night ? '#1a1d24' : '#5a606a'); R(c, 1300, 86, 150, 4, '#c0392b'); R(c, 1320, 100, 110, 40, '#0a0b0e'); for (let i = 0; i < 6; i++) R(c, 1324 + i * 6, 112 + i * 4, 102 - i * 12, 3, '#3a3e48');
-  disc(c, 1375, 76, 10, '#c0392b'); ptext(c, 'М', 1375, 74, '#fff', 1, 'center'); ptext(c, 'МЕТРО', 1375, 92, '#fff', 1, 'center');
-  // тротуар и дорога (без лишних элементов)
+  R(c, 1178, 106, 30, 8, '#e8eef8'); armSign(c, 'Արամի փ.', 1193, 110, '#1a4a8a', 6);
+  smallHouse(c, 1290, 100, SW, night ? '#5a5048' : '#d0b898', '#3a3a44', night, 29, false);
+  // тротуар и дорога
+  R(c, 0, SW, W, 20, night ? '#2a2c32' : '#8a8e96'); for (let x = 0; x < W; x += 16) R(c, x, SW, 1, 20, night ? '#24262c' : '#7e828a'); R(c, 0, SW, W, 1, night ? '#3a3c44' : '#9a9ea6');
+  R(c, 0, SW + 20, W, 3, night ? '#4a4c54' : '#a8acb4'); R(c, 0, SW + 23, W, H - SW - 23, night ? '#15161a' : '#4a4c52');
+}
+// улица у офиса: остановка 36, бизнес-центр и метро (Абовян, Кентрон)
+const OST_W = 900;
+function drawOfficeStreet(c, W, H, night) {
+  const SW = 140, g = c.createLinearGradient(0, 0, 0, SW); g.addColorStop(0, night ? '#05070e' : '#7d8ea6'); g.addColorStop(1, night ? '#1a1a2e' : '#c4cad2'); c.fillStyle = g; c.fillRect(0, 0, W, SW);
+  skyline(c, 0, 30, W, 70, night ? '#10141e' : '#8a94a4', night, 31);
+  // остановка
+  R(c, 70, 96, 3, 44, '#555'); disc(c, 71, 92, 9, '#1a5aa0'); disc(c, 71, 92, 7, '#fff'); ptext(c, '36', 71, 90, '#1a5aa0', 1, 'center');
+  R(c, 90, 100, 90, 3, '#9aa3ad'); R(c, 92, 103, 2, 37, '#9aa3ad'); R(c, 176, 103, 2, 37, '#9aa3ad'); R(c, 96, 104, 78, 26, 'rgba(160,200,220,.2)'); R(c, 110, 124, 50, 3, '#3a3e48');
+  R(c, 98, 106, 34, 8, '#e8eef8'); armSign(c, 'Աբովյան փ.', 115, 110, '#1a4a8a', 6);
+  // бизнес-центр
+  const bx = 230, bw = 300; R(c, bx, 18, bw, SW - 18, night ? '#1e2430' : '#5a6474'); R(c, bx, 18, bw, 3, '#8a96a8');
+  for (let fy = 28; fy < SW - 44; fy += 16) for (let fx = bx + 10; fx < bx + bw - 14; fx += 20) { const lit = night ? ((fx * 7 + fy * 3) % 11) < 3 : 0; R(c, fx, fy, 14, 10, lit ? '#f4d35e' : night ? '#141a26' : '#9ab4cc'); R(c, fx, fy, 14, 1, 'rgba(255,255,255,.15)'); }
+  R(c, bx + 100, SW - 42, 100, 42, '#0e1218'); R(c, bx + 104, SW - 38, 44, 38, night ? '#2a3a4a' : '#7a9ab4'); R(c, bx + 152, SW - 38, 44, 38, night ? '#2a3a4a' : '#7a9ab4'); R(c, bx + 149, SW - 38, 2, 38, '#0e1218');
+  R(c, bx + 90, SW - 50, 120, 8, '#2a2e38'); ptext(c, 'БЦ «ТЕРМИНАЛ»', bx + 150, SW - 49, '#e8eef8', 1, 'center');
+  R(c, bx + 96, SW - 2, 108, 2, '#8a8e96');
+  // метро
+  const mx = 640; R(c, mx, 88, 170, 52, night ? '#1a1d24' : '#5a606a'); R(c, mx, 88, 170, 4, '#c0392b'); R(c, mx + 22, 102, 126, 38, '#0a0b0e'); for (let i = 0; i < 6; i++) R(c, mx + 26 + i * 6, 112 + i * 4, 118 - i * 12, 3, '#3a3e48');
+  disc(c, mx + 85, 74, 11, '#c0392b'); armSign(c, 'Մ', mx + 85, 75, '#fff', 13); R(c, mx + 40, 92, 90, 9, '#0e1016'); armSign(c, 'Մետրո · Метро', mx + 85, 97, '#fff', 7);
+  // тротуар и дорога
   R(c, 0, SW, W, 20, night ? '#2a2c32' : '#8a8e96'); for (let x = 0; x < W; x += 16) R(c, x, SW, 1, 20, night ? '#24262c' : '#7e828a'); R(c, 0, SW, W, 1, night ? '#3a3c44' : '#9a9ea6');
   R(c, 0, SW + 20, W, 3, night ? '#4a4c54' : '#a8acb4'); R(c, 0, SW + 23, W, H - SW - 23, night ? '#15161a' : '#4a4c52');
 }
@@ -2379,9 +2570,8 @@ const CAB_ART = {
     R(c, 36, 10, 40, 60, '#3a2a1c'); shelfSide(c, 38, 12, 36, 5, 4); R(c, 46, 0, 1, 12, '#111');
     R(c, 100, 0, 1, 26, '#222'); R(c, 94, 26, 13, 7, '#d9c38a'); R(c, 95, 33, 11, 1, '#fff2c0');
     floorSide(c, 0, CAB_F, CAB_W, CAB_H - CAB_F, '#3a3028', 'wood', 2);
-    R(c, 112, CAB_F - 46, 22, 26, '#3a3d46'); R(c, 114, CAB_F - 44, 18, 22, '#22252c'); // системник
     deskSide(c, 110, CAB_F, 86, '#2e2a26', null);
-    R(c, 136, CAB_F - 44, 26, 18, '#16171c'); R(c, 138, CAB_F - 42, 22, 14, '#5aa8ec'); R(c, 164, CAB_F - 44, 26, 18, '#16171c'); R(c, 166, CAB_F - 42, 22, 14, '#5aa8ec'); R(c, 147, CAB_F - 26, 4, 4, '#222'); R(c, 175, CAB_F - 26, 4, 4, '#222');
+    R(c, 146, CAB_F - 40, 28, 16, '#2a2c33'); R(c, 148, CAB_F - 38, 24, 12, '#0a1f14'); R(c, 150, CAB_F - 35, 12, 1, '#4aff9a'); R(c, 142, CAB_F - 24, 36, 3, '#3a3c44'); // ноутбук
     R(c, 150, CAB_F - 25, 22, 2, '#3a7bd5'); for (let i = 0; i < 5; i++) ellipse(c, 128, CAB_F - 24 - i * 1.5, 5, 1, '#d8dde3');
     chairSide(c, 150, CAB_F, '#1c1c22');
     doorSide(c, 8, CAB_F, '#3a3a44');
@@ -2436,7 +2626,7 @@ const CAB_ART = {
     wallpaper(c, 0, 0, CAB_W, CAB_F, '#26303e', 8);
     for (let i = 0; i < 3; i++) { R(c, 36 + i * 18, 40, 16, 56, '#5a626c'); for (let j = 0; j < 4; j++) { R(c, 38 + i * 18, 43 + j * 13, 12, 11, '#6a727c'); R(c, 42 + i * 18, 47 + j * 13, 4, 1, '#ccc'); } }
     R(c, 100, 14, 60, 34, '#f4f4f0'); for (let i = 0; i < 6; i++) R(c, 106 + i * 9, 42 - i * 4, 6, 4 + i * 4, '#2c5a8e');
-    R(c, 176, 14, 40, 34, '#f2efe6'); for (let r = 0; r < 4; r++) for (let k = 0; k < 6; k++) outlineRect(c, 178 + k * 6, 18 + r * 7, 6, 7, '#bbb');
+    R(c, 176, 12, 40, 38, '#f2efe6'); octCal(c, 178, 14, 5, 5, [19]);
     floorSide(c, 0, CAB_F, CAB_W, CAB_H - CAB_F, '#3a4250', 'tile', 9);
     deskSide(c, 114, CAB_F, 72, '#a08a6a', '#0a1424'); chairSide(c, 150, CAB_F, '#24304a');
     doorSide(c, 8, CAB_F, '#3a4250');
@@ -2651,20 +2841,31 @@ const LOC = {
     dark: () => nightStreet() ? 0.66 : 0.18, wet: () => nightStreet() || G.s.episode === 1, surface: () => (nightStreet() || G.s.episode === 1) ? 'wet' : 'asphalt', amb: () => nightStreet() ? 'street_night' : 'street_day', ambient: () => nightStreet() ? '#9aaad0' : '#d6deea',
     lights: () => {
       const L = []; for (let x = 120; x < STREET_W; x += 190) L.push({ x, y: 92, r: 56, a: 0.9, col: '#ffac48', cone: 62, cw: 30, fl: x === 690 ? 'dying' : 'warm' });
-      L.push({ x: 667, y: 112, r: 70, a: 0.8, col: '#bfeedd', core: 0 }, { x: 844, y: 116, r: 60, a: 0.85, col: '#ffc878' }, { x: 870, y: 83, r: 40, a: 0.7, col: '#f4d35e', fl: 'neon' }, { x: 380, y: 106, r: 32, a: 0.9, col: '#ffc060', fl: 'warm' }, { x: 1375, y: 80, r: 44, a: 0.9, col: '#e3343a', fl: 'neon' }, { x: 1375, y: 120, r: 50, a: 0.6, col: '#e8f0ff', core: 0 }, { x: 700, y: 75, r: 40, a: 0.8, col: '#45e07a', fl: 'neon' });
+      L.push({ x: 676, y: 112, r: 60, a: 0.7, col: '#bfeedd', core: 0 }, { x: 836, y: 116, r: 56, a: 0.85, col: '#ffc878' }, { x: 850, y: 90, r: 34, a: 0.6, col: '#f4d35e', fl: 'neon' }, { x: 380, y: 106, r: 32, a: 0.9, col: '#ffc060', fl: 'warm' }, { x: 640, y: 92, r: 30, a: 0.7, col: '#45e07a', fl: 'neon' });
       return L;
     },
     objs: [
-      { x0: 190, x1: 250, ly: 70, label: 'Ворота ГСК', act: 'gate' },
       { x0: 360, x1: 394, ly: 84, label: 'Домой', act: 'street_home' },
       { x0: 404, x1: 424, ly: 104, label: 'Почтовый ящик', act: 'mailbox' },
-      { x0: 630, x1: 760, ly: 60, label: 'Аптека «Здоровье»', act: 'pharmacy' },
-      { x0: 810, x1: 930, ly: 62, label: 'Մթերք', act: 'shop' },
+      { x0: 626, x1: 746, ly: 60, label: 'Դեղատուն · аптека', act: 'pharmacy' },
+      { x0: 806, x1: 926, ly: 62, label: 'Մթերք · продукты', act: 'shop' },
       { x0: 642 + 300, x1: 662 + 300, ly: 130, label: 'Кот', act: 'cat', if: () => !Inv.has('cat_photo') },
       { x0: 1140, x1: 1260, ly: 80, label: 'Остановка 36', act: 'bus' },
-      { x0: 1310, x1: 1440, ly: 66, label: 'Метро', act: 'metro' },
     ],
-    exits: { left: { act: 'gate_walk' } },
+    exits: {},
+  },
+  ostreet: {
+    type: 'side', viewH: 180, minW: 300, w: OST_W, H: 180, floor: 156, minX: 20, maxX: OST_W - 20, name: 'Абовяна · у офиса', far: true,
+    key: () => 'ostreet' + ostNight(), drawBg: c => drawOfficeStreet(c, OST_W, 180, ostNight()), drawFar: (c, w) => drawStreetFar(c, w, 180, ostNight()),
+    music: () => G.s.episode === 10 ? 'horror' : 'street', rain: () => G.s.episode === 10,
+    dark: () => ostNight() ? 0.62 : 0.15, wet: () => ostNight(), surface: () => ostNight() ? 'wet' : 'asphalt', amb: () => ostNight() ? 'street_night' : 'street_day', ambient: () => ostNight() ? '#9aaad0' : '#d6deea',
+    lights: () => [{ x: 380, y: 112, r: 70, a: 0.8, col: '#cfe0ff', core: 0 }, { x: 725, y: 74, r: 40, a: 0.9, col: '#e3343a', fl: 'neon' }, { x: 725, y: 122, r: 50, a: 0.6, col: '#e8f0ff', core: 0 }, { x: 200, y: 92, r: 56, a: 0.9, col: '#ffac48', cone: 62, cw: 30, fl: 'warm' }, { x: 580, y: 92, r: 56, a: 0.9, col: '#ffac48', cone: 62, cw: 30, fl: 'warm' }],
+    objs: [
+      { x0: 80, x1: 180, ly: 80, label: 'Остановка 36', act: 'obus' },
+      { x0: 334, x1: 430, ly: 70, label: 'Вход в офис', act: 'office_door' },
+      { x0: 660, x1: 790, ly: 66, label: 'Метро', act: 'metro' },
+    ],
+    exits: {},
   },
   road: {
     type: 'side', viewH: 180, minW: 300, w: ROAD_W, H: 180, floor: 156, minX: 60, maxX: ROAD_W - 16, name: 'Гаражи', key: () => 'road', drawBg: c => drawRoad(c, ROAD_W, 180),
@@ -2972,6 +3173,7 @@ const World = {
       const S = Dbg.skip;
       if (!S.bg) { if (this.far) ctx.drawImage(this.far, Math.round(-cam.x * 0.4) - 0, -cam.y); ctx.drawImage(this.bg, -cam.x, -cam.y); }
       if (!S.deco) { if (L.anim) L.anim(ctx, cam, t); this.drawSideExtras(cam, t); }
+      this.floorRefl(cam);
       const list = [...this.npcs.map(n => ({ n, y: 0 })), { me: 1 }];
       const cs = L.charScale || 1;
       if (L.mirror) { ctx.globalAlpha = L.mirror.ca || 0.25; for (const [pal, e, me] of [...this.npcs.map(n => [CHARS[n.id], n, false]), [CHARS.ruben, this.player, true]]) { const sp = this.charSprite(pal, e, me); ctx.drawImage(Mirror.refl(sp, Math.round(sp.height * 0.65)), Math.round(e.x - sp.width * cs / 2 - cam.x), Math.round(L.floor - cam.y), Math.round(sp.width * cs), Math.round(sp.height * cs)); } ctx.globalAlpha = 1; }
@@ -2982,6 +3184,7 @@ const World = {
       const S = Dbg.skip;
       if (L.behind && !S.deco) L.behind(ctx, cam, t);
       if (!S.bg) ctx.drawImage(this.bg, -cam.x, -cam.y);
+      this.floorRefl(cam);
       const cs = L.charScale || 1;
       if (L.mirror && this.mirrorMask) this.drawReflections(cam, t, cs, Perf.level >= 2);
       const items = [];
@@ -3067,9 +3270,15 @@ const World = {
     }
     ctx.globalCompositeOperation = 'lighter'; ctx.imageSmoothingEnabled = smooth;
     ctx.drawImage(C.g, sx, sy, sw, sh, 0, 0, W, H);
-    if (C.r && Perf.level < 2) ctx.drawImage(C.r, sx, sy, sw, sh, 0, 0, W, H);
     if (dyn.length) { ctx.save(); ctx.translate(-cam.x, -cam.y); for (const l of dyn) this.paintLight(null, ctx, l, l.k, str, dark, Perf.low); ctx.restore(); }
     ctx.globalCompositeOperation = 'source-over'; ctx.imageSmoothingEnabled = false;
+  },
+  // блики ламп на мокром полу рисуются до персонажей — свет ложится под ноги, а не поверх людей
+  floorRefl(cam) {
+    const C = this._lc; if (!C || !C.r || Perf.level >= 2 || Dbg.noLight || !C.sig.startsWith(this.locId + '|')) return;
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.imageSmoothingEnabled = Perf.level === 0;
+    ctx.drawImage(C.r, (cam.x + C.P) / 2, (cam.y + C.P) / 2, View.W / 2, View.H / 2, 0, 0, View.W, View.H); ctx.drawImage(C.r, (cam.x + C.P) / 2, (cam.y + C.P) / 2, View.W / 2, View.H / 2, 0, 0, View.W, View.H);
+    ctx.restore();
   },
   isDyn(l) { return !!(l.dyn || l.fl === 'dying' || l.fl === 'tv' || l.fl === 'neon' || l.fl === 'pulse'); },
   paintLight(d, g, l, k, str, dark, lo) {
@@ -3185,10 +3394,18 @@ PROPS.lift2 = { w: 70, h: 92, wall: true, draw(c, o) {
 } };
 
 // --- фон этажа: окна с городом, плитка, блоки стен ---
-function o2block(c, x, y, w, hh, face = 26) { R(c, x, y, w, hh, '#1c2026'); R(c, x, y, w, 2, '#3a414b'); const f = Math.min(face, hh); R(c, x, y + hh - f, w, f, '#2c323a'); R(c, x, y + hh - f, w, 1, '#46505c'); R(c, x, y + hh - 2, w, 2, '#15181d'); }
+function o2block(c, x, y, w, hh, face = 26) { R(c, x, y, w, hh, '#1c2026'); R(c, x, y, w, 2, '#3a414b'); const f = Math.min(face, hh - 8); R(c, x, y + 2, w, 6, '#262b33'); for (let i = x + 4; i < x + w; i += 12) R(c, i, y + 4, 6, 1, '#303640'); R(c, x, y + hh - f, w, f, '#2c323a'); R(c, x, y + hh - f, w, 1, '#46505c'); R(c, x, y + hh - 2, w, 2, '#15181d'); }
 function o2door(c, x, y, w, hh, o = {}) {
   R(c, x - 2, y - 2, w + 4, hh + 2, '#14171b'); R(c, x, y, w, hh, o.lit ? '#d8b878' : '#3a414b');
-  if (o.lit) { R(c, x + 3, y + 4, w - 6, hh - 8, '#f4d39a'); R(c, x + 5, y + hh - 18, 8, 10, '#6a4a2a'); R(c, x + w - 12, y + 8, 6, 8, '#3a2a1c'); }
+  if (o.lit && !o.lock) { // дверь открыта: за ней видно комнату — стену, пол, мебель
+    R(c, x + 2, y + 2, w - 4, hh - 2, '#d8c49a'); R(c, x + 2, y + 2, w - 4, 2, '#f4e2b8'); const fy = y + Math.round(hh * 0.58);
+    for (let j = fy; j < y + hh; j++) R(c, x + 2, j, w - 4, 1, shade('#8a7458', (j - fy) / (hh * 0.5) * 0.25));
+    for (let k = 0; k < 3; k++) lineP(c, x + 6 + k * (w - 12) / 2, fy, x + 2 + k * (w - 4) / 2, y + hh - 1, '#76634a');
+    R(c, x + 2, fy - 1, w - 4, 1, '#6a5a44');
+    if (/КУХ/.test(o.plate || '')) { R(c, x + 5, y + 14, 9, fy - y - 13, '#eceef0'); R(c, x + 5, y + 26, 9, 1, '#a8aeb4'); R(c, x + 16, fy - 10, w - 20, 10, '#a89070'); R(c, x + 16, fy - 10, w - 20, 1, '#d8c8a8'); }
+    else { R(c, x + 5, fy - 3, w - 10, 6, '#5a4030'); R(c, x + 5, fy - 3, w - 10, 1, '#7a5a40'); R(c, x + 7, y + 10, w - 14, 12, '#2a2e36'); R(c, x + 8, y + 11, w - 16, 10, '#5a8ac8'); }
+    R(c, x - 3, y - 2, 4, hh + 2, '#6a4a2a'); R(c, x - 3, y - 2, 4, 1, '#8a6a44'); // распахнутая створка
+  } else if (o.lit) { R(c, x + 3, y + 4, w - 6, hh - 8, '#f4d39a'); R(c, x + 5, y + hh - 18, 8, 10, '#6a4a2a'); R(c, x + w - 12, y + 8, 6, 8, '#3a2a1c'); }
   else { R(c, x + 2, y + 2, w / 2 - 3, hh - 2, '#4a525c'); R(c, x + w / 2 + 1, y + 2, w / 2 - 3, hh - 2, '#4a525c'); }
   if (o.lock) { R(c, x + w - 6, y + hh / 2, 3, 5, '#c0392b'); } else R(c, x + w - 6, y + hh / 2, 2, 3, '#d4b26a');
   if (o.plate) { const tw = textW(o.plate) + 6; R(c, x + w / 2 - tw / 2, y - 10, tw, 8, '#0d0f13'); outlineRect(c, x + w / 2 - tw / 2, y - 10, tw, 8, '#5a6a80'); ptext(c, o.plate, x + w / 2, y - 9, '#cfe0ff', 1, 'center'); }
@@ -3695,6 +3912,7 @@ UI.suspects = function (focus) {
       h('div', { class: 'kv' }, h('b', {}, 'ОПИСАНИЕ'), ch.desc),
       h('div', { class: 'kv' }, h('b', {}, 'ЗАЯВЛЕНИЕ / АЛИБИ'), Flags.has(id + '_alibi') ? ch.alibi : h('span', { class: 'muted' }, 'Ещё не спрашивал.')),
       h('div', { class: 'kv' }, h('b', {}, 'СТАТУС'), st.map(s => h('span', { class: 'status s-' + s, title: STATUS[s][2] }, STATUS[s][1] + ' ' + STATUS[s][0]))),
+      (() => { const [cs, col] = Case.susState(id); const qs = Object.keys(G.s.qs || {}).filter(q => Case.qState(q) === 'open' && REL.some(r => r.q === q && (EVIDENCE[r.a].who === id || EVIDENCE[r.b].who === id))); return h('div', { class: 'kv' }, h('b', {}, 'В ДЕЛЕ'), h('span', { class: 'cst', style: `color:${col};border-color:${col}` }, cs), qs.map(q => h('div', { style: 'color:var(--amber)' }, '? ' + QUEST[q].t))); })(),
       h('div', { class: 'kv' }, h('b', {}, 'ПРОВЕРЕНО'), verified.length ? verified.map(v => h('div', {}, '• ' + v)) : h('span', { class: 'muted' }, 'Пока ничего.')),
       h('div', { class: 'kv' }, h('b', {}, 'СВЯЗЬ С ВАРЕЙ'), link.length ? link.map(v => h('div', {}, '• ' + v)) : h('span', { class: 'muted' }, 'Не найдена.')),
       h('div', { class: 'kv' }, h('b', {}, `НАЙДЕННЫЕ УЛИКИ · ${evs.length}`), evs.length ? evs.map(e => evMini(e)) : h('span', { class: 'muted' }, 'Нет.')),
@@ -3708,41 +3926,343 @@ function portraitCanvas(ch, opt = {}) { const [c, x] = mk(48, 48); if (ch) x.dra
 function evMini(id) { const e = EVIDENCE[id]; return h('div', { class: 'evmini' }, e.time ? h('span', { class: 't' }, e.time) : null, h('b', {}, e.title), ' — ', e.text); }
 
 /* ---------------- Расследование ---------------- */
-UI.investigation = function (tab = 'ev') {
+/* ---------------- Дело: сопоставление улик ----------------
+   Найти улику и понять её — разные действия. Карточку можно открыть, перетащить на другую (или «Сопоставить с…»),
+   Рубен рассуждает вслух, появляются открытые вопросы. Противоречие — это ещё не вина. */
+const STMT_WHEN = { mark: 'весь вечер дома', tigran: '19:30–21:00 дома', taras: '19:00–20:30 в зале', andrey: 'весь вечер дома', kirill: 'весь вечер в игре', sasha: 'весь вечер дома', dima: 'весь вечер за документами', nikita: 'весь вечер записывал музыку' };
+for (const id in STMT_WHEN) EVIDENCE['st_' + id] = { who: id, title: 'Слова: ' + CHARS[id].name, time: null, claim: STMT_WHEN[id], src: 'Допрос', kind: 'stmt', text: CHARS[id].alibi };
+// номер карточки и глава, в которой она появляется
+const EV_NO = {}; Object.keys(EVIDENCE).forEach((id, i) => EV_NO[id] = String(i + 1).padStart(3, '0'));
+const EV_EP = {}; for (let n = 1; n <= 10; n++) for (const id of (EPISODES[n] && EPISODES[n].grants && EPISODES[n].grants.ev) || []) if (!EV_EP[id]) EV_EP[id] = n;
+for (let n = 2; n <= 9; n++) if (EPISODES[n].who && EVIDENCE['st_' + EPISODES[n].who]) EV_EP['st_' + EPISODES[n].who] = n;
+EV_EP.st_mark = 4;
+
+// t: sup — подтверждает, contra — противоречит, con — связано. key — без этой связки глава не закрывается.
+const REL = [
+  { ep: 1, a: 'varya_left', b: 'cam_enter', t: 'sup', th: ['22:00 — она ушла из дома.', '22:31 — она уже в офисе.', 'Полчаса. Ровно дорога. Значит, поехала туда сразу.'], q: 'q_why_office' },
+  { ep: 1, a: 'cam_enter', b: 'cam_bag', t: 'con', th: ['22:31 — Варя входит. Одна.', '22:47 — кто-то выносит мешок.', 'Шестнадцать минут. Что было внутри этих шестнадцати минут?'], q: 'q_hood' },
+  { ep: 1, a: 'varya_errands', b: 'varya_left', t: 'con', th: ['Весь вечер «бегала по делам».', 'Вернулась в 21:30 — и через полчаса снова ушла.', 'Какие дела бывают в десять вечера в субботу?'], q: 'q_errands' },
+  { ep: 1, a: 'mark_story', b: 'cam_bag', t: 'con', th: ['Марк смотрел трансляцию и видел всё.', 'И написал мне только утром.', 'Почему не позвонил сразу?'], q: 'q_mark_wait' },
+  // Тигран
+  { ep: 2, key: 1, a: 'st_tigran', b: 'tig_wifi', t: 'contra', th: ['«С 19:30 до 21:00 был дома».', 'А телефон отключился от домашнего Wi‑Fi в 20:11. И вернулся в 20:17.', 'Значит, он выходил.', 'Или телефон выходил без него. Но в это я не верю.'], q: 'q_tig_out' },
+  { ep: 2, a: 'st_tigran', b: 'tig_receipt', t: 'contra', th: ['Говорит — никуда не выходил.', 'Чек: 20:14, магазин у его дома.', 'Шесть минут. Энергетик. Ради этого врать?'], q: 'q_tig_why' },
+  { ep: 2, a: 'tig_wifi', b: 'tig_receipt', t: 'sup', th: ['Телефон вне дома: 20:11–20:17.', 'Чек: 20:14.', 'Сходится. Он был в магазине у дома.'] },
+  { ep: 2, a: 'tig_courier', b: 'tig_sasha', t: 'sup', th: ['Курьер обещал быть у подъезда в 20:12.', 'В 20:13 Тигран пишет: «стою у подъезда».', 'Он ждал посылку. Тубус. 30 на 40.'], q: 'q_tig_tube' },
+  { ep: 2, a: 'tig_wifi', b: 'tig_courier', t: 'con', th: ['Вышел в 20:11. Курьер — в 20:12.', 'Он выходил не только за энергетиком.'] },
+  { ep: 2, a: 'st_tigran', b: 'tig_activity', t: 'sup', th: ['Ноутбук работал весь вечер.', 'Это подтверждает, что работал ноутбук.', 'Не что за ним сидел Тигран.'] },
+  // Тарас
+  { ep: 3, key: 1, a: 'st_taras', b: 'tar_gym', t: 'contra', th: ['«В зале с 19:00 до 20:30».', 'Приложение: выход в 20:47.', 'Семнадцать минут. Мелочь.', 'Но зачем врать о мелочи?'], q: 'q_tar_after' },
+  { ep: 3, a: 'st_taras', b: 'tar_bank', t: 'sup', th: ['Чек: 18:52, спортзал.', 'Пришёл он туда правда. Вопрос — когда ушёл.'] },
+  { ep: 3, a: 'tar_andrey', b: 'tar_order', t: 'con', th: ['В 21:02 жалуется на склады на Заводской.', 'Заказ на складе на Заводской — до 21:30.', 'Он забирал что-то крупное. Очень крупное.'], q: 'q_tar_box' },
+  { ep: 3, a: 'tar_dims', b: 'cam_bag', t: 'con', th: ['Коробка 120 на 80 на 80.', 'Мешок на записи.', 'В такую коробку поместится человек.', '…Нет. Не думай так. Это ничего не доказывает.'] },
+  { ep: 3, a: 'tar_gym', b: 'tar_andrey', t: 'sup', th: ['Из зала — в 20:47.', 'В 21:02 — уже у складов.', 'Он поехал туда прямо из зала.'] },
+  // Марк
+  { ep: 4, key: 1, a: 'mark_says_call', b: 'mark_calendar', t: 'contra', th: ['«Она просто звонила».', 'А в календаре — встреча. «ВАРЯ», 19:50.', 'Звонок не записывают как встречу.', 'Марк встречался с ней. И не сказал мне.'], q: 'q_mark_meet' },
+  { ep: 4, a: 'st_mark', b: 'mark_geo', t: 'contra', th: ['«Дома. Весь вечер».', 'Геолокация: 19:48 — сквер на Садовой.', 'Марк выходил. Ровно тогда, когда встречался с ней.'] },
+  { ep: 4, a: 'mark_geo', b: 'mark_flowers', t: 'sup', th: ['19:48 — сквер. 19:51 — цветочный.', 'Он купил цветы по дороге. Для кого?'], q: 'q_mark_flowers' },
+  { ep: 4, a: 'mark_planner', b: 'mark_calendar', t: 'sup', th: ['Ежедневник и календарь говорят одно: 19:50, Варя.', 'Марк записывает всё. Даже то, что скрывает.'] },
+  { ep: 4, a: 'mark_camlog', b: 'mark_story', t: 'sup', th: ['Трансляцию он правда смотрел: 22:30–22:50.', 'Хоть что-то в его рассказе сходится.'] },
+  // Андрей
+  { ep: 5, key: 1, a: 'st_andrey', b: 'and_gps', t: 'contra', th: ['«Весь вечер был дома».', 'Снимок в 20:03 — у гаражей, ГСК «Северный».', 'Его там не должно было быть.', 'Если только он не снимал что-то, что нельзя снимать дома.'], q: 'q_and_garage' },
+  { ep: 5, a: 'and_camera', b: 'and_gps', t: 'sup', th: ['На фотоаппарате — Варя.', 'Метаданные: гаражи, 20:03.', 'Варя была у гаражей. Андрей был рядом.'] },
+  { ep: 5, a: 'and_img', b: 'tar_dims', t: 'con', th: ['На фоне снимка — коробки.', 'Чертёж коробки Тараса.', 'Это та же коробка? Тарас и Андрей — в одном месте?'] },
+  { ep: 5, a: 'and_matvey', b: 'and_gps', t: 'con', th: ['«М.» пишет, что он «сегодня в гараже».', 'Андрей в это же время — у гаражей.', 'Кто такой «М.»?'], q: 'q_m' },
+  // Кирилл
+  { ep: 6, key: 1, a: 'st_kirill', b: 'kir_game', t: 'contra', th: ['«Играл весь вечер».', 'Лаунчер: вышел в 20:12, вернулся в 20:39.', 'Двадцать семь минут.', 'Рейтинг сам себя не поднимает. А вот пропасть можно.'], q: 'q_kir_27' },
+  { ep: 6, a: 'kir_taxi', b: 'kir_game', t: 'sup', th: ['Такси: 20:15 туда, 20:34 обратно.', 'Ровно внутри его 27 минут.'] },
+  { ep: 6, a: 'kir_discord', b: 'kir_taxi', t: 'sup', th: ['20:14 — «Я уже выехал». Варе.', '20:15 — такси.', 'Он ехал к ней. Или по её просьбе.'] },
+  { ep: 6, a: 'kir_bank', b: 'kir_taxi', t: 'sup', th: ['20:21 — «Подарки и сувениры».', 'Такси — в ТЦ «Арбуз».', 'Он что-то купил. И Варя вернула ему деньги.'] },
+  { ep: 6, a: 'kir_tigran', b: 'kir_game', t: 'sup', th: ['Марк: «пропал минут на полчаса».', 'Лаунчер говорит то же самое.'] },
+  // Саша
+  { ep: 7, key: 1, a: 'st_sasha', b: 'sas_taxi', t: 'contra', th: ['«Весь вечер дома. Сериал, чай, плед».', 'Такси в 20:21: дом → «ДекорМаркет» → гаражи.', 'Саша врёт. Саша, который никогда не врёт.'], q: 'q_sas_garage' },
+  { ep: 7, a: 'sas_bank', b: 'sas_taras', t: 'sup', th: ['Дима видел его у «ДекорМаркета».', 'Банк: 20:28, шары, гирлянда, свечи.', 'Это правда был он.'] },
+  { ep: 7, a: 'sas_garage', b: 'and_img', t: 'con', th: ['Фото украшенного гаража — 15 октября.', 'Снимок Андрея — коробки, шарики, гирлянда.', 'Одно и то же место. Его готовили заранее.'], q: 'q_prepared' },
+  { ep: 7, a: 'sas_chat', b: 'sas_taxi', t: 'sup', th: ['Варя: «отвези туда, где договорились».', 'И он отвёз. На такси до гаражей.'] },
+  { ep: 7, a: 'kir_bank', b: 'sas_bank', t: 'con', th: ['Кирилл — «Подарки и сувениры», 20:21.', 'Саша — «ДекорМаркет», 20:28.', 'Один ТЦ. Семь минут разницы.'] },
+  // Дима
+  { ep: 8, key: 1, a: 'st_dima', b: 'dim_xlsx', t: 'contra', th: ['«Проверь историю файла», — сказал он.', 'Проверил. В 20:13 правка с телефона, не с ноутбука.', 'Дима сам предложил проверку, которая его ловит.', 'Или хотел, чтобы я её нашёл?'], q: 'q_dim_phone' },
+  { ep: 8, a: 'dim_bank', b: 'dim_kirill', t: 'sup', th: ['Саша видел его на кассе «Подарков».', 'Банк: 20:17, «Подарки и сувениры».', 'Сходится.'] },
+  { ep: 8, a: 'dim_bank', b: 'kir_bank', t: 'con', th: ['Дима — 20:17. Кирилл — 20:21.', 'Один и тот же магазин подарков.', 'Совпадение? Или очередь?'] },
+  { ep: 8, a: 'dim_note', b: 'sas_bank', t: 'sup', th: ['В «Операции Рубен» — шарики, свечи, гирлянда.', 'Саша купил шарики, свечи, гирлянду.', 'Это один и тот же список.'] },
+  // Никита
+  { ep: 9, key: 1, a: 'nik_meta', b: 'nik_audio', t: 'contra', th: ['«Рубен, если ты это слышишь…»', 'Звучит как последнее сообщение.', 'Но файл создан 14 октября. За три дня.', 'Она записала это заранее. Зачем?'], q: 'q_nik_why' },
+  { ep: 9, a: 'st_nikita', b: 'nik_chat', t: 'contra', th: ['«Записывал музыку. Весь вечер в наушниках».', 'А в 20:47 переписывается с Варей о записи.', 'Музыку он правда записывал. Только не свою.'] },
+  { ep: 9, a: 'mat_msg', b: 'mat_camera', t: 'con', th: ['Матвей зовёт к гаражу.', 'Над гаражом №13 — камера.', 'Мой гараж. Ключ с биркой «13» у меня в кармане.'], q: 'q_garage13' },
+  { ep: 9, a: 'mat_msg', b: 'and_matvey', t: 'sup', th: ['«М.» из переписки Андрея.', 'Матвей. Он был в гараже ещё в субботу.'] },
+];
+REL.forEach(r => r.id = [r.a, r.b].sort().join('|'));
+const REL_BY = {}; for (const r of REL) REL_BY[r.id] = r;
+const QUEST = {
+  q_why_office: { t: 'Зачем Варя ночью поехала в офис?' },
+  q_hood: { t: 'Кто в тёмной толстовке?' },
+  q_errands: { t: 'По каким «делам» Варя бегала весь вечер?', res: ['mark_chat', 'kir_discord', 'sas_chat'] },
+  q_mark_wait: { t: 'Почему Марк не позвонил сразу?', res: ['mark_chat'] },
+  q_tig_out: { t: 'Куда Тигран выходил в 20:11–20:17?', res: ['tig_courier', 'tig_receipt'] },
+  q_tig_why: { t: 'Почему Тигран врёт о шести минутах?', res: ['tig_file'] },
+  q_tig_tube: { t: 'Что было в тубусе 30×40?', res: ['sas_garage'] },
+  q_tar_after: { t: 'Где был Тарас после 20:30?', res: ['tar_andrey'] },
+  q_tar_box: { t: 'Что Тарас забрал со склада?', res: ['tar_dims'] },
+  q_mark_meet: { t: 'Зачем Марк встречался с Варей?', res: ['mark_chat'] },
+  q_mark_flowers: { t: 'Для кого Марк купил цветы?' },
+  q_and_garage: { t: 'Что Андрей снимал у гаражей?', res: ['and_img'] },
+  q_m: { t: 'Кто такой «М.»?', res: ['mat_msg'] },
+  q_kir_27: { t: 'Куда Кирилл пропал на 27 минут?', res: ['kir_taxi'] },
+  q_sas_garage: { t: 'Что Саша вёз к гаражам?', res: ['sas_bank'] },
+  q_prepared: { t: 'Для чего гараж готовили заранее?' },
+  q_dim_phone: { t: 'Где был Дима, когда правил таблицу с телефона?', res: ['dim_bank', 'dim_kirill'] },
+  q_nik_why: { t: 'Зачем Варя записала «последнее» сообщение заранее?' },
+  q_garage13: { t: 'Что в гараже №13?' },
+};
+// гипотезы: статус считается по связкам; «причастен» никогда не подтверждается до финала
+const HYP = [
+  { ep: 2, t: 'Тигран выходил из дома вечером', need: ['st_tigran|tig_wifi'] },
+  { ep: 2, t: 'Тигран причастен к исчезновению Вари', guilt: 1 },
+  { ep: 3, t: 'Тарас ушёл из зала позже и поехал на склад', need: ['st_taras|tar_gym', 'tar_gym|tar_andrey'] },
+  { ep: 3, t: 'Тарас вывез Варю в коробке', guilt: 1 },
+  { ep: 4, t: 'Марк встречался с Варей в 19:50', need: ['mark_calendar|mark_says_call', 'mark_geo|st_mark'] },
+  { ep: 4, t: 'Марк скрывает, что видел на записи', guilt: 1 },
+  { ep: 5, t: 'Андрей был у гаражей в 20:03', need: ['and_gps|st_andrey', 'and_camera|and_gps'] },
+  { ep: 6, t: 'Кирилл ездил в ТЦ по просьбе Вари', need: ['kir_game|st_kirill', 'kir_discord|kir_taxi'] },
+  { ep: 7, t: 'Гараж украшали заранее', need: ['and_img|sas_garage', 'sas_taxi|st_sasha'] },
+  { ep: 8, t: 'Все покупки — по одному списку', need: ['dim_note|sas_bank', 'dim_bank|kir_bank'] },
+  { ep: 9, t: 'Запись Вари сделана заранее', need: ['nik_audio|nik_meta'] },
+  { ep: 9, t: 'Все они действуют заодно', need: ['nik_audio|nik_meta', 'dim_note|sas_bank'], guilt: 1 },
+].map(x => ({ ...x, need: (x.need || []).map(k => k.split('|').sort().join('|')) }));
+const CASE_HINTS = {
+  2: ['Что-то в словах Тиграна не сходится с его же телефоном.', 'Он говорит, что был дома с 19:30 до 21:00. Где в это время был его телефон?', 'Сравни карточку «Слова: Тигран» с журналом Wi‑Fi — перетащи одну на другую.'],
+  3: ['Тарас назвал точное время. Точное время легко проверить.', 'Когда он ушёл из зала на самом деле?', 'Сравни «Слова: Тарас» с приложением спортзала.'],
+  4: ['Марк объяснил запись в ежедневнике. Объяснение и факты расходятся.', '«Она просто звонила». А что записано у него в календаре?', 'Сравни «Она просто звонила» с календарём Марка.'],
+  5: ['Андрей сказал, где был. Его же снимки говорят другое.', 'Где сделан кадр в 20:03?', 'Сравни «Слова: Андрей» с метаданными снимка.'],
+  6: ['«Рейтинг поднялся» — но игра пишет каждую минуту.', 'Был ли Кирилл в игре весь вечер?', 'Сравни «Слова: Кирилл» с историей игры.'],
+  7: ['Саша любит плед и сериалы. Но в тот вечер…', 'Куда ездило такси Саши?', 'Сравни «Слова: Саша» с такси Саши.'],
+  8: ['Дима сам предложил проверить историю файла.', 'С какого устройства правили таблицу в 20:13?', 'Сравни «Слова: Дима» с expenses.xlsx.'],
+  9: ['Голос Вари звучит как прощание. Но когда он записан?', 'Посмотри свойства файла final_message.wav.', 'Сравни метаданные записи с самой записью.'],
+};
+const NO_LINK = ['Нет. Это ничего не доказывает.', 'Не вижу связи.', 'Мало. Одно с другим не сходится и не спорит.', 'Просто два факта. Пока — просто два факта.'];
+const REL_T = { sup: ['ПОДТВЕРЖДАЕТ', '#7be39a'], contra: ['ПРОТИВОРЕЧИЕ', '#ff6b6b'], con: ['СВЯЗАНО', '#f4d35e'], inc: ['НЕ ДОКАЗЫВАЕТ', '#8a90a0'] };
+
+const Case = {
+  made: id => G.s.links.includes(id),
+  keyDone: n => REL.filter(r => r.ep === n && r.key).every(r => G.s.links.includes(r.id)),
+  // заявления появляются, когда записано алиби; старые сохранения догоняют
+  sync() {
+    if (!G.s || !G.s.flags) return; G.s.links = G.s.links || []; G.s.qs = G.s.qs || {}; G.s.insp = G.s.insp || {};
+    for (const id in STMT_WHEN) if (G.s.flags[id + '_alibi'] && !G.s.evidence.includes('st_' + id)) G.s.evidence.push('st_' + id);
+  },
+  qState(q) { const Q = QUEST[q]; const r = (Q.res || []).find(Ev.has); return r ? 'res' : 'open'; },
+  hypState(H) {
+    if (H.guilt) return ['НЕДОСТАТОЧНО ДАННЫХ', '#8a90a0'];
+    const n = H.need.filter(Case.made).length;
+    return !n ? ['НЕ ПРОВЕРЕНО', '#8a90a0'] : n < H.need.length ? ['ЧАСТИЧНО', '#f4d35e'] : ['ПОДТВЕРЖДЕНО', '#7be39a'];
+  },
+  susState(id) {
+    const ls = G.s.links.map(k => REL_BY[k]).filter(r => r && (EVIDENCE[r.a].who === id || EVIDENCE[r.b].who === id));
+    if (ls.some(r => r.t === 'contra' && (r.a === 'st_' + id || r.b === 'st_' + id))) return ['АЛИБИ ПОД ВОПРОСОМ', '#ff6b6b'];
+    if (ls.some(r => r.t === 'contra')) return ['ПРОТИВОРЕЧИЕ НАЙДЕНО', '#ff6b6b'];
+    if (ls.length) return ['СВЯЗЬ НАЙДЕНА', '#f4d35e'];
+    if (Ev.of(id).length > 1) return ['ПРОВЕРЯЕТСЯ', '#9ac8ff'];
+    return ['НЕ ПРОВЕРЕН', '#8a90a0'];
+  },
+  // попытка связать две карточки
+  test(a, b) {
+    if (a === b) return null;
+    const id = [a, b].sort().join('|'), r = REL_BY[id];
+    if (!r) { SND.sfx('paper'); return { t: 'inc', th: [NO_LINK[Math.floor(Math.random() * NO_LINK.length)]] }; }
+    if (Case.made(id)) return { t: r.t, th: ['Это я уже сопоставил.'], old: 1, r };
+    G.s.links.push(id);
+    if (r.q && !G.s.qs[r.q]) G.s.qs[r.q] = 1;
+    if (r.t === 'contra') SND.sfx('contra'); else SND.sfx('link');
+    Game.onChange(); Save.write && Save.write();
+    return { t: r.t, th: r.th, r, fresh: 1 };
+  },
+  unlink(id) { G.s.links = G.s.links.filter(k => k !== id); Game.onChange(); },
+  // прилёт новой улики: карточка в центре → летит к кнопке «Расследование»
+  q: [], busy: false,
+  arrive(id) { this.q.push(id); if (!this.busy) this.next(); },
+  next() {
+    const id = this.q.shift(); if (!id) { this.busy = false; return; } this.busy = true;
+    const e = EVIDENCE[id], fast = this.q.length > 0;
+    const el = h('div', { class: 'evfly' }, h('div', { class: 'k' }, 'НОВАЯ УЛИКА'), h('div', { class: 'no' }, '#' + EV_NO[id] + (e.time ? ' · ' + e.time : '')), h('b', {}, e.title), h('div', { class: 's' }, e.src));
+    document.body.append(el); requestAnimationFrame(() => el.classList.add('in'));
+    setTimeout(() => {
+      const t = $('.hbtn[data-id="inv2"]'); const r = t && t.getBoundingClientRect(), me = el.getBoundingClientRect();
+      if (r && r.width) { el.style.transform = `translate(-50%,-50%) translate(${r.left + r.width / 2 - (me.left + me.width / 2)}px,${r.top + r.height / 2 - (me.top + me.height / 2)}px) scale(.12)`; }
+      el.classList.add('out');
+      setTimeout(() => { el.remove(); if (t) { t.classList.remove('pulse'); void t.offsetWidth; t.classList.add('pulse'); } this.next(); }, 520);
+    }, fast ? 650 : 1250);
+  },
+};
+
+UI.investigation = function (tab = 'case') {
+  Case.sync();
   const tabs = h('div', { class: 'tabs' }); const body = h('div');
-  const T = [['ev', 'УЛИКИ'], ['tl', 'ХРОНОЛОГИЯ'], ['map', 'СВЯЗИ'], ['nb', 'БЛОКНОТ']];
-  let filter = null;
+  const T = [['case', 'ДЕЛО'], ['tl', 'ХРОНОЛОГИЯ'], ['sus', 'ПОДОЗРЕВАЕМЫЕ'], ['ev', 'УЛИКИ'], ['map', 'СВЯЗИ']];
+  let filter = null, scope = G.s.episode >= 10 ? 'all' : 'ep', pick = null, search = '';
+  const ep = Math.min(G.s.episode, 10);
   const show = t => {
-    tab = t; $$('.tab', tabs).forEach(b => b.classList.toggle('on', b.dataset.t === t)); body.innerHTML = ''; const pb = body.parentNode; if (pb) { pb.classList.toggle('cork', t === 'ev'); pb.style.padding = t === 'map' ? '0' : ''; }
-    if (t === 'ev') {
+    tab = t; $$('.tab', tabs).forEach(b => b.classList.toggle('on', b.dataset.t === t)); body.innerHTML = ''; body.style.cssText = t === 'case' ? 'min-height:100%;display:flex;flex-direction:column' : ''; const pb = body.parentNode; if (pb) { pb.classList.toggle('cork', t === 'ev'); pb.style.padding = t === 'map' ? '0' : ''; }
+    if (t === 'case') board();
+    else if (t === 'ev') {
       const fl = h('div', { class: 'evfilter' }); const people = ['varya', ...SUSPECT_ORDER].filter(p => Ev.of(p).length);
+      const inp = h('input', { class: 'evsearch', type: 'search', placeholder: 'Поиск: время, слово, имя…', value: search, oninput: () => { search = inp.value; grid(); } }); inp.addEventListener('keydown', e => e.stopPropagation());
       fl.append(h('button', { class: 'chip' + (!filter ? ' on' : ''), onclick: () => { filter = null; show('ev'); } }, `Все · ${G.s.evidence.length}`));
       for (const p of people) fl.append(h('button', { class: 'chip' + (filter === p ? ' on' : ''), onclick: () => { filter = p; show('ev'); } }, `${CHARS[p].name} · ${Ev.of(p).length}`));
-      body.append(fl);
       const g = h('div', { class: 'evgrid' });
-      const ids = G.s.evidence.filter(id => !filter || EVIDENCE[id].who === filter).slice().reverse();
-      if (!ids.length) g.append(h('div', { class: 'muted' }, 'Улик пока нет.'));
-      ids.forEach((id, i) => { const e = EVIDENCE[id]; g.append(h('div', { class: 'evc' + (G.s.evNew.includes(id) ? ' new' : ''), style: `--r:${((i * 53) % 5) - 2}deg` }, e.time ? h('div', { class: 'time' }, e.time) : null, h('div', { class: 'who' }, CHARS[e.who].name + ' · ' + e.src), h('h4', {}, e.title), e.text, e.status ? h('div', { style: 'margin-top:6px' }, h('span', { class: 'status s-' + e.status, style: 'background:#1d1810' }, STATUS[e.status][1] + ' ' + STATUS[e.status][0])) : null)); });
-      body.append(g); G.s.evNew = [];
+      const grid = () => {
+        g.innerHTML = ''; const s = search.trim().toLowerCase();
+        const ids = G.s.evidence.filter(id => (!filter || EVIDENCE[id].who === filter) && (!s || [EVIDENCE[id].title, EVIDENCE[id].text, EVIDENCE[id].time, EVIDENCE[id].src, CHARS[EVIDENCE[id].who].name].join(' ').toLowerCase().includes(s))).slice().reverse();
+        if (!ids.length) g.append(h('div', { class: 'muted' }, 'Ничего не найдено.'));
+        ids.forEach((id, i) => { const e = EVIDENCE[id]; g.append(h('div', { class: 'evc' + (G.s.evNew.includes(id) ? ' new' : ''), style: `--r:${((i * 53) % 5) - 2}deg;--d:${Math.min(i, 12) * 40}ms` }, e.time ? h('div', { class: 'time' }, e.time) : null, h('div', { class: 'who' }, '#' + EV_NO[id] + ' · ' + CHARS[e.who].name + ' · ' + e.src), h('h4', {}, e.title), e.claim ? h('i', {}, e.claim + '. ') : null, e.text)); });
+      };
+      body.append(fl, inp, g); grid(); G.s.evNew = [];
     } else if (t === 'tl') {
-      body.append(h('div', { class: 'muted', style: 'font-size:13px;margin-bottom:14px' }, 'Вечер субботы, 17 октября. Здесь только то, что подтверждено найденными уликами.'));
+      body.append(h('div', { class: 'muted', style: 'font-size:13px;margin-bottom:14px' }, 'Вечер субботы, 17 октября. Только то, что подтверждено найденными уликами. Красным — то, что спорит со словами.'));
       const wrap = h('div', { class: 'tl' });
+      const conf = {}; for (const k of G.s.links) { const r = REL_BY[k]; if (r && r.t === 'contra') { conf[r.a] = r.b; conf[r.b] = r.a; } }
       const evs = G.s.evidence.filter(id => EVIDENCE[id].time).sort((a, b) => tmin(EVIDENCE[a].time) - tmin(EVIDENCE[b].time));
       if (!evs.length) wrap.append(h('div', { class: 'muted' }, 'Пока пусто.'));
-      for (const id of evs) { const e = EVIDENCE[id]; wrap.append(h('div', { class: 'tle' }, h('div', { class: 'tt' }, e.time), h('b', {}, CHARS[e.who].name + ': '), e.title, h('div', { class: 'src' }, e.src))); }
+      for (const id of evs) { const e = EVIDENCE[id]; wrap.append(h('div', { class: 'tle' + (conf[id] ? ' conf' : '') }, h('div', { class: 'tt' }, e.time), h('b', {}, CHARS[e.who].name + ': '), e.title, h('div', { class: 'src' }, e.src + (conf[id] ? ' · ≠ ' + EVIDENCE[conf[id]].title : '')))); }
+      wrap.append(h('div', { class: 'tle unk' }, h('div', { class: 'tt' }, '??:??'), h('b', {}, 'Варя: '), 'исчезновение', h('div', { class: 'src' }, 'не установлено')));
       body.append(wrap);
+    } else if (t === 'sus') {
+      const g = h('div', { class: 'cslist' });
+      for (const id of SUSPECT_ORDER) {
+        if (!Sus.has(id)) continue; const [st, col] = Case.susState(id);
+        const contra = G.s.links.map(k => REL_BY[k]).filter(r => r && r.t === 'contra' && (EVIDENCE[r.a].who === id || EVIDENCE[r.b].who === id));
+        const qs = Object.keys(G.s.qs).filter(q => Case.qState(q) === 'open' && REL.some(r => r.q === q && (EVIDENCE[r.a].who === id || EVIDENCE[r.b].who === id)));
+        g.append(h('div', { class: 'csrow', onclick: () => { SND.sfx('paper'); UI.suspects(id); } }, portraitCanvas(CHARS[id]),
+          h('div', {}, h('div', { class: 'nm' }, CHARS[id].name.toUpperCase(), h('span', { class: 'cst', style: 'color:' + col + ';border-color:' + col }, st)),
+            h('div', { class: 'cl' }, Flags.has(id + '_alibi') ? 'Говорит: ' + (STMT_WHEN[id] || '—') : 'Ещё не спрашивал.'),
+            contra.length ? h('div', { class: 'cl red' }, '≠ ' + contra.map(r => EVIDENCE[r.a.startsWith('st_') || r.a === 'mark_says_call' ? r.b : r.a].title).join(' · ')) : null,
+            qs.length ? h('div', { class: 'cl q' }, '? ' + qs.map(q => QUEST[q].t).join(' · ')) : null,
+            h('div', { class: 'cl dim' }, `Улик: ${Ev.of(id).length} · Связок: ${G.s.links.filter(k => { const r = REL_BY[k]; return r && (EVIDENCE[r.a].who === id || EVIDENCE[r.b].who === id); }).length}`))));
+      }
+      if (!g.children.length) g.append(h('div', { class: 'muted' }, 'Пока никого.'));
+      body.append(h('div', { class: 'muted', style: 'font-size:13px;margin-bottom:12px' }, 'Статус — не вина. Только то, насколько слова совпадают с фактами.'), g);
     } else if (t === 'map') {
       const c = h('canvas', { id: 'linkcv' }); body.append(c); body.style.height = '100%';
       requestAnimationFrame(() => drawLinks(c));
-    } else if (t === 'nb') {
-      const tb = h('table', { class: 'nbtable' }, h('tr', {}, h('th', {}, 'ИМЯ'), h('th', {}, 'ЗАЯВЛЕНИЕ'), h('th', {}, 'ПРОВЕРЕНО'), h('th', {}, 'СТАТУС'), h('th', {}, 'СВЯЗЬ С ВАРЕЙ')));
-      for (const id of SUSPECT_ORDER) { if (!Sus.has(id)) continue; const evs = Ev.of(id); const st = Sus.statuses(id); tb.append(h('tr', {}, h('td', {}, h('b', {}, CHARS[id].name)), h('td', {}, Flags.has(id + '_alibi') ? CHARS[id].alibi : h('span', { class: 'muted' }, 'не спрашивал')), h('td', {}, evs.map(e => EVIDENCE[e].verify).filter(Boolean).join('; ') || h('span', { class: 'muted' }, '—')), h('td', {}, st.map(s => h('span', { class: 'status s-' + s }, STATUS[s][1] + ' ' + STATUS[s][0]))), h('td', {}, evs.map(e => EVIDENCE[e].link).filter(Boolean).join('; ') || h('span', { class: 'muted' }, '—')))); }
-      body.append(h('div', { style: 'overflow-x:auto' }, tb), h('div', { class: 'nb-hyp' }, notebookThought()));
     }
   };
+  // ---- главная доска
+  const board = () => {
+    const ids = G.s.evidence.filter(id => scope === 'all' || EV_EP[id] === ep || REL.some(r => r.ep === ep && (r.a === id || r.b === id)));
+    const wrap = h('div', { class: 'case' });
+    const head = h('div', { class: 'casebar' },
+      h('button', { class: 'chip' + (scope === 'ep' ? ' on' : ''), onclick: () => { scope = 'ep'; show('case'); } }, ep >= 10 ? 'Финал' : 'Глава ' + ep),
+      h('button', { class: 'chip' + (scope === 'all' ? ' on' : ''), onclick: () => { scope = 'all'; show('case'); } }, 'Всё дело · ' + G.s.evidence.length),
+      h('span', { class: 'sp' }), h('button', { class: 'chip', title: 'Подсказка', onclick: () => UI.hint() }, '?'));
+    const help = h('div', { class: 'casehelp' }, IS_TOUCH ? 'Коснись карточки, чтобы открыть. Тяни за ⠿ на другую карточку — сопоставить.' : 'Нажми на карточку, чтобы открыть. Перетащи одну карточку на другую — сопоставить.');
+    // открытые вопросы
+    const qbox = h('div', { class: 'caseq' });
+    const qids = Object.keys(G.s.qs);
+    if (qids.length) {
+      qbox.append(h('div', { class: 'sect' }, 'ОТКРЫТЫЕ ВОПРОСЫ'));
+      for (const q of qids.sort((a, b) => (Case.qState(a) === 'res') - (Case.qState(b) === 'res'))) {
+        const res = (QUEST[q].res || []).find(Ev.has);
+        qbox.append(h('div', { class: 'qq' + (res ? ' res' : '') }, h('span', { class: 'm' }, res ? '✓' : '?'), QUEST[q].t, res ? h('small', {}, ' → ' + EVIDENCE[res].title) : null));
+      }
+    }
+    // гипотезы текущей главы
+    const hs = HYP.filter(H => scope === 'all' ? H.ep <= ep : H.ep === ep);
+    if (hs.length && G.s.evidence.some(id => EV_EP[id] === hs[0].ep || scope === 'all')) {
+      qbox.append(h('div', { class: 'sect' }, 'ГИПОТЕЗЫ'));
+      for (const H of hs) { const [s, col] = Case.hypState(H); qbox.append(h('div', { class: 'hyp' }, h('span', { class: 'cst', style: `color:${col};border-color:${col}` }, s), H.t, H.guilt ? h('small', {}, ' — противоречие ещё не вина') : null)); }
+    }
+    const grid = h('div', { class: 'cgrid' }); const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); svg.setAttribute('class', 'clines');
+    const area = h('div', { class: 'carea' }, svg, grid);
+    const thought = h('div', { class: 'cthink' }, (() => { const c = portraitCanvas(CHARS.ruben); return c; })(), h('div', { class: 'tx' }, G.s.evidence.length < 2 ? 'Мало. Нужно больше фактов.' : 'Что из этого не сходится?'));
+    const cards = {};
+    if (!ids.length) grid.append(h('div', { class: 'muted' }, 'Улик пока нет.'));
+    ids.slice().sort((a, b) => (EVIDENCE[a].kind === 'stmt' ? -1 : 0) - (EVIDENCE[b].kind === 'stmt' ? -1 : 0) || tmin(EVIDENCE[a].time) - tmin(EVIDENCE[b].time)).forEach((id, i) => {
+      const e = EVIDENCE[id], nl = G.s.links.filter(k => k.split('|').includes(id)).length;
+      const grip = h('span', { class: 'grip', title: 'Тяни на другую карточку' }, '⠿');
+      const c = h('div', { class: 'ccard' + (e.kind === 'stmt' ? ' stmt' : '') + (G.s.evNew.includes(id) ? ' new' : '') + (G.s.insp[id] ? '' : ' unseen'), style: `--r:${((i * 37) % 5) - 2}deg;--d:${Math.min(i, 14) * 35}ms`, tabindex: 0 },
+        h('div', { class: 'top' }, h('span', {}, '#' + EV_NO[id]), e.time ? h('span', { class: 'tm' }, e.time) : null, grip),
+        h('b', {}, e.title), e.claim ? h('div', { class: 'clm' }, e.claim) : null, h('div', { class: 's' }, CHARS[e.who].name + ' · ' + e.src), nl ? h('div', { class: 'ln' }, '⟷ ' + nl) : null);
+      c.dataset.id = id; cards[id] = c; grid.append(c);
+      c.addEventListener('click', () => { if (drag.moved) return; if (pick && pick !== id) { connect(pick, id); pick = null; marks(); return; } inspect(id); });
+      c.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); c.click(); } });
+      const start = ev => startDrag(ev, id, c);
+      grip.addEventListener('pointerdown', start); if (!IS_TOUCH) c.addEventListener('pointerdown', start);
+    });
+    G.s.evNew = [];
+    // нити между уже сопоставленными карточками
+    const lines = (fresh) => {
+      const R0 = area.getBoundingClientRect(); if (!R0.width) return; svg.setAttribute('width', area.scrollWidth); svg.setAttribute('height', area.scrollHeight); svg.innerHTML = '';
+      const k = Scale.z || 1;
+      for (const id of G.s.links) {
+        const [a, b] = id.split('|'); if (!cards[a] || !cards[b]) continue; const r = REL_BY[id]; if (!r) continue;
+        const A = cards[a].getBoundingClientRect(), B = cards[b].getBoundingClientRect();
+        const p = Q => [(Q.left - R0.left + Q.width / 2) / k, (Q.top - R0.top) / k + 4];
+        const [x1, y1] = p(A), [x2, y2] = p(B);
+        const ln = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        Object.entries({ x1, y1, x2, y2, stroke: REL_T[r.t][1], 'stroke-width': 2.5, 'stroke-linecap': 'round', opacity: 0.85 }).forEach(([q, v]) => ln.setAttribute(q, v));
+        if (fresh === id) { const L = Math.hypot(x2 - x1, y2 - y1); ln.setAttribute('stroke-dasharray', L); ln.setAttribute('stroke-dashoffset', L); ln.style.transition = 'stroke-dashoffset .6s ease-out'; requestAnimationFrame(() => requestAnimationFrame(() => ln.setAttribute('stroke-dashoffset', 0))); }
+        svg.append(ln);
+      }
+    };
+    const marks = () => { for (const id in cards) cards[id].classList.toggle('pick', pick === id); };
+    let tq = [], tT = null;
+    const think = (arr, kind) => {
+      clearTimeout(tT); tq = arr.slice(); const tx = $('.tx', thought); thought.className = 'cthink ' + (kind || '');
+      const step = () => { const s = tq.shift(); if (s == null) return; tx.textContent = ''; tx.append(h('span', { class: 'ln' }, s)); SND.sfx('type'); tT = setTimeout(step, Math.max(1400, s.length * 45)); };
+      step();
+    };
+    const connect = (a, b) => {
+      const res = Case.test(a, b); if (!res) return;
+      const lbl = REL_T[res.t];
+      [a, b].forEach(id => { const c = cards[id]; if (c) { c.classList.remove('flash'); void c.offsetWidth; c.classList.add('flash'); c.style.setProperty('--fc', lbl[1]); } });
+      const th = res.t === 'inc' ? res.th : [...res.th]; if (res.fresh && res.r.t === 'contra') th.push('Противоречие — ещё не вина. Но словам больше нельзя верить на слово.');
+      think(th, res.t);
+      if (res.fresh) {
+        const banner = h('div', { class: 'cban', style: 'color:' + lbl[1] + ';border-color:' + lbl[1] }, (res.t === 'contra' ? 'ПРОТИВОРЕЧИЕ НАЙДЕНО' : lbl[0]) + (res.r.q ? ' · НОВЫЙ ВОПРОС' : ''));
+        area.append(banner); setTimeout(() => banner.remove(), 1900);
+        lines(res.r.id);
+        // обновить вопросы/гипотезы/счётчики, не теряя нити
+        setTimeout(() => { const keep = tq.slice(), txt = $('.tx', thought).innerHTML, cls = thought.className; const sc = body.parentNode ? body.parentNode.scrollTop : 0; show('case'); const t2 = $('.cthink', body); if (t2) { t2.className = cls; $('.tx', t2).innerHTML = txt; } if (body.parentNode) body.parentNode.scrollTop = sc; if (keep.length) setTimeout(() => { const T3 = $('.cthink .tx', body); let i = 0; const go = () => { if (!T3 || i >= keep.length) return; T3.innerHTML = ''; T3.append(h('span', { class: 'ln' }, keep[i++])); SND.sfx('type'); setTimeout(go, 1600); }; go(); }, 1300); }, 1200);
+      }
+    };
+    // перетаскивание: мышь — за карточку, палец — за ⠿
+    const drag = { moved: false };
+    const startDrag = (ev, id, c) => {
+      if (ev.button > 0) return; ev.stopPropagation(); const sx = ev.clientX, sy = ev.clientY; let ghost = null, over = null; drag.moved = false;
+      const mv = e => {
+        if (!ghost && Math.hypot(e.clientX - sx, e.clientY - sy) < 6) return;
+        if (!ghost) { drag.moved = true; const R = c.getBoundingClientRect(); ghost = c.cloneNode(true); ghost.className = c.className + ' ghost'; Object.assign(ghost.style, { width: R.width + 'px', left: '0px', top: '0px' }); document.body.append(ghost); c.classList.add('lift'); SND.sfx('paper'); }
+        ghost.style.transform = `translate(${e.clientX - 40}px,${e.clientY - 24}px) rotate(-3deg)`;
+        const t = document.elementFromPoint(e.clientX, e.clientY); const tc = t && t.closest && t.closest('.ccard:not(.ghost)'); const nid = tc && tc.dataset.id !== id ? tc : null;
+        if (over !== nid) { if (over) over.classList.remove('over'); over = nid; if (over) over.classList.add('over'); }
+        e.preventDefault();
+      };
+      const up = () => {
+        removeEventListener('pointermove', mv); removeEventListener('pointerup', up); removeEventListener('pointercancel', up);
+        if (ghost) ghost.remove(); c.classList.remove('lift'); if (over) { over.classList.remove('over'); connect(id, over.dataset.id); }
+        setTimeout(() => drag.moved = false, 30);
+      };
+      addEventListener('pointermove', mv, { passive: false }); addEventListener('pointerup', up); addEventListener('pointercancel', up);
+    };
+    // осмотр карточки
+    const det = h('div', { class: 'cdet hidden' });
+    const inspect = id => {
+      const e = EVIDENCE[id]; SND.sfx('paper'); const first = !G.s.insp[id]; G.s.insp[id] = 1; cards[id] && cards[id].classList.remove('unseen');
+      const ls = G.s.links.filter(k => k.split('|').includes(id)).map(k => { const r = REL_BY[k], o = r.a === id ? r.b : r.a; return h('div', { class: 'dl' }, h('span', { style: 'color:' + REL_T[r.t][1] }, REL_T[r.t][0]), ' — ' + EVIDENCE[o].title, h('button', { class: 'x', title: 'Убрать связь', onclick: ev => { ev.stopPropagation(); Case.unlink(k); show('case'); } }, '✕')); });
+      det.innerHTML = '';
+      det.append(h('div', { class: 'dh' }, h('span', {}, '#' + EV_NO[id] + ' · ' + (e.kind === 'stmt' ? 'ЗАЯВЛЕНИЕ' : 'УЛИКА')), h('button', { class: 'xbtn', onclick: () => det.classList.add('hidden') }, '✕')),
+        h('h3', {}, e.title), h('div', { class: 'meta' }, [CHARS[e.who].name, e.src, '17 октября', e.time].filter(Boolean).join(' · ')),
+        e.claim ? h('div', { class: 'claim' }, 'Утверждает: ' + e.claim) : null, h('p', {}, e.text), ...ls,
+        h('div', { class: 'row' }, h('button', { class: 'btn', onclick: () => { pick = id; marks(); det.classList.add('hidden'); think(['Сопоставить «' + e.title + '» с…', 'Выбери вторую карточку.']); } }, 'СОПОСТАВИТЬ С…')));
+      det.classList.remove('hidden');
+      if (first) think([e.kind === 'stmt' ? 'Его слова. Слова надо проверять фактами.' : e.time ? e.time + '… Запомню.' : 'Запомню.']);
+    };
+    wrap.append(head, help, qbox, det, area, thought); body.append(wrap);
+    requestAnimationFrame(() => lines());
+    const ro = new ResizeObserver(() => lines()); ro.observe(area);
+  };
   for (const [k, n] of T) { const b = h('button', { class: 'tab', onclick: () => { SND.sfx('click'); show(k); } }, n); b.dataset.t = k; tabs.append(b); }
-  const p = this.panel('РАССЛЕДОВАНИЕ', body, { tabs }); this.open(p, 'KeyJ'); show(tab);
+  const p = this.panel('ДЕЛО: ВАРЯ', body, { tabs }); this.open(p, 'KeyJ'); show(tab === 'ev' ? 'ev' : tab);
 };
+
 function notebookThought() {
   // заметка Рубена от первого лица — без готовых выводов
   const n = G.s.evidence.filter(id => EVIDENCE[id].garage).length, v = G.s.evidence.filter(id => EVIDENCE[id].status === 'varya').length;
@@ -3757,22 +4277,47 @@ function drawLinks(c) {
   const W = Math.max(320, box.width / Scale.z), H = Math.max(300, box.height / Scale.z - 4); c.width = W * DPR; c.height = H * DPR; c.style.width = W + 'px'; c.style.height = H + 'px';
   const x = c.getContext('2d'); x.scale(DPR, DPR); x.imageSmoothingEnabled = false;
   x.fillStyle = '#3a2a1c'; x.fillRect(0, 0, W, H); const r = mulberry(5); for (let i = 0; i < W * H / 60; i++) { x.fillStyle = r() < 0.5 ? 'rgba(0,0,0,.12)' : 'rgba(255,255,255,.04)'; x.fillRect(r() * W, r() * H, 2, 2); }
-  const cx = W / 2, cy = H / 2, R0 = Math.min(W, H) * 0.38; const ps = Math.max(44, Math.min(72, Math.min(W, H) / 7));
+  const sus = SUSPECT_ORDER.filter(Sus.has), n = Math.max(1, sus.length);
+  const ps = Math.max(40, Math.min(66, Math.min(W, H) / 6.5)), pw = ps, ph = ps + 18;
+  const cx = W / 2, cy = (H - 20) / 2, RX = Math.max(W / 2 - pw / 2 - 10, 60), RY = Math.max((H - 20) / 2 - ph / 2 - 8, 60);
   const anyGarage = G.s.evidence.some(id => EVIDENCE[id].garage);
-  const nodes = { varya: [cx - (anyGarage ? R0 * 0.25 : 0), cy] }; if (anyGarage) nodes.garage = [cx + R0 * 0.32, cy];
-  const sus = SUSPECT_ORDER.filter(Sus.has); sus.forEach((id, i) => { const a = -Math.PI / 2 + i / Math.max(1, sus.length) * Math.PI * 2; nodes[id] = [cx + Math.cos(a) * R0 * (W > H ? 1.25 : 0.95), cy + Math.sin(a) * R0 * 0.95]; });
-  const thread = (a, b, label, col = '#d8262e') => { x.strokeStyle = 'rgba(0,0,0,.4)'; x.lineWidth = 3; x.beginPath(); x.moveTo(a[0] + 2, a[1] + 3); x.lineTo(b[0] + 2, b[1] + 3); x.stroke(); x.strokeStyle = col; x.lineWidth = 2; x.beginPath(); x.moveTo(a[0], a[1]); x.lineTo(b[0], b[1]); x.stroke(); if (label) { const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2; x.font = '11px IBM Plex Mono, monospace'; const w = Math.min(150, x.measureText(label).width + 10); x.fillStyle = '#f4d35e'; x.save(); x.translate(mx, my); x.rotate(-0.04); x.fillRect(-w / 2, -9, w, 18); x.fillStyle = '#2a2010'; x.textAlign = 'center'; x.fillText(label.length > 22 ? label.slice(0, 21) + '…' : label, 0, 4); x.restore(); } };
+  const nodes = { varya: [cx - (anyGarage ? pw * 0.75 : 0), cy] }; if (anyGarage) nodes.garage = [cx + pw * 0.75, cy];
+  sus.forEach((id, i) => { const a = -Math.PI / 2 + i / n * Math.PI * 2; nodes[id] = [cx + Math.cos(a) * RX, cy + Math.sin(a) * RY]; });
+  const rects = Object.values(nodes).map(([px, py]) => [px - pw / 2 - 4, py - ph / 2 - 4, pw + 8, ph + 8]);
+  const labels = [];
+  const thread = (a, b, label, col = '#d8262e') => { x.strokeStyle = 'rgba(0,0,0,.4)'; x.lineWidth = 3; x.beginPath(); x.moveTo(a[0] + 2, a[1] + 3); x.lineTo(b[0] + 2, b[1] + 3); x.stroke(); x.strokeStyle = col; x.lineWidth = 2; x.beginPath(); x.moveTo(a[0], a[1]); x.lineTo(b[0], b[1]); x.stroke(); if (label) labels.push([a, b, label]); };
   for (const id of sus) {
     const evs = Ev.of(id); const lk = evs.map(e => EVIDENCE[e].link).filter(Boolean); const g = evs.some(e => EVIDENCE[e].garage);
     if (lk.length) thread(nodes[id], nodes.varya, lk[0]);
     if (g && nodes.garage) thread(nodes[id], nodes.garage, null, '#f2b45a');
   }
-  if (nodes.garage && G.s.evidence.some(id => ['and_gps', 'sas_taxi', 'and_camera'].includes(id))) thread(nodes.varya, nodes.garage, 'Варя у гаража?', '#7ab8ff');
-  const polaroid = (pos, img, name, sub) => { const [px, py] = pos; const w = ps, hh = ps + 16; x.fillStyle = 'rgba(0,0,0,.45)'; x.fillRect(px - w / 2 + 3, py - hh / 2 + 4, w, hh); x.fillStyle = '#ece2c8'; x.fillRect(px - w / 2, py - hh / 2, w, hh); x.drawImage(img, px - w / 2 + 4, py - hh / 2 + 4, w - 8, w - 8); x.fillStyle = '#1b1610'; x.font = 'bold 10px IBM Plex Mono, monospace'; x.textAlign = 'center'; x.fillText(name, px, py + hh / 2 - 5); x.fillStyle = '#e3343a'; x.beginPath(); x.arc(px, py - hh / 2 + 2, 4, 0, 7); x.fill(); };
+  if (nodes.garage && G.s.evidence.some(id => ['and_gps', 'sas_taxi', 'and_camera'].includes(id))) thread(nodes.varya, nodes.garage, null, '#7ab8ff');
+  // имя всегда помещается на полароид: шрифт уменьшается, длинное — обрезается
+  const fitText = (t, maxW, big, small) => { for (let f = big; f >= small; f--) { x.font = `bold ${f}px IBM Plex Mono, monospace`; if (x.measureText(t).width <= maxW) return t; } let s = t; while (s.length > 2 && x.measureText(s + '…').width > maxW) s = s.slice(0, -1); return s + '…'; };
+  const polaroid = (pos, img, name, st) => { const [px, py] = pos; x.fillStyle = 'rgba(0,0,0,.45)'; x.fillRect(px - pw / 2 + 3, py - ph / 2 + 4, pw, ph); x.fillStyle = '#ece2c8'; x.fillRect(px - pw / 2, py - ph / 2, pw, ph); x.drawImage(img, px - pw / 2 + 4, py - ph / 2 + 4, pw - 8, pw - 8); x.fillStyle = '#1b1610'; x.textAlign = 'center'; x.fillText(fitText(name, pw - 6, 11, 7), px, py + ph / 2 - 5); if (st) { x.font = '10px sans-serif'; x.textAlign = 'right'; x.fillText(st, px + pw / 2 - 5, py - ph / 2 + 15); } x.fillStyle = '#e3343a'; x.beginPath(); x.arc(px, py - ph / 2 + 2, 4, 0, 7); x.fill(); };
   polaroid(nodes.varya, portrait(CHARS.varya), 'ВАРЯ');
   if (nodes.garage) { const [gc, gx] = mk(48, 48); R(gx, 0, 0, 48, 48, '#1a1c22'); R(gx, 8, 14, 32, 28, '#5a626c'); for (let i = 0; i < 28; i += 3) R(gx, 9, 15 + i, 30, 1, '#4a525c'); ptext(gx, '13', 24, 6, '#f4d35e', 1, 'center'); polaroid(nodes.garage, gc, 'ГАРАЖ'); }
-  for (const id of sus) { const st = Sus.statuses(id); polaroid(nodes[id], portrait(CHARS[id]), CHARS[id].name.toUpperCase() + ' ' + st.map(s => STATUS[s][1]).join('')); }
-  x.fillStyle = 'rgba(240,230,210,.7)'; x.font = '12px IBM Plex Mono, monospace'; x.textAlign = 'left'; x.fillText('красная нить — связь с Варей · жёлтая — связь с местом', 12, H - 12);
+  for (const id of sus) { const st = Sus.statuses(id); polaroid(nodes[id], portrait(CHARS[id]), CHARS[id].name.toUpperCase(), st.map(s => STATUS[s][1]).join('')); }
+  // жёлтые подписи: ищем место на нити, где они не закрывают полароиды и друг друга
+  x.font = '11px IBM Plex Mono, monospace';
+  const placed = [], hit = (A, B) => A[0] < B[0] + B[2] && A[0] + A[2] > B[0] && A[1] < B[1] + B[3] && A[1] + A[3] > B[1];
+  for (const [a, b, label] of labels) {
+    const words = label.split(' '), lines = []; let cur = '';
+    for (const w of words) { const t = cur ? cur + ' ' + w : w; if (x.measureText(t).width > 120 && cur) { lines.push(cur); cur = w; } else cur = t; } lines.push(cur);
+    const lw = Math.max(...lines.map(l => x.measureText(l).width)) + 10, lh = lines.length * 13 + 5;
+    const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L;
+    let best = null, bestScore = 1e9;
+    for (const t of [0.5, 0.42, 0.58, 0.34, 0.66, 0.27, 0.73]) for (const off of [0, 16, -16, 30, -30]) {
+      const mx = a[0] + dx * t + nx * off, my = a[1] + dy * t + ny * off, Rr = [mx - lw / 2, my - lh / 2, lw, lh];
+      if (Rr[0] < 2 || Rr[1] < 2 || Rr[0] + lw > W - 2 || Rr[1] + lh > H - 22) continue;
+      const score = rects.filter(q => hit(Rr, q)).length * 10 + placed.filter(q => hit(Rr, q)).length * 10 + Math.abs(off) / 30 + Math.abs(t - 0.5);
+      if (score < bestScore) { bestScore = score; best = Rr; } if (score < 1) break;
+    }
+    if (!best) continue; placed.push(best);
+    x.fillStyle = 'rgba(0,0,0,.35)'; x.fillRect(best[0] + 2, best[1] + 2, best[2], best[3]); x.fillStyle = '#f4d35e'; x.fillRect(best[0], best[1], best[2], best[3]);
+    x.fillStyle = '#2a2010'; x.textAlign = 'center'; lines.forEach((l, i) => x.fillText(l, best[0] + best[2] / 2, best[1] + 13 + i * 13));
+  }
+  x.fillStyle = 'rgba(240,230,210,.7)'; x.font = '11px IBM Plex Mono, monospace'; x.textAlign = 'left'; const leg = ['красная — связь с Варей', 'жёлтая — с местом', 'синяя — Варя у гаража']; if (x.measureText(leg.join(' · ')).width < W - 20) x.fillText(leg.join(' · '), 10, H - 8); else leg.forEach((l, i) => x.fillText(l, 10 + (i % 2) * (W / 2), H - 22 + (i >> 1) * 13));
 }
 
 /* ---------------- Пауза / настройки / эпизоды ---------------- */
@@ -3822,10 +4367,10 @@ const Desk = {
   open(id) {
     this.id = id; const cfg = DESKS[id]; const el = $('#desk'); el.classList.remove('hidden');
     const cvs = $('#deskCv'); cvs.width = DW; cvs.height = DH; const c = cvs.getContext('2d'); c.imageSmoothingEnabled = false;
-    deskBase(c, cfg); for (const it of cfg.items) if (it.draw) it.draw(c); deskLight(c, cfg);
+    deskBase(c, cfg); for (const it of cfg.items) if (it.draw) { c.save(); c.translate(it.dx || 0, it.dy || 0); it.draw(c); c.restore(); } deskLight(c, cfg);
     $('#desk .dtitle').textContent = cfg.title; $('#desk .dinfo').classList.remove('on');
     const hw = $('#desk .hots'); hw.innerHTML = ''; this.hots = [];
-    cfg.items.filter(it => it.act && it.w).forEach(it => { const b = h('button', { class: 'hot' + (G.s.deskSeen[id + ':' + it.id] ? ' done' : ''), 'aria-label': it.label, onclick: () => this.use(it, b) }, h('span', { class: 'hl' }, it.label)); b.dataset.x = it.x; b.dataset.y = it.y; b.dataset.w = it.w; b.dataset.h = it.h; hw.append(b); this.hots.push([b, it]); });
+    cfg.items.filter(it => it.act && it.w).forEach(it => { const b = h('button', { class: 'hot' + (G.s.deskSeen[id + ':' + it.id] ? ' done' : ''), 'aria-label': it.label, onclick: () => this.use(it, b) }, h('span', { class: 'hl' }, it.label)); b.dataset.x = it.x + (it.dx || 0); b.dataset.y = it.y + (it.dy || 0); b.dataset.w = it.w; b.dataset.h = it.h; hw.append(b); this.hots.push([b, it]); });
     this.sel = -1; this.layout(); SND.sfx('paper'); Input.clear();
   },
   layout() {
@@ -3839,7 +4384,7 @@ const Desk = {
     const a = it.act; SND.sfx('click');
     if (b) { b.classList.add('done'); G.s.deskSeen[this.id + ':' + it.id] = 1; }
     if (a.comp) { Comp.open(a.comp); return; }
-    const info = $('#desk .dinfo'); info.innerHTML = ''; info.classList.add('on'); const low = it.y + it.h / 2 > DH * 0.5; info.classList.toggle('top', low);
+    const info = $('#desk .dinfo'); info.innerHTML = ''; info.classList.add('on'); const low = it.y + it.h / 2 > DH * 0.5; info.classList.toggle('top', true); void low;
     info.append(h('h3', {}, it.label.toUpperCase()), h('div', {}, a.text || ''));
     if (a.mini) { const done = Puzzle.solved(a.mini === 'receipt' ? 'mark_receipt' : a.mini === 'camroll' ? 'and_roll' : a.mini); info.append(h('div', { class: 'row' }, h('button', { class: 'btn', onclick: () => Mini.open(a.mini, () => { info.classList.remove('on'); }) }, done ? 'ПОСМОТРЕТЬ ЕЩЁ РАЗ' : (a.mini === 'receipt' ? 'СОБРАТЬ ЧЕК' : 'ПОСМОТРЕТЬ')))); }
     if (a.flag) Flags.set(a.flag);
@@ -3883,7 +4428,7 @@ const Comp = {
     avc.className = 'avatar';
     if (L.type === 'pass') {
       const inp = h('input', { type: 'text', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', placeholder: '••••••••' });
-      const go = () => { if (inp.value.trim().toLowerCase().replace(/\s/g, '') === L.answer) ok(); else { fail(); inp.select(); } };
+      const go = () => { if ([].concat(L.answer).includes(inp.value.trim().toLowerCase().replace(/\s/g, ''))) ok(); else { fail(); inp.select(); } };
       inp.addEventListener('keydown', e => { e.stopPropagation(); SND.sfx('type'); if (e.key === 'Enter') go(); if (e.key === 'Escape') this.back(); });
       box.append(inp, h('button', { class: 'cbtn', onclick: go }, 'ВОЙТИ'), err);
       setTimeout(() => { if (!IS_TOUCH) inp.focus(); }, 80);
@@ -4084,16 +4629,18 @@ function discordView(root, opts = {}) {
 // история переписки Рубена с друзьями (до 17 октября) — по характерам и обстоятельствам дружбы
 const HIST = {
   mark: [['Рубен, в хойку сегодня?', '11.10 19:30'], ['давай после девяти', '19:31', 1], ['Я опять возьму Британию 🙂', '19:31'], ['опять?', '19:32', 1], ['Не опять, а снова. Лиза передаёт привет', '19:33'], ['И бравл в выходные не забудь', '15.10 22:10']],
-  tigran: [['ахпер, бравл?', '12.10 21:04'], ['го, только одну', '21:05', 1], ['одну катку. как в девятом классе', '21:05'], ['и как в девятом — до трёх ночи', '21:06', 1], ['апнул 30к кубков', '14.10 18:22'], ['красава. ашот вазгенович бы гордился', '18:30', 1], ['он бы снизил оценку за то, что играю на уроке 😄', '18:31']],
+  tigran: [['ахпер, бравл?', '12.10 21:04'], ['го, только одну', '21:05', 1], ['одну катку. как в двенадцатом классе', '21:05'], ['и как в двенадцатом — до трёх ночи', '21:06', 1], ['апнул 30к кубков', '14.10 18:22'], ['красава. ашот вазгенович бы гордился', '18:30', 1], ['он бы снизил оценку за то, что играю на уроке 😄', '18:31']],
   taras: [['братан, водитель опять опоздал. ехал на такси. ЭКОНОМ', '10.10 09:12'], ['держись', '09:20', 1], ['тебе легко говорить', '09:20'], ['как духи, кстати? нравятся?', '13.10 20:41'], ['…очень', '20:55', 1], ['я знал. взял себе ещё два флакона, а то вдруг кончатся', '20:56']],
   andrey: [['го в зал завтра', '09.10 23:01', 1], ['не', '23:01'], ['почему', '23:02', 1], ['я дома', '23:02'], ['ты всегда дома', '23:02', 1], ['вот именно. зачем менять то, что работает', '23:03'], ['алина говорит, я похож на твоего кота', '14.10 12:40'], ['у меня нет кота', '12:41', 1], ['вот и я о том же', '12:41']],
   kirill: [['сегодня ноги', '08.10 07:02'], ['я не могу ходить с прошлого раза', '07:30', 1], ['это не аргумент. в 19:00', '07:30'], ['как пары в мгу?', '13.10 15:10', 1], ['камера выключена — значит пара идёт', '15:12'], ['у меня есть шутка про…', '15:12'], ['не надо', '15:12', 1], ['ладно. приберегу для сервера', '15:13']],
   sasha: [['как там воронеж?', '05.10 18:00', 1], ['стоит. что ему будет', '18:20'], ['помнишь, как мы на физике сидели на последней парте?', '18:21'], ['и физичка думала, что мы списываем', '18:22', 1], ['а мы просто спали 😄', '18:22'], ['ты норм вообще? давно не писал', '14.10 21:10'], ['норм, работа', '21:30', 1], ['береги себя. если что — я тут', '21:31']],
-  dima: [['составил план тренировок на октябрь. тебе тоже', '01.10 08:00'], ['спасибо?', '08:15', 1], ['пн — грудь, ср — спина, пт — саша опаздывает', '08:16'], ['как там алина?', '12.10 20:00', 1], ['отлично. созваниваемся по расписанию', '20:02'], ['вы же ни разу не виделись', '20:02', 1], ['это тоже по плану', '20:03']],
+  dima: [['составил план тренировок на октябрь. тебе тоже', '01.10 08:00'], ['спасибо?', '08:15', 1], ['пн — грудь, ср — спина, пт — саша опаздывает', '08:16'], ['как там алина?', '12.10 20:00', 1], ['виделись наконец! вживую. три месяца переписки — и вот', '20:02'], ['и как?', '20:02', 1], ['лучше, чем в плане. впервые план оказался хуже реальности', '20:03']],
   nikita: [['Servus! как ты?', '07.10 22:40'], ['норм. как вена?', '22:45', 1], ['в понедельник экзамен по теорфизу. Kant hilft nicht', '22:46'], ['а пиво помогает?', '22:46', 1], ['пиво — это категорический императив', '22:47'], ['Prost 🍺', '22:47'], ['приезжай в австрию, покажу, где Шрёдингер пил кофе', '13.10 19:00']],
 };
 
 /* ---------------- Телефон Рубена ---------------- */
+// на экране блокировки — одна дата: та, что сейчас
+const phoneDate = () => G.s.dateOver ? 'понедельник, 19 октября' : G.s.episode === 1 && !Flags.has('morning') && G.s.clock >= '12' ? 'суббота, 17 октября' : 'воскресенье, 18 октября';
 const PHONE = {
   chats() {
     const ep = G.s.episode, L = [];
@@ -4102,16 +4649,18 @@ const PHONE = {
     if (Flags.has('varya_missing')) varya.push(['Варя, ответь, пожалуйста', '18.10 10:31', 1, 1]);
     if (ep >= 5) varya.push(['я знаю, что ты была у гаражей', '18.10 22:25', 1, 1]);
     L.push({ id: 'varya', name: CONTACTS.varya, who: 'varya', msgs: varya });
-    L.push({ id: 'mark', name: CONTACTS.mark, who: 'mark', msgs: HIST.mark.concat(Flags.has('mark_msg') ? [['Рубен. Приходи в офис. Срочно.', '18.10 07:12']] : []) });
+    L.push({ id: 'mark', name: CONTACTS.mark, who: 'mark', msgs: HIST.mark.concat(Flags.has('mark_msg') ? [['Рубен. Приходи в офис. Срочно.', '18.10 06:20']] : []) });
     for (const id of CHAT_PEOPLE) if (!L.find(c => c.id === id)) L.push({ id, name: CONTACTS[id] || CHARS[id].name, who: id, msgs: (HIST[id] || []).slice() });
     if (Flags.has('matvey_message_received') || G.s.phoneNew.includes('matvey')) L.push({ id: 'matvey', name: CONTACTS.matvey, who: 'matvey', msgs: [['Рубен, это Матвей. Надо срочно встретиться. У меня есть кое-что про Варю.', '18.10 23:25'], ['Сегодня. 23:59. Гараж у твоего дома — от метро налево. Только сначала закончи то, что начал.', '23:25'], ...(ep >= 10 && Flags.has('metro_done') ? [['Я на месте. Жду.', '23:50']] : [])] });
     for (const c of L) { const log = (G.s.chat || {})[c.id]; if (log) c.msgs = c.msgs.concat(log); c.ask = chatAvail(c.id).filter(q => !G.s.seen[q.id]); }
-    return L;
+    // чат с новым сообщением — наверх, затем недавние переписки
+    const rank = c => G.s.phoneNew.includes(c.id) ? 0 : (G.s.chatT || {})[c.id] ? 1e6 - G.s.chatT[c.id] : 2e6 + L.indexOf(c);
+    return L.slice().sort((a, b) => rank(a) - rank(b));
   },
   // вопрос персонажу по телефону: ответы приходят по одному
   async ask(q, rerender) {
     G.s.chat = G.s.chat || {}; const log = G.s.chat[q.to] = G.s.chat[q.to] || [];
-    G.s.seen[q.id] = 1; log.push([q.q, G.s.clock, 1]); SND.sfx('click'); rerender();
+    G.s.seen[q.id] = 1; log.push([q.q, G.s.clock, 1]); G.s.chatT = G.s.chatT || {}; G.s.chatT[q.to] = (G.s.chatN = (G.s.chatN || 0) + 1); SND.sfx('click'); rerender();
     for (const a of q.a) { await wait(900 + a.length * 18); log.push([a, G.s.clock]); SND.sfx('ping'); rerender(); }
     if (q.ev) Ev.add(q.ev); if (q.flag) Flags.set(q.flag); if (q.think) UI.think(q.think);
     Game.onChange(); rerender();
@@ -4120,7 +4669,7 @@ const PHONE = {
 UI.phone = function (opts = {}) {
   const scr = h('div', { class: 'scr' }); const ph = h('div', { class: 'ph' }, h('div', { class: 'notch' }), scr, h('div', { class: 'home' }));
   const sbar = () => h('div', { class: 'sbar' }, h('span', {}, G.s.clock), h('span', {}, '▂▄▆ 67%'));
-  const home = () => { scr.innerHTML = ''; scr.dataset.chat = ''; const apps = h('div', { class: 'apps' }); const A = [['msg', 'Сообщения', '#2b5cc4', () => list()], ['discord', 'Discord', '#5865f2', () => discord()], ['files', 'Файлы', '#c0392b', () => files()], ['notes', 'Заметки', '#d4ac0d', () => notes()]]; for (const [id, n, col, fn] of A) { const [c, x] = mk(14, 14); R(x, 0, 0, 14, 14, col); if (id === 'msg') { R(x, 3, 4, 8, 5, '#fff'); R(x, 4, 9, 2, 2, '#fff'); } if (id === 'files') { R(x, 3, 4, 3, 2, '#fff'); R(x, 3, 5, 8, 6, '#fff'); } if (id === 'notes') { R(x, 4, 3, 6, 8, '#fff'); R(x, 5, 5, 4, 1, col); R(x, 5, 7, 3, 1, col); } if (id === 'discord') { ellipse(x, 7, 7, 4, 3, '#fff'); R(x, 3, 4, 2, 2, '#fff'); R(x, 9, 4, 2, 2, '#fff'); P(x, 5, 7, col); P(x, 9, 7, col); } const b = h('button', { class: 'app', onclick: () => { SND.sfx('click'); fn(); } }, c, n); if (id === 'msg' && G.s.phoneNew.length) b.append(h('span', { class: 'unread' })); if (id === 'discord' && SERVER.posts().some(p => p.ev && !Ev.has(p.ev))) b.append(h('span', { class: 'unread' })); if (id === 'files' && G.s.episode === 10 && Flags.has('at_garage') && !Flags.has('final_video_unlocked')) b.append(h('span', { class: 'unread' })); apps.append(b); } scr.append(sbar(), h('div', { class: 'wall' }, G.s.clock, h('small', {}, EPISODES[G.s.episode].date)), apps); };
+  const home = () => { scr.innerHTML = ''; scr.dataset.chat = ''; const apps = h('div', { class: 'apps' }); const A = [['msg', 'Сообщения', '#2b5cc4', () => list()], ['discord', 'Discord', '#5865f2', () => discord()], ['files', 'Файлы', '#c0392b', () => files()], ['notes', 'Заметки', '#d4ac0d', () => notes()]]; for (const [id, n, col, fn] of A) { const [c, x] = mk(14, 14); R(x, 0, 0, 14, 14, col); if (id === 'msg') { R(x, 3, 4, 8, 5, '#fff'); R(x, 4, 9, 2, 2, '#fff'); } if (id === 'files') { R(x, 3, 4, 3, 2, '#fff'); R(x, 3, 5, 8, 6, '#fff'); } if (id === 'notes') { R(x, 4, 3, 6, 8, '#fff'); R(x, 5, 5, 4, 1, col); R(x, 5, 7, 3, 1, col); } if (id === 'discord') { ellipse(x, 7, 7, 4, 3, '#fff'); R(x, 3, 4, 2, 2, '#fff'); R(x, 9, 4, 2, 2, '#fff'); P(x, 5, 7, col); P(x, 9, 7, col); } const b = h('button', { class: 'app', onclick: () => { SND.sfx('click'); fn(); } }, c, n); if (id === 'msg' && G.s.phoneNew.length) b.append(h('span', { class: 'unread' })); if (id === 'discord' && SERVER.posts().some(p => p.ev && !Ev.has(p.ev))) b.append(h('span', { class: 'unread' })); if (id === 'files' && G.s.episode === 10 && Flags.has('at_garage') && !Flags.has('final_video_unlocked')) b.append(h('span', { class: 'unread' })); apps.append(b); } scr.append(sbar(), h('div', { class: 'wall' }, G.s.clock, h('small', {}, phoneDate())), apps); };
   const list = () => { scr.innerHTML = ''; scr.dataset.chat = ''; const body = h('div', { class: 'pbody' }); for (const ch of PHONE.chats()) { const [c, x] = mk(48, 48); x.drawImage(portrait(CHARS[ch.who]), 0, 0); const last = ch.msgs[ch.msgs.length - 1]; body.append(h('div', { class: 'chatrow', onclick: () => chat(ch.id) }, c, h('div', { class: 'l' }, h('b', {}, ch.name), h('p', {}, last ? last[0] : (ch.ask.length ? 'Можно задать вопрос' : '—'))), G.s.phoneNew.includes(ch.id) || ch.ask.length ? h('span', { class: 'unread' }) : null)); } scr.append(sbar(), h('div', { class: 'ptitle' }, h('button', { onclick: home }, '‹'), 'Сообщения'), body); };
   const chat = (id, compose) => {
     scr.innerHTML = ''; const ch = PHONE.chats().find(c => c.id === id); G.s.phoneNew = G.s.phoneNew.filter(x => x !== id);
@@ -4274,7 +4823,7 @@ const Mini = {
 const Game = {
   _saveT: null,
   rotateTip() { if (IS_TOUCH && innerHeight > innerWidth && !G.rotTip) { G.rotTip = 1; setTimeout(() => UI.toast('СОВЕТ', 'Поверни телефон горизонтально — так удобнее играть и лучше видно.'), 1500); } },
-  onChange() { UI.updateHUD(); clearTimeout(this._saveT); this._saveT = setTimeout(() => Save.write(), 400); },
+  onChange() { Case.sync(); UI.updateHUD(); clearTimeout(this._saveT); this._saveT = setTimeout(() => Save.write(), 400); },
   async goto(loc, x, y, dir, opts = {}) {
     if (G.transit) return; G.transit = true;
     if (!opts.instant) { SND.sfx(opts.sound || 'door'); await UI.fade(true, 350); }
@@ -4323,12 +4872,13 @@ const Game = {
     for (const c of g.comps || []) G.s.comps[c] = { unlocked: true };
     for (const p of g.puzzles || []) G.s.puzzles[p] = true;
     for (const q of g.seen || []) G.s.seen[q] = 1;
+    G.s.links = G.s.links || []; for (const r of REL) if (r.ep === k && r.key && !G.s.links.includes(r.id)) G.s.links.push(r.id);
     G.s.flags.morning = true;
   },
   // глава завершается сама, когда собраны все нужные факты — без дня/ночи и поездок домой
   checkChapter() {
     const n = G.s.episode; if (n < 2 || n > 9 || G.advancing || G.mode !== 'play' || UI.busy()) return;
-    if (!EPISODES[n].done()) return;
+    if (!EPISODES[n].done() || !Case.keyDone(n)) return;
     G.advancing = true; UI.think(DONE_THOUGHTS[n], 4.5);
     setTimeout(async () => { while (UI.busy()) await wait(300); G.s.maxEpisode = Math.max(G.s.maxEpisode, n + 1); await this.startEpisode(n + 1); G.advancing = false; }, 5000);
   },
@@ -4350,14 +4900,14 @@ const SAY = {
   poster: () => { Inv.add('hello_friend'); return 'Компьютер. На заставке — «Hello, friend». Варя поставила её на прошлый день рождения.'; },
   window_apt: () => nightApt() ? 'Ночь. В доме напротив горят три окна. Ни в одном нет Вари.' : 'Солнце. Во дворе кто-то выгуливает собаку. Обычный день, которого у меня нет.',
   calendar: () => 'Шкаф. На дверце магнитный календарь. ' + (G.s.episode >= 9 ? '19 октября обведено красным. До него совсем чуть-чуть. Это ведь мой день рождения… Из-за всего этого я про него забыл.' : 'Октябрь. Девятнадцатое обведено красным — день рождения. Сейчас совсем не до этого.'),
-  couch: () => nightApt() ? 'Кровать ещё тёплая. Варя сидела здесь пару часов назад.' : 'Кровать. Без Вари она кажется огромной.',
+  couch: () => G.s.episode === 1 && Flags.has('phone_tried') && !Flags.has('morning') ? (Scenes.morning(), 'Лягу. Пять минут. Она скоро вернётся…') : nightApt() ? 'Кровать ещё тёплая. Варя сидела здесь пару часов назад.' : 'Кровать. Без Вари она кажется огромной.',
   tv: () => nightApt() ? 'Серия закончилась. Автовоспроизведение крутит следующую. Варя бы уже ругалась.' : 'Телевизор выключен. Я больше не могу смотреть Mr. Robot без неё.',
   plant_apt: 'Варин фикус. Я полил его. Надеюсь, правильно.',
-  shop: '«24/7 ПРОДУКТЫ». Энергетики «VOLT» по акции. Где-то я уже видел этот энергетик.',
+  shop: '«Մթերք» — «продукты». Энергетики «VOLT» по акции. Где-то я уже видел этот энергетик.',
   cafe: () => { Inv.add('bus_ticket'); return 'Кофейня. Мы с Варей сидели вон за тем столиком. Под стулом валяется билет на 36 автобус.'; },
   laundry: 'Прачечная. В одной из машин крутится что-то красное. И один носок. Вечная загадка.',
   rent: '«СДАЁТСЯ». Под объявлением кто-то приписал маркером: «19.10 — не занимать!» Странный город.',
-  pharmacy: 'Аптека. Можно купить успокоительное. Нет. Мне нужна ясная голова.',
+  pharmacy: '«Դեղատուն» — аптека. Можно купить успокоительное. Нет. Мне нужна ясная голова.',
   ad: 'Плакат с рекламой сериала. «Иногда всё не то, чем кажется». Спасибо, плакат.',
   board: 'Доска Марка: «ГРАФИК ПОИСКОВ». Под ним стёртая надпись. Проступает только: «…ДНЯ РОЖ…». Наверное, чей-то из коллег.',
   coffee: 'Кофемашина. Никто, как всегда, её не выключил. Марк будет в ярости.',
@@ -4394,7 +4944,7 @@ const Interact = {
   async phone_table() {
     if (G.s.episode === 1 && !Flags.has('phone_tried')) {
       if (!Flags.has('mirror_used')) { UI.think('Сначала… что у меня с лицом? Оно какое-то липкое.'); return; }
-      UI.phone({ compose: true, onDone: () => { setTimeout(() => { UI.closeAll(); Scenes.morning(); }, 1400); } });
+      UI.phone({ compose: true, onDone: () => { setTimeout(() => UI.think('Не доставлено. Телефон Вари вне сети. Наверное, села батарея… Утром разберусь. Надо лечь.'), 900); } });
       return;
     }
     UI.phone();
@@ -4407,18 +4957,25 @@ const Interact = {
   street_home() { Game.goto('apt', 26, null, 'right'); },
   cat() { Inv.add('cat_photo'); SND.sfx('cat'); UI.think('Кот смотрит на меня с осуждением. Я его сфотографировал. Он не возражал.'); },
   gate() { if (G.s.episode >= 10) { UI.think('Ворота открыты. Гаражи… мой — тринадцатый. В самом конце.'); return; } UI.think(G.s.episode >= 6 ? 'Гаражный кооператив. Мой гараж где-то там. Я давно в нём не был. Что-то тянет туда… но не сейчас.' : 'Гаражи. Мой — №13, в самом конце. Я не был там с сентября.'); },
-  gate_walk() { if (G.s.episode >= 10) { Game.goto('road', ROAD_W - 30, null, 'left', { sound: 'creak' }); } else UI.think('Ворота ГСК заперты. Мне туда пока не нужно.'); },
-  road_back() { Game.goto('street', 260, null, 'right'); },
+  road_back() { UI.think('Назад? Нет. Гараж №13 — в самом конце ряда.'); },
+  obus() { UI.think(G.s.episode === 10 ? 'Автобус 36 идёт домой. Мне — в метро, к гаражам.' : 'Остановка 36. Обратно домой — потом. Сначала офис.'); },
+  office_door() { if (G.s.episode === 10 && Flags.has('left_office')) { UI.think('Я уже всё здесь проверил. Метро — справа.'); return; } Game.goto('office1', 288, 270, 'up', { sound: 'door' }); },
   async bus() {
     if (G.s.episode !== 1) { UI.think('Автобус 36 ходит до офиса. Мне сейчас не туда.'); return; }
     if (!Flags.has('mark_msg')) { UI.think('Куда ехать? Я даже не знаю, где искать.'); return; }
     if (Flags.has('office_unlocked')) { UI.think('В офис я уже съездил.'); }
     G.lockMove = true; await Scenes.busRide(); G.lockMove = false;
     Flags.set('office_unlocked');
-    await Game.goto('office1', 288, 270, 'up', { instant: false, sound: 'whoosh' });
-    if (!Flags.has('mark_interrogated')) UI.think('Офис. Марк ждёт у ресепшена.');
+    await Game.goto('ostreet', 140, null, 'right', { instant: false, sound: 'whoosh' });
+    if (!Flags.has('mark_interrogated')) UI.think('Абовяна. Офис — бизнес-центр прямо передо мной. Марк ждёт внутри.');
   },
-  metro() { UI.think(G.s.episode === 10 ? 'Я только что из метро. Гараж — налево, за воротами.' : 'Метро. Мне сейчас нужен автобус 36.'); },
+  async metro() {
+    if (G.s.episode !== 10 || !Flags.has('left_office')) { UI.think(G.s.episode === 10 ? 'Сначала выйти из офиса.' : 'Метро. Сейчас мне в офис, а не в подземку.'); return; }
+    G.lockMove = true; await Scenes.metroRide(); G.lockMove = false;
+    Flags.set('metro_done'); Time.set('night', '23:48');
+    await Game.goto('road', ROAD_W - 30, null, 'left', { sound: 'creak' });
+    UI.think('23:48. Станция у гаражей. Мой — тринадцатый, в самом конце ряда.');
+  },
   mailbox() { UI.think('Почтовый ящик. Внутри — рекламка пиццерии «Мама Мия». На обороте ручкой: «19.10 — 10 пицц». Странно.'); },
   stairs() { if (World.locId === 'office1') Game.goto('office2', 407, 830, 'up', { sound: 'step' }); else Game.goto('office1', 40, 124, 'down', { sound: 'step' }); },
   tv_office() { UI.think('Телевизор на стене. Логотип компании крутится по кругу. Никто его никогда не выключает.'); },
@@ -4427,10 +4984,9 @@ const Interact = {
     const n = G.s.episode;
     if (n === 1) { UI.think(Flags.has('mark_interrogated') ? 'Уходить нельзя. Мне нужно поговорить со всеми.' : 'Я только приехал. Марк ждёт.'); return; }
     if (n < 10) { UI.think('Я ещё не всё проверил. Кабинеты — на втором этаже.'); return; }
-    G.lockMove = true; await Scenes.metroRide(); G.lockMove = false;
-    Flags.set('metro_done'); Time.set('night', '23:48');
-    await Game.goto('street', 1360, null, 'left', { sound: 'whoosh' });
-    UI.think('23:48. Моя станция. Гараж — налево по улице, за воротами ГСК.');
+    Flags.set('left_office');
+    await Game.goto('ostreet', 380, null, 'right', { sound: 'door' });
+    UI.think('Ночь. Метро — справа, за бизнес-центром.');
   },
   elevator() { SND.sfx('ping'); const to = World.locId === 'office1' ? 'office2' : 'office1'; Game.goto(to, to === 'office2' ? 495 : 135, 52, 'down', { sound: 'whoosh' }); },
   async secpc() {
@@ -4520,7 +5076,7 @@ const Scenes = {
     const draw = (c, t) => {
       const W = View.W, H = View.H, oy = Math.round((H - APT_H) / 2), ox = W >= APT_W ? Math.round((W - APT_W) / 2) : Math.round(clamp(W / 2 - 150, W - APT_W, 0));
       c.fillStyle = '#000'; c.fillRect(0, 0, W, H); c.save(); c.translate(ox, oy); drawAptImg(c, true); c.restore();
-      const [tx, ty, tw, th] = [32, 62, 26, 19]; c.fillStyle = `rgba(80,140,220,${0.55 + Math.sin(t * 9) * 0.1})`; c.fillRect(ox + tx, oy + ty, tw, th); R(c, ox + tx + tw / 2 - 3, oy + ty + th / 2 - 2, 6, 4, '#e3343a');
+      const [tx, ty, tw, th] = [27, 52, 33, 19]; c.fillStyle = `rgba(80,140,220,${0.55 + Math.sin(t * 9) * 0.1})`; c.fillRect(ox + tx, oy + ty, tw, th); R(c, ox + tx + tw / 2 - 3, oy + ty + th / 2 - 2, 6, 4, '#e3343a');
       const put = (pal, dir, f, x, opt) => { const sp = personSprite(pal, dir, f, opt); const w = sp.width * cs, hh = sp.height * cs; c.drawImage(sp, Math.round(ox + x - w / 2), Math.round(oy + A.floor - hh), w, hh); };
       put(CHARS.ruben, 'left', 0, 178, { mask: phase >= 1 });
       if (phase < 2) put(CHARS.varya, 'left', phase === 1.5 ? Math.floor(t * 6) % 4 : 0, phase === 1.5 ? Math.max(8, 204 - (t - Scenes._t0) * 50) : 204);
@@ -4546,8 +5102,8 @@ const Scenes = {
   },
   async morning() {
     G.lockMove = true; await UI.fade(true, 1600);
-    UI.sub('Проходит 7 часов. Воскресенье, 18 октября.'); await wait(2200); UI.sub('');
-    Flags.set('morning'); Time.set('day', '07:06'); World._key = null; World.enter('apt', 150, null, 'left');
+    UI.sub('Прошло 6 часов. Воскресенье, 18 октября.'); await wait(2200); UI.sub('');
+    Flags.set('morning'); Time.set('day', '06:08'); World._key = null; World.enter('apt', 150, null, 'left');
     await UI.fade(false, 1400); G.lockMove = false;
     UI.think('Утро. Лицо снова обычное. Варя так и не вернулась. Телефон молчит.');
     // сообщение от Марка — после того как игрок немного походит
@@ -4565,8 +5121,8 @@ const Scenes = {
       const off = (t * 90) % 400; skyline(c, -off, H * 0.2, W + 400, H * 0.45, night ? '#141a2c' : '#8a96a6', night, 7);
       R(c, 0, H * 0.72, W, H * 0.28, '#1a1a1e'); for (let x = -off * 2 % 40; x < W; x += 40) R(c, x, H * 0.85, 20, 2, '#8a8a70');
       const bx = W / 2 - 50, by = H * 0.72 - 34 + Math.sin(t * 20) * 0.6; R(c, bx, by, 100, 32, '#1a5aa0'); R(c, bx, by, 100, 3, '#3a7ad0'); for (let i = 0; i < 6; i++) R(c, bx + 6 + i * 15, by + 6, 12, 12, night ? '#f4d35e' : '#9ad0f0'); R(c, bx + 88, by + 6, 10, 22, '#0a2a50'); ptext(c, '36', bx + 92, by + 22, '#fff'); disc(c, bx + 20, by + 32, 6, '#111'); disc(c, bx + 80, by + 32, 6, '#111');
-      c.drawImage(personSprite(CHARS.ruben, 'right', 0), bx + 36, by + 4, 10, 20);
-      ptext(c, back ? 'ДОМОЙ' : 'БЦ «ТЕРМИНАЛ»', W / 2, 10, '#fff', 1, 'center');
+      { const sil = '#07080c', wx = bx + 6 + 2 * 15; disc(c, wx + 6, by + 11, 3, sil); R(c, wx + 3, by + 9, 3, 2, sil); R(c, wx + 2, by + 14, 9, 4, sil); }
+      ptext(c, back ? 'ДОМОЙ' : 'БЦ «ТЕРМИНАЛ» - АБОВЯНА', W / 2, 10, '#fff', 1, 'center');
     };
     await UI.fade(true, 300); $('#hud').classList.add('hidden'); await this.play(draw, 50); await UI.fade(false, 300); await wait(2300); await UI.fade(true, 300); G.cutscene = false; $('#hud').classList.remove('hidden');
   },
@@ -4620,17 +5176,45 @@ const Scenes = {
     Flags.set('final_garage_unlocked');
     setTimeout(() => UI.think('Каждый из них в этом замешан. 23:40. Матвей ждёт у гаража в 23:59. Выход — внизу, оттуда на метро.'), 900);
   },
+  // метро как в заставке Mr. Robot: вагон, попутчики, Рубен в капюшоне — потом сбой картинки и «ruben00.dat loaded.»
   async metroRide() {
     G.cutscene = true; SND.sfx('bus'); $('#hud').classList.add('hidden');
-    const draw = (c, t) => {
-      const W = View.W, H = View.H; c.fillStyle = '#0c0d12'; c.fillRect(0, 0, W, H);
-      const off = (t * 220) % 60; for (let x = -off; x < W; x += 60) { R(c, x, H * 0.3, 30, 4, '#f2efe6'); glow(c, x + 15, H * 0.3, 20, '#f4d35e', 0.2); }
-      R(c, 0, H * 0.4, W, H * 0.35, '#c8ccd2'); R(c, 0, H * 0.4, W, 3, '#e8ecf0'); for (let i = 0; i < 6; i++) { const x = W * 0.05 + i * W * 0.16; R(c, x, H * 0.45, W * 0.12, H * 0.14, '#1a2030'); for (let k = 0; k < 5; k++) P(c, x + ((t * 300 + k * 37) % (W * 0.12)), H * 0.45 + 4 + k * 3, '#f4d35e'); }
-      R(c, 0, H * 0.62, W, 4, '#c0392b'); c.drawImage(personSprite(CHARS.ruben, 'right', 0), W * 0.48, H * 0.47, 10, 20);
-      ptext(c, 'МЕТРО → ДОМОЙ · 23:4' + Math.min(8, 1 + Math.floor(t * 2)), W / 2, 8, '#fff', 1, 'center');
+    const [buf, b] = mk(240, 135); b.imageSmoothingEnabled = false;
+    const pals = [{ id: 'm1', skin: '#e2b896', hair: '#2a2420', hairStyle: 'short', top: '#1a2030', pants: '#14161c' }, { id: 'm2', skin: '#d8a882', hair: '#4a3020', hairStyle: 'short', top: '#3a2a20', pants: '#1c1c22', beard: '#3a2a1a' }, { id: 'm3', skin: '#f0cdb2', hair: '#1a1414', hairStyle: 'long', top: '#5a2a3a', pants: '#20242f', female: true }];
+    let phase = 'car', t0 = 0;
+    const car = t => {
+      R(b, 0, 0, 240, 135, '#a89a78'); speck(b, 0, 0, 240, 135, ['#b2a482', '#9e906e'], 0.12, 4);
+      R(b, 0, 0, 240, 16, '#d8d0b8'); R(b, 0, 16, 240, 2, '#7a6e54'); // потолок с рекламой
+      [[10, '#2a2a30', 'Ա'], [70, '#c0392b', 'Ü'], [130, '#2a4a2a', ''], [190, '#e8e0c8', '']].forEach(([x, col]) => { R(b, x, 3, 44, 10, col); R(b, x + 4, 6, 20, 1, 'rgba(255,255,255,.5)'); R(b, x + 4, 9, 30, 1, 'rgba(255,255,255,.3)'); });
+      // окно с тоннелем
+      const wx = 8, wy = 30; R(b, wx - 3, wy - 3, 62, 40, '#7a6e54'); R(b, wx, wy, 56, 34, '#121418');
+      const off = (t * 260) % 70; for (let x = -off; x < 70; x += 70) { R(b, wx + x, wy + 12, 6, 3, '#f4d35e'); } lineP(b, wx + 4, wy + 30, wx + 52, wy + 6, 'rgba(255,255,255,.12)');
+      // объявление и двери
+      R(b, 80, 26, 30, 38, '#e8e0c8'); R(b, 84, 30, 22, 3, '#3a3a3a'); for (let i = 0; i < 6; i++) R(b, 84, 37 + i * 4, 10 + (i * 7) % 12, 1, '#555'); R(b, 84, 50, 8, 10, '#2a2a30');
+      R(b, 160, 22, 74, 104, '#7a6e54'); for (const dx of [164, 198]) { R(b, dx, 26, 32, 100, '#cfc6aa'); R(b, dx + 7, 36, 18, 30, '#7a6e54'); R(b, dx + 9, 38, 14, 26, '#121418'); R(b, dx + 2, 86, 28, 2, '#a89a78'); }
+      // поручень и скамья
+      R(b, 54, 18, 3, 112, '#c8ccd2'); R(b, 55, 18, 1, 112, '#eef'); R(b, 2, 106, 150, 7, '#3a8a90'); R(b, 2, 106, 150, 1, '#6ac0c4'); R(b, 2, 113, 150, 4, '#2a6a70'); R(b, 0, 126, 240, 9, '#8a7c5c');
+      // попутчики: стоящий у поручня и двое на скамье; Рубен в капюшоне — с краю
+      const sw = Math.sin(t * 3) * 0.6;
+      const P2 = (pal, x, y, dir, sit) => { const sp = personSprite(pal, dir, 0); b.save(); if (sit) { b.beginPath(); b.rect(x - 4, y - 4, sp.width + 8, sp.height * 0.62 + 4); b.clip(); } b.drawImage(sp, Math.round(x), Math.round(y)); b.restore(); if (sit) { R(b, x + 2, y + sp.height * 0.6, sp.width - 4, 6, pal.pants); R(b, x + 2, y + sp.height * 0.6 + 6, 4, 9, pal.pants); R(b, x + sp.width - 6, y + sp.height * 0.6 + 6, 4, 9, pal.pants); } };
+      const sp0 = personSprite(pals[0], 'right', 0), sh = sp0.height;
+      P2(pals[0], 34 + sw, 126 - sh, 'right', false);
+      P2(pals[1], 74, 112 - sh * 0.6, 'down', true); P2(pals[2], 98, 112 - sh * 0.6, 'down', true); P2(CHARS.ruben, 124, 112 - sh * 0.6, 'down', true);
+      // покачивание и тусклый свет
+      b.fillStyle = `rgba(20,30,20,${0.12 + 0.05 * Math.sin(t * 7)})`; b.fillRect(0, 0, 240, 135);
     };
-    await UI.fade(true, 300); await this.play(draw, 50); await UI.fade(false, 300); await wait(2600); await UI.fade(true, 300); G.cutscene = false; $('#hud').classList.remove('hidden');
+    const glitch = (t, c) => { for (let y = 0; y < 135; y += 3 + ((t * 50 + y) % 7 | 0)) { const sh = ((Math.sin(y * 12.9 + t * 40) * 43758) % 1) * 40 | 0; b.drawImage(buf, 0, y, 240, 4, sh, y, 240, 4); } b.globalCompositeOperation = 'lighter'; b.fillStyle = `rgba(${(t * 900) % 2 ? 180 : 0},${(t * 700) % 3 > 1 ? 120 : 0},40,.25)`; b.fillRect(0, (t * 300) % 135, 240, 30); b.globalCompositeOperation = 'source-over'; };
+    const draw = (c, t) => {
+      const W = View.W, H = View.H; c.fillStyle = '#000'; c.fillRect(0, 0, W, H);
+      if (phase === 'car' || phase === 'glitch') { car(t); if (phase === 'glitch') glitch(t, c); const s = Math.max(W / 240, H / 135); c.drawImage(buf, (W - 240 * s) / 2, (H - 135 * s) / 2, 240 * s, 135 * s); }
+      if (phase === 'car') ptext(c, 'МЕТРО - 23:4' + Math.min(7, 1 + Math.floor(t * 2)), W / 2, 6, '#fff', 1, 'center');
+      if (phase === 'dat') { const k = Math.max(1, Math.floor(Math.min(W, H) / 60)); const pw = 48 * k * 0.6 | 0; c.drawImage(portrait(CHARS.varya, { bg: '#000' }), W / 2 - pw / 2, H / 2 - pw / 2 - 8, pw, pw); if (Math.floor(t * 3) % 2) ptext(c, 'ruben00.dat loaded.', W / 2, H / 2 + pw / 2, '#e3343a', 1, 'center'); }
+    };
+    await UI.fade(true, 300); await this.play(draw, 50); await UI.fade(false, 300);
+    await wait(3600); phase = 'glitch'; SND.sfx('switch'); await wait(900); phase = 'dat'; SND.sfx('ding'); await wait(1800);
+    await UI.fade(true, 300); G.cutscene = false; $('#hud').classList.remove('hidden');
   },
+
 };
 // мысли по дороге к гаражу (эп. 10)
 const ROAD_THOUGHTS = [
@@ -4681,6 +5265,7 @@ LOC.road.post = function (c, t) {
 };
 // пыль в комнатах
 for (const id of ['apt', 'exec', 'meet', 'kitchen', 'garage', 'cab_tigran', 'cab_taras', 'cab_mark', 'cab_andrey', 'cab_kirill', 'cab_sasha', 'cab_dima', 'cab_nikita']) if (LOC[id]) LOC[id].dust = true;
+for (const id of ['apt', 'exec', 'meet', 'kitchen', 'garage', 'cab_tigran', 'cab_taras', 'cab_mark', 'cab_andrey', 'cab_kirill', 'cab_sasha', 'cab_dima', 'cab_nikita']) if (LOC[id]) LOC[id].fill = true; // крупно, во всю высоту
 LOC.apt.update = function (dt) { if (G.waitMark) { G.waitMarkT = (G.waitMarkT || 0) + dt; if (World.walkT > 4 || G.waitMarkT > 9) { G.waitMarkT = 0; Scenes.markMessage(); } } };
 
 /* ---- 70_main ---- */
