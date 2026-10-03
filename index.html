@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,shrink-to-fit=no">
 <meta name="theme-color" content="#07080b">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -22,14 +22,18 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--txt);overflow:hi
   touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;overscroll-behavior:none}
 button{font:inherit;color:inherit}
 input{font:inherit;user-select:text;-webkit-user-select:text}
-#cv{position:fixed;left:0;top:0;width:100%;height:100%;display:block;background:#000}
+/* холст кадра чуть больше экрана (кадр делится на целые пиксели), поэтому он внутри обрезающей рамки:
+   иначе страница на iOS становится шире экрана, браузер её отдаляет и касания начинают тормозить кадры */
+#stage{position:fixed;inset:0;overflow:hidden;background:#000}
+#cv{position:absolute;left:0;top:0;width:100%;height:100%;display:block;background:#000}
 #crt{position:fixed;inset:0;pointer-events:none;z-index:70;
   background:repeating-linear-gradient(0deg,rgba(0,0,0,.16) 0 1px,transparent 1px 3px);}
 #crt::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 58%,rgba(0,0,0,.6) 100%)}
 #crt::before{content:'';position:absolute;inset:0;background:rgba(255,240,220,.025);animation:flick 4s infinite steps(1)}
 @keyframes flick{0%,100%{opacity:.6}47%{opacity:1}48%{opacity:.3}50%{opacity:.9}}
 body.nocrt #crt{display:none}
-body.dbgnoui #hud,body.dbgnoui #prompt,body.dbgnoui #thought,body.dbgnoui #joy{visibility:hidden}
+body.dbgnoui #hud,body.dbgnoui #prompt,body.dbgnoui #thought,body.dbgnoui #toasts,body.dbgnoui #fade,body.dbgnoui #crt,body.dbgnoui #sub,body.dbgnoui #layer{display:none!important}
+body.dbgnoui #joy{visibility:hidden}
 body.touch #crt::before{animation:none;display:none}
 .hidden{display:none!important}
 @keyframes blink{50%{opacity:0}}
@@ -304,7 +308,7 @@ body.touch .hbtn .k{display:none}
 .cipher{font-family:var(--f-pix);font-size:12px;line-height:2;letter-spacing:2px;text-align:center;padding:16px;background:#000;border:1px solid var(--line);word-break:break-word}
 
 /* ---------- touch ---------- */
-#touch{position:fixed;inset:0;z-index:19;pointer-events:none}
+#touch{position:fixed;inset:0;z-index:19;pointer-events:none;overflow:hidden}
 #joyZone{position:absolute;left:0;top:18%;bottom:0;width:50%;pointer-events:auto;touch-action:none}
 #joy{position:absolute;width:132px;height:132px;border-radius:50%;border:2px solid rgba(255,255,255,.2);background:rgba(10,10,14,.35);pointer-events:none;transform:translate(-50%,-50%);will-change:transform}
 #joy .knob{will-change:transform;position:absolute;width:56px;height:56px;border-radius:50%;background:rgba(240,235,220,.28);border:2px solid rgba(240,235,220,.6);left:50%;top:50%;transform:translate(-50%,-50%)}
@@ -356,7 +360,7 @@ body.touch .hbtn .k{display:none}
 </style>
 </head>
 <body>
-<canvas id="cv"></canvas>
+<div id="stage"><canvas id="cv"></canvas></div>
 
 <div id="hud" class="hidden">
   <div class="info"><div class="ep" id="hudEp"></div><div class="when" id="hudWhen"></div><div class="goal" id="hudGoal"></div></div>
@@ -558,28 +562,32 @@ const Input = {
     // Джойстик на неблокирующих событиях: прокрутку запрещает CSS (touch-action:none), а не preventDefault,
     // поэтому браузер не ждёт наш обработчик на каждом движении пальца и не душит отрисовку кадров.
     // Внешний вид джойстика обновляется раз в кадр (Input.paint), а не на каждое событие.
-    const start = (id, x, y) => { this.joy = { active: true, id, ox: x, oy: y, x: 0, y: 0, dx: 0, dy: 0, moved: true, shown: false }; };
+    const start = (id, x, y) => { this.joy = { active: true, id, ox: x, oy: y, x: 0, y: 0, dx: 0, dy: 0, moved: true, shown: false }; Dbg.touch(true); };
     const move = (x, y) => {
       let dx = x - this.joy.ox, dy = y - this.joy.oy; const d = Math.hypot(dx, dy);
       if (d > R) { dx = dx / d * R; dy = dy / d * R; }
-      this.joy.x = dx / R; this.joy.y = dy / R; this.joy.dx = dx; this.joy.dy = dy; this.joy.moved = true;
+      this.joy.x = dx / R; this.joy.y = dy / R; this.joy.dx = dx; this.joy.dy = dy; this.joy.moved = true; Dbg.move();
     };
-    const end = () => { this.joy.active = false; this.joy.x = this.joy.y = 0; this.joy.moved = true; };
+    const end = () => { if (!this.joy.active) return; this.joy.active = false; this.joy.x = this.joy.y = 0; this.joy.moved = true; Dbg.touch(false); };
     this.paint = () => { const j = this.joy; if (!j.moved) return; j.moved = false;
       if (j.active) { if (!j.shown) { j.shown = true; joy.style.left = j.ox + 'px'; joy.style.top = j.oy + 'px'; joy.style.opacity = 1; } knob.style.transform = `translate(calc(-50% + ${j.dx | 0}px),calc(-50% + ${j.dy | 0}px))`; }
       else { joy.style.opacity = 0; } };
-    const dbg = () => { if (typeof Dbg !== 'undefined') Dbg.tm++; };
     if (window.PointerEvent) {
-      zone.addEventListener('pointerdown', e => { if (this.joy.active) return; try { zone.setPointerCapture(e.pointerId); } catch (_) { } start(e.pointerId, e.clientX, e.clientY); SND.init(); }, { passive: true });
-      zone.addEventListener('pointermove', e => { dbg(); if (this.joy.active && e.pointerId === this.joy.id) move(e.clientX, e.clientY); }, { passive: true });
+      // Движение и отпускание пальца слушаем на всём окне, без захвата указателя: они доходят всегда,
+      // даже если палец ушёл за пределы зоны. Новое первое касание (isPrimary) всегда перезапускает
+      // джойстик — «залипшее» старое касание больше не блокирует управление.
+      zone.addEventListener('pointerdown', e => { if (this.joy.active && !e.isPrimary) return; start(e.pointerId, e.clientX, e.clientY); SND.init(); }, { passive: true });
+      addEventListener('pointermove', e => { if (this.joy.active && e.pointerId === this.joy.id) move(e.clientX, e.clientY); }, { passive: true });
       const up = e => { if (e.pointerId === this.joy.id) end(); };
-      zone.addEventListener('pointerup', up, { passive: true }); zone.addEventListener('pointercancel', up, { passive: true }); zone.addEventListener('lostpointercapture', up, { passive: true });
+      addEventListener('pointerup', up, { passive: true }); addEventListener('pointercancel', e => { if (this.joy.active && e.pointerId === this.joy.id) Dbg.pc++; up(e); }, { passive: true });
+      zone.addEventListener('lostpointercapture', e => { if (this.joy.active && e.pointerId === this.joy.id) Dbg.lc++; }, { passive: true });
     } else {
       zone.addEventListener('touchstart', e => { const t = e.changedTouches[0]; start(t.identifier, t.clientX, t.clientY); }, { passive: true });
-      zone.addEventListener('touchmove', e => { dbg(); for (const t of e.changedTouches) if (t.identifier === this.joy.id) move(t.clientX, t.clientY); }, { passive: true });
+      zone.addEventListener('touchmove', e => { for (const t of e.changedTouches) if (t.identifier === this.joy.id) move(t.clientX, t.clientY); }, { passive: true });
       zone.addEventListener('touchend', e => { for (const t of e.changedTouches) if (t.identifier === this.joy.id) end(); }, { passive: true });
-      zone.addEventListener('touchcancel', end, { passive: true });
+      zone.addEventListener('touchcancel', () => { Dbg.pc++; end(); }, { passive: true });
     }
+    addEventListener('blur', end); document.addEventListener('visibilitychange', () => { if (document.hidden) end(); });
     const ab = $('#actBtn');
     // кнопка действия: срабатывает сразу при касании, без ожидания click
     if (window.PointerEvent) ab.addEventListener('pointerdown', () => { this.act = true; }, { passive: true }); else { ab.addEventListener('touchstart', () => { this.act = true; }, { passive: true }); ab.addEventListener('click', () => { this.act = true; }); }
@@ -4536,7 +4544,16 @@ const Menu = {
 
 /* ---------------- Диагностика (?debug или Настройки → Диагностика) ---------------- */
 const Dbg = { on: false, el: null, fr: [], resizes: 0, rzEv: 0, tm: 0, snd: 0, upd: 0, drw: 0, noDraw: false, noLight: false, t: 0, fc: 0, oldSpr: false, skip: {}, xs: [], xt: 0, dot: null,
-  frame(ms) { if (!this.on) return; this.track(ms); this.fr.push(ms); if (this.fr.length > 120) this.fr.shift(); this.t += ms; if (this.t > 500) { this.t = 0; this.show(); } },
+  pc: 0, lc: 0, T: null, report: 'ещё не касался',
+  frame(ms) { if (!this.on) return; this.track(ms); this.touchFrame(ms); this.fr.push(ms); if (this.fr.length > 120) this.fr.shift(); this.t += ms; if (this.t > 500) { this.t = 0; this.show(); } },
+  // отчёт о касании джойстика, как в lab.html: сколько кадров прошло, самая долгая пауза, шёл ли герой
+  touch(on) { if (!this.on) return; const now = performance.now();
+    if (on) { this.T = { t0: now, fr: 0, gap: 0, mv: 0, jd: 0, hm: 0, lp: null }; return; }
+    const T = this.T; if (!T) return; this.T = null; const d = (now - T.t0) / 1000;
+    this.report = `${d.toFixed(1)} с · кадров ${T.fr} (${(T.fr / Math.max(d, 0.001)).toFixed(0)}/с) · макс. пауза ${T.gap.toFixed(0)} мс · движений пальца ${T.mv} · джойстик отклонён ${T.jd} кадров, герой шёл ${T.hm}`; },
+  move() { this.tm++; if (this.T) this.T.mv++; },
+  touchFrame(ms) { const T = this.T; if (!T) return; T.fr++; if (T.fr > 1) T.gap = Math.max(T.gap, ms);
+    if (Math.hypot(Input.joy.x, Input.joy.y) > 0.18) { T.jd++; const p = World.player; const k = p ? p.x.toFixed(1) + ',' + p.y.toFixed(1) : ''; if (T.lp !== null && k !== T.lp) T.hm++; T.lp = k; } },
   init() { this.on = /debug/.test(location.search) || !!Settings.debug; if (!this.on) return;
     const el = this.el = h('div', { style: 'position:fixed;left:4px;bottom:4px;z-index:95;background:rgba(0,0,0,.82);color:#7f7;font:11px/1.35 monospace;padding:6px 8px;max-width:62vw;pointer-events:auto;border:1px solid #3a3' });
     const txt = h('div', {}); const row = h('div', { style: 'display:flex;gap:4px;margin-top:4px;flex-wrap:wrap' });
@@ -4549,6 +4566,7 @@ const Dbg = { on: false, el: null, fr: [], resizes: 0, rzEv: 0, tm: 0, snd: 0, u
     btn('ИНТЕРФЕЙС: вкл', b => { document.body.classList.toggle('dbgnoui'); b.textContent = 'ИНТЕРФЕЙС: ' + (document.body.classList.contains('dbgnoui') ? 'скрыт' : 'вкл'); });
     btn('ВЫВОД: ' + (presenter === 'gl' ? 'webgl' : '2d'), b => { initPresenter(presenter === 'gl' ? '2d' : 'gl'); resize(); b.textContent = 'ВЫВОД: ' + (presenter === 'gl' ? 'webgl' : '2d'); });
     for (const [k, nm] of [['bg', 'ФОН'], ['deco', 'ДЕКОР'], ['chars', 'ГЕРОИ'], ['shadow', 'ТЕНЬ'], ['text', 'СЧЁТЧИК']]) btn(nm + ': вкл', b => { this.skip[k] = !this.skip[k]; b.textContent = nm + ': ' + (this.skip[k] ? 'выкл' : 'вкл'); });
+    btn('ХОЛСТ: обрезан', b => { const st = $('#stage'); st.style.overflow = st.style.overflow === 'visible' ? '' : 'visible'; b.textContent = 'ХОЛСТ: ' + (st.style.overflow === 'visible' ? 'вылезает' : 'обрезан'); });
     btn('КАДР: вкл', b => { this.noDraw = !this.noDraw; b.textContent = 'КАДР: ' + (this.noDraw ? 'выкл' : 'вкл'); });
     el.append(txt, row); this.txt = txt; document.body.append(el); this.tmLast = performance.now();
   },
@@ -4556,7 +4574,7 @@ const Dbg = { on: false, el: null, fr: [], resizes: 0, rzEv: 0, tm: 0, snd: 0, u
   track(ms) { const p = World.player; if (!p) return; this.xt += ms; if (this.xt >= 100) { this.xt = 0; this.xs.push(Math.round(World.L && World.L.type === 'side' ? p.x : p.x + p.y)); if (this.xs.length > 10) this.xs.shift(); }
     if (this.dot && World.L && World.L.type !== 'cut') { const [sx, sy] = World.toScreen(p.x, World.L.type === 'side' ? World.L.floor : p.y); this.dot.style.transform = `translate(${sx | 0}px,${sy | 0}px)`; } },
   show() { const f = this.fr; if (!f.length || !this.txt) return; const avg = f.reduce((a, b) => a + b, 0) / f.length, mx = Math.max(...f), dtm = (performance.now() - this.tmLast) / 1000; this.tmLast = performance.now();
-    const p = World.player; this.txt.textContent = `fps ${(1000 / avg).toFixed(0)} · худший кадр ${mx.toFixed(0)}мс · логика ${this.upd.toFixed(1)} · рисование ${this.drw.toFixed(1)}мс\nкасаний/с ${(this.tm / dtm).toFixed(0)} · resize событий ${this.rzEv} · пересозданий ${this.resizes} · звук ${SND.ac ? SND.ac.state : 'нет'} · звуков/с ${(this.snd / dtm).toFixed(0)}\nэкран ${innerWidth}x${innerHeight} dpr ${devicePixelRatio} · кадр ${View.W}x${View.H}·${View.k} · графика ${Perf.level} · ${World.locId} ${p ? (p.x | 0) + ',' + (p.y | 0) : ''}\nпозиция каждые 0.1с: ${this.xs.join(' ')}\nкадров нарисовано: ${this.fc}`;
+    const p = World.player, vv = window.visualViewport, de = document.documentElement; this.txt.textContent = `fps ${(1000 / avg).toFixed(0)} · худший кадр ${mx.toFixed(0)}мс · логика ${this.upd.toFixed(1)} · рисование ${this.drw.toFixed(1)}мс\nкасаний/с ${(this.tm / dtm).toFixed(0)} · resize событий ${this.rzEv} · пересозданий ${this.resizes} · звук ${SND.ac ? SND.ac.state : 'нет'} · звуков/с ${(this.snd / dtm).toFixed(0)}\nэкран ${innerWidth}x${innerHeight} dpr ${devicePixelRatio} · кадр ${View.W}x${View.H}·${View.k} · графика ${Perf.level} · ${World.locId} ${p ? (p.x | 0) + ',' + (p.y | 0) : ''}\nпозиция каждые 0.1с: ${this.xs.join(' ')}\nкадров нарисовано: ${this.fc}\nстраница: зум ${vv ? vv.scale.toFixed(2) : '?'} · видимая ${vv ? Math.round(vv.width) + 'x' + Math.round(vv.height) : '?'} · документ ${de.scrollWidth}x${de.scrollHeight} · экран устройства ${screen.width}x${screen.height}\nотмен касания ${this.pc} · потерь захвата ${this.lc}${this.T ? ' · ИДЁТ КАСАНИЕ' : ''}\nпоследнее касание: ${this.report}`;
     this.txt.style.whiteSpace = 'pre-wrap'; this.tm = 0; this.snd = 0; },
 };
 
