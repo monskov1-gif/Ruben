@@ -919,6 +919,7 @@ function drawTitle(c, s, x, y, sc, col = '#e3343a', inner = '#000') {
 /* ---------- Персонажи: палитры задаются в CHARS (30 data) ---------- */
 const _spr = {};
 function personSprite(pal, dir, f, opt = {}) {
+  if (typeof SPR_DATA !== 'undefined' && SPR_DATA[pal.id]) return customSprite(pal.id, dir, f, opt);
   const key = pal.id + dir + f + (opt.lux ? 'L' : '') + (opt.mask ? 'M' : '') + (opt.sit ? 'S' : '');
   if (_spr[key]) return _spr[key];
   const [cv, c] = mk(14, 28);
@@ -1043,6 +1044,7 @@ function drawHair(c, p, d, X, Y) {
 /* ---------- Портреты 48x48 ---------- */
 const _por = {};
 function portrait(pal, opt = {}) {
+  if (typeof SPR_DATA !== 'undefined' && SPR_DATA[pal.id]) return customPortrait(pal.id, opt);
   const key = pal.id + JSON.stringify(opt);
   if (_por[key]) return _por[key];
   const [cv, c] = mk(48, 48);
@@ -1215,6 +1217,40 @@ function propImg(type, o = {}) {
   const d = PROPS[type]; const w = o.w || d.w;
   const [cv, c] = mk(w, d.h); d.draw(c, o);
   _propCache.set(key, cv); return cv;
+}
+
+/* ---- 21_sprites ---- */
+/* =====================================================================
+   21 SPRITES — Рубен и Варя: пиксели сняты с раскладок заказчика
+   ===================================================================== */
+const SPR_DATA = {"ruben":{"w":18,"h":29,"pal":{"a":"#131317","b":"#19191e","c":"#1d1d22","d":"#202025","e":"#222329","f":"#27262b","g":"#372d2c","h":"#272931","i":"#2c2f39","j":"#37363b","k":"#494548","l":"#6c6261","m":"#a59086","n":"#d6baac"},"frames":{"down0":["........g.ggj.....",".....kjggfgfg.....",".....gfgggggggg...","....jgggggggggg...","....kfglnllmjgjk..","....jkknannakgg...",".....jlnnnnnmj....","......kmnnnml.....",".....hbanmmabi....","...kehiemmmbhhf...","...ebihhiddjeeii..","..dfdiiikddkhfifh.","..efbiiikddlifidh.","..debiiikcdlieieh.","..cebiiikddlihieh.","..feahhikddlihidf.","..deciiiddddiieef.","..llkhhhccdahhlmm.","..nnmeeebacbeelnn.","..nnmfccbabdcclnn.",".....heecabeee....",".....hffbecfed....",".....ieec.beee....",".....hfec.bffe....",".....feec.ceec....",".....feed.bdef....",".....hecb.dddd....",".....bbba.aabcj...","....ccbbb.dbccej.."],"down1":[".......jjgggj.....","....gggggfgggl....","....gggggggggjg...","...ggggkjgkgggg...","....ggknnkmlgggj..","...jgfnbjnnaggg...","....jgnnnnnnkj....","......mnnnnmk.....",".....hammmmabi....","...ddhekmmlcihej..","..ihcihkcccjbihd..","..ifcihkddekbife..",".effbiikdedkcieee.",".eedciilcddkdidef.",".efcbiildddkcidee.",".fecehildddihdcfe.",".dedhiikeeciihbeh.",".lll.debbbbbcbmmm.",".nnn.ddbbaedccnnn.",".....eecaaefff....",".....fecaafeee....",".....ffdbaeeef....",".....eecaafeef....",".....eeb.leeed....","....ieed.lfede....","....cbba.leeee....","...bccba.kddca....","...aabba.kabbc....",".........kabcbd..."],"downH0":["......iiiij.......",".....iiiiiiij.....","....iiihhhiiij....","...jihfddffhij....","...iifggjggfiik...","...hefjmlllfehk...","...dfknamnfagdk...","...fbjnnnnnnbhk...","....caannngabd....","...hcfcnmmfdfhj...","..ebiiidccjhijcf..","..fciiikcdlihicej.",".eechiikdckiiibff.",".debiiikcclihibeh.",".debhiikddlihibee.",".deceiildckihibee.",".fechiikcdliiebef.",".ghhhhikcckiiefjj.",".nnnbdfbabbddbnnn.","..nnfddbabccdhnnn.","....jeebbbeff.....","....iffb.heef.....","....ifhc.hefh.....","....jffa.jeee.....","....iefd.jdee.....","....iffb.idef.....","....cdcb.fdddc....","...ibbba.eaabb....","...dbbbb.jbbccc..."],"downH2":["......kjiii.......",".....hiiiiiik.....","....jiiiiiiij.....","...jiiffdffiil....","...iifgggggfii....","...hffgmllljfh....","...dfgnalnmaff....","...fcdnnnnnnae....","....dbannnaack....","...ibhcmmmadcih...","..idjhjdcdjeeief..",".eebiikfcfkiehee..",".ffciikfchkieidef.",".debiikecfkieicef.",".eeahikecfkihibef.",".eebhhkdchkiehcee.",".eebhikfdejiicbeh.",".llkhhebbbbdejmmm.",".nnndccbacdccgnnn.","....jeebjhefeh....","....jefc.jeffh....","....kffb.jffee....","....feeb.feeef....","....iffcadfeee....","....jffcabefea....","....jefdbbbbbb....","....jddb.babai....","...cbcba..........","...cbbbb.........."],"up0":["......gggggj......","...jjggggggggg....","....ggjgfgggggg...","....ggggggfgff.l..","...ggggggggfggjl..","...ggfggffggfgk...","....jgfggfggfj....","......gfffddk.....",".....jbbcbbcik....","...dchiiiiiihcdl..","..fhediiiiiidbhe..",".kfccbffehhebheek.",".decfbiiiiiichdff.",".eebdaiiiiiicfcef.",".eebchiihhiiibcef.",".eebdeiiiiiiiccee.",".eeabhhiiiiihbbff.",".lmlheehffhhhhlmm.",".nnnfebbaabcefmnn.","....dcdcbabdcd....","....jfecbaceff....","....jefcddceeh....","....jeecj.ceef....","....jffdj.beeh....","....iefck.ceeh....","....jfeci.deej....","....dbcbc.abcd....","...dbbbab.abbbj...","...bddbah.abdcdk.."],"up1":[".....jggjgg.......","..kkggggfgggjj....","...fgggggggggg....","...gggggfffggkk...","..ggggggggggfgk...","..gggggfgggggj....","...ggggjggggj.....",".....gfffffj......","....ifeeeehhh.....","..jadiiiiiiidhik..",".ihfbeiiiiecdehj..","eedhchdccdhheeffi.","eedibiiiiiiedcdff.","debebiifefihcceee.","debchiiiiiiicbeed.","eebehiiiiiiicceee.","eebfhhhiiiihdcdef.","klkhheccdcchifnnn.","nnnbccbbbbbcbfnnn.","nnnfcddbaccdd.....","....hffbadeff.....","....hfecadeee.....","....effcadeef.....","....eeed.beeej....","....defe.bbccdj...","....hfee.aaccbi...","....dcba.aaaaaf...","...bbcaa.ffiiik...","..ccbbbc.........."],"upH0":["......iijij.......","....kiiiiiih......","...iiiiiiiiij.....","..jiiiiiiiiiji....","..jiiiiiiiiiih....","..ihiiiiiiiiih....","..jhiiiiiiiiie....","...hhhhhhhhihj....","...cbcddcdbce.....","..bbeiiiiiihbbf...",".edahchiiieibhhk..","ideahihiihhhbhhhe.","fedaiiiiiiiideffe.","dedbiihffhiidbeee.","decbiiiiiiiidadef.","cecbhiiiiiiidaeee.","febbehhhhhhhdadef.","mmlfhbcccddeifmmm.","nnmbbbbbbbbbbdnnn.","...jedbbaccdel....","...kffdbaceff.....","...keecb.cfee.....","...keeed.dffe.....","...kffdc.cefh.....","...jefdc.dffe.....","...kefeh.effh.....","...kcddc.bcdd.....","..kbbbaa.bbbbc....","..cccbad.bbbccb..."],"upH2":["......iiiii.......","....kiiiiiih......","...kiiiiiiiii.....","..jiiiiiiiiiii....","..jiiiiiiiiiii....","..ihiiiiiiiiii....","..ifhiiiiiiiif....","...ihhhhhhhihj....","...kcddccccdc.....","..ebeiiiiiiibbb...",".kebhbiiiieeahfh..",".idbiiiiihhhaffeh.","efdbiiiiiiiiaeefh.","dfcciihhfhiieaeeh.","debciiiiiiiidaffe.","debdiiiiiiihdaeee.","eebadehfhhheeadef.","mmlhhebaabbiidnnn.","nnmdbbbaabbbaannn.","...iefcaacede.....","...jffdkkcfef.....","...jefel.bddc.....","...jfedl.aaab.....","...jfffaaaaaa.....","...jefeaaaabb.....","...jefebaaaab.....","...jcbbaaj........","..kabbaabj........","..hcbbabbk........"],"right0":["........ggggggj...",".......kkgggggggk.",".......ggggfgjggjk","......gggggggfggfk","......kgggggjgnnjl","......jgggggmnla..","......lggfmnnnnm..",".......gfdmnnnnn..",".......jddflmmn...",".......iiihhhc....",".....bbeecbbee....","....cffahiiibii...","....eheahiiibii...","....dhhahiihbjj...","....ehhadhiibji...","....chhachiibih...","....dhfafehiahh...",".......chjllkfi...",".......chlnnnje...","........blnnng....","........cfeeh.....","........behhf.....","........ceffh.....","........cfffh.....","........dffee.....","........defff.....","........babbb.....","........babceek...","........ebbbccci.."],"right1":["........ggfgjjj...","........kgggfgjg..","......kgfgjggggggk",".....jgfggfgggggfk","......kgggggfnnnk.","......gfgfggmnga..","......kfggnnnnnm..","......kgggmnnnnn..",".......ieeekmm....",".....ifhhfdhha....","....checciihbf....","....dhfadiiibii...","....eheaeiiiajj...","....chebdiiiaij...","....bhfbchiiahh...","....ehdecfhiajh...",".......hehhhajh...",".......hhnnnmif...",".......kcnnnmkf...","........cllll.....","........bfffd.....","........defff.....","........ddffe.....","........dfffd.....","........heffc.....",".......hdeefe.....",".......daaaab.....",".......eabbcbd....","........eccbbbc..."],"rightH0":["........iihhhi....","......kiiiiiiigk..",".....iiiiiiiihggk.","....ehiiiiiihgfgk.","....diiiiiiikmnj..","....ehiiiiijnkb...","....dhhiiiiknnm...",".....eehiiiknnn...",".....icdefhimm....","......eiihhedf....","...eedbdbccdfi....","...bffcahiiibj....","...cefcbhiiidif...","...bfhcbhiiibhf...","...dfebbdiihbfc...","...behcfchhhcie...","....chbfbehieih...",".....ldhhelmmma...",".....lehebmnnna...",".......bcbmmnna...",".......aeffef.....",".......bfffdh.....",".......aeefeh.....",".......aefffh.....",".......bfffeh.....",".......befeeh.....",".......baaabf.....",".......cabbccf....",".......baabcdei..."],"rightH2":["........jiiiih....",".......hiiiiiigk..",".....iiiiiiiifggj.","....ihiiiiiihgfgl.","....iiiiiiiiknnk..","....iiiiiiijmga...","....jehiihijnmm...",".....fhhhiijnnn...",".......bdffjmm....",".....j.ihcbfha....","....bheabiiebe....","....bhebfiihai....","....aefbhiiibjh...","....bhhbeiiibie...","....dheaciiiaih...","....acdadiiiajh...","......iieehicie...","......jhflmnnbe...","......hdblnnnac...",".......kbjlllk....",".......kbeefe.....",".......lcfffe.....","......eibfffd.....","......bddfffc.....","......acdfffc.....","......bbaefhf.....","......abaaaab.....","......efdebbcbf...",".........kbbbbck.."],"left0":["....gkkjgjk.......","..kgggggggk.......",".kjggggfgggjg.....",".kfgggggfggg......","..jnnnkgggggg.....","...bknmgggggf.....","...lmnnnmfggk.....","...nnnnnmggg......","...nnnnlcdb.......",".....giiiiij......",".....ebbdeffc.....",".....ceiiibdee....","....idhiihaehe....","....jdhiihaehf....","....idhhihbeec....","....icfiihbehd....","....hbhiihhbci....","....fklllchk......","....fmnnnefk......","....ilmmmbj.......",".....efeeck.......",".....cfffcj.......",".....ffffck.......",".....dfffbk.......",".....efffcj.......",".....ffffbj.......","....jbbbbck.......","....cccback.......","..kcbcdcack......."],"left1":["....gkggjgj.......","..kggjggggk.......",".lgfgggggjggk.....",".gggggfggggfk.....","..jnnnlgggggj.....","...ejnmfgjfgj.....","...mmnnnnfggk.....","...nnnnnmffj......","....nnlkfhfk......",".....dhihhhe......",".....fdfeccee.....","....iceiihbeec....","....heiiihadhe....","....iehiihbehe....","....hehiihbdec....","....hdhiihbdhd....","....hdeiheiaj.....","....ekmmmdij......","....fmnnncij......",".....lmmmab.......",".....fhffbb.......",".....ffffcc.......",".....eeffce.......",".....dffhdd.......",".....hhffcc.......",".....feffcc.......",".....cbaach.......","...ihecbadh.......","...abccbbdf......."],"leftH0":[".....jijihi.......","...kfiiiiiiih.....","..lgghiiiiiiik....","..fggghiiiiiihj...","...gnmjiiiiiihj...","....afniiiiiiij...","....nnniiiiihik...","....nnniiiihi.....",".....nmhedcbk.....",".....fhdehhfkb....",".....jehhhcbddc...","....kiaiiicaeec...","....hiajiidaeee...","....ijbiiiebeed...","....iibiiiebedb...","....eiciheccdde...","....deciheeha.....","....ejnnmbhha.....","....bknnnddda.....","....jkmmlaac......",".....ceeeebf......",".....dfffebd......",".....eeeeedeb.....",".....ddeeedcb.....",".....edfffeca.....",".....cdhhhaaa.....",".....baaaabba.....","....kedcackk......","...kcbbcbd........"],"leftH2":[".....kiiiii.......","...kgiiiiiihk.....","...jghiiiiiiii....","..fgjkiiiiiiiih...","...jnmjiiiiiiih...","....alniiiiiiii...","...nnnniiiiihhj...","....nnniiiihh.....",".....nlfedcch.....",".....ieccehedj....",".....kciiibacec...","....jjaiiihaeec...","....ehaiiihaeeb...","....hiaiiihaeec...","....eibihhdbfeb...","....dhbiifbacce...","....hibhhefhd.....","....dlnnnciii.....","....dlnnnacdh.....",".....lmmmcb.......","......ffefb.......","......hffhc.......","......hfefb.......","......hfffb.......","......fffhc.......","......ihffb.......",".....jbbbab.......","....jdcbbad.......","...cccdbbac......."]},"por":{"pal":{"a":"#19191f","b":"#1d1d22","c":"#202127","d":"#24252b","e":"#2c2424","f":"#302728","g":"#352b2b","h":"#272932","i":"#2a2d36","j":"#2c2f39","k":"#31343e","l":"#3c3130","m":"#494447","n":"#453838","o":"#5c575a","p":"#867169","q":"#a98f82","r":"#c1a598","s":"#d9bbac","t":"#e3c5b6"},"rows":["................................................","................................................","................................................","................................................","............................ll..................","..................n......nnnln..................","...............nllllnnlgllglnnllm...............","...............llgnelnlglggnlllllm..............","...............nngnelnglnfffffnnll..............","...............lgggfffnlgffffgnlfl..............","............onlngflgffgggffggngfglnoo...........","............nllgffnnlffflglnlffgnnlgno..........","..........momgffgngglngffnnfefffffgnlgn.........","..........nnngeglngfglgfflmffffgggglggl.........","..........lnnlgnllgfggopllqlgflllnlglln.........",".........l.glgflfflggorrnfoopofglgffll..........",".........ofggfffggllpqssppprrrpggggglm..........","..........ggfffflnlnrtsstsststrlflllnn..........","..........eggllllpllsssstttsstsqllgfffn.........",".........llnnllgfqllglllttspllglllllnln.........",".........nllnggggrgppppptttrppppplllnnm.........","..........lllgfggrq..ncptttt..amrglll...........","..........llgflgert..aapttrt..amseffl...........","..........ngfqrogssttrqrttqrttqrtgfg............","............fqrplststttttsrqtttssegn............","............lrsrqsttttttttrqtttttgg.............","............elrsrttttttttrrssttstff.............","............feglgsttttttttttsttstgf.............",".............effertttttrqqqqqttsrl..............","..............leeeqttttttttttttpe...............","...............eeferstttttttttpcf...............","...............ihhhqrtttttttttldddhm............",".............mihcbbrrqqrttttsqaabddhc...........","............hjicbbbrrrqqqqqqqqaabbcij...........","...........mkjhaabarssrqqqqqrraaaabijihk........","...........hkjidbaasssrrrqqrrraaacchhhhhm.......","...........jkjkkhabsttssrrrsssbabjjjkkjdm.......","...........bchkkjjabottsssssqebdkkkkjhdd........",".........cbbacikkkbamsssttsrlaadkkkkicba........",".......hijjhbabhjjkbbbrsttqcbbijkkjcbaddhi......","......kikkkicccbckjicalnnlgbbijijjbaccijjkiik...","....bcdkkkkjdddackhkdbbbbbbbajjijiabcckkkkccd...",".oijibckkkkjdddadkcokcbbbbbbbokdjabddckkkkbdijha","jihjjabjkkkjdddacjhokbbbbbbbcokhkbbccckkkkbdiica","bcjkjbckkkkjdddabkkokcbbbbbbdomjjabddckkkkacjjca","abijibcikkkidddackjokdbbbbbbdomjjabddckkkkadjibb","cbciibbdijjhcddacjjokdbabbabdomjjaacccjjihadjhaa","bbbjjbbhjihihdcackkokcbbbbbbdokkjaadhdhhhichhcba"]}},"varya":{"w":16,"h":26,"pal":{"a":"#121112","b":"#181717","c":"#241515","d":"#1c1c1c","e":"#302f2f","f":"#2d1a19","g":"#331f1d","h":"#382520","i":"#3f2c25","j":"#493730","k":"#594a44","l":"#8d7668","m":"#b59a89","n":"#dfc3b0","w":"#f4eee8"},"frames":{"down0":[".....khihhi.....","....jjjihijj....","....ijjjkjjji...","....ijnnnnnji...","...hjwannawji...","...hjnnnnnnji...","..kghjnllnnhi...","...hifmnnmjghi..","....ggfmmfggh...","...iggfknhggg...","...gfhgggghfg...","...hfghhghhcgj..","...ggffgggfegg..","...hchfgggf.gg..","...hcbbbbbbkfg..","...nmddddddbnn..","...nnbdbdddbnn..",".....ddd.bdb....",".....ddd.ddb....",".....bdd.ddd....","....bddbebdd....","....addddddbd...","....bdddadddb...","....dddbadddd...","...ebddbabddd...","...abbbabbddb..."],"down1":[".....khhghi.....","....jjjihijj....","....ijjjkjjji...","....ijnnnnnji...","...hjwannawji...","...hjnnnnnnji...","..kghjnllnnhi...","...hifmnnmjghi..","....ggfmmfggh...","...fggfimfcgh...","...gghhhfghggj..","...igfggfggcgf..","...hcgfgggf.fg..","...gfiggggf.fg..","...lkbbbdbbdlk..","...nmdddddddnn..","...m.bddmddd....",".....bdd.ddd....","....ebbb.ddd....","....dbbbkddde...","....abbbdddde...","....dbbbbdddd...","...edbbbbdddb...","...eabddadddde..","........adddde..",".........afda..."],"downS":[".....jhhghhk....","....jjjihijj....","....ijjjkjjji...","....ijnnnnnji...","...hjwannawji...","...hjnnnnnnji...","..kghjlnnlnhi...","...hifmllmjghi..","....ggfmmfggh...","...jhgfjmhfgh...","...gfhhgcghghk..","...hfgghghhcgj..","..khfffggggkhg..","..khcjggggh.gi..","..khfaadddbjgg..","...nmddddddann..","...nnddbedddnn..",".....ddd.ddb....",".....ddd.ddd....",".....ddd.ddd....","....dddd.bdde...","....edddedddd...","....bdddadddb...","....bdddadddd...","...dddbdadddb...","...eeeeeddddd..."],"down3":[".....khihgi.....","....ijjihiji....","....ijjjkjjji...","....ijnnnnnji...","...hjwannawji...","...hjnnnnnnji...","..kghjnllnnhi...","...hifmnnmjghi..","....ggfmmfggh...","...hggcimgggg...","...hfhhihihcf...","..jgfgggghgcgj..","..jgccghgggkff..","..jgfcghhhgkff..","..llkabbbbbell..","..nnlddddddenn..","...meddbeddem...","....ddddjdde....","....ddbdedde....","....ddbaeddd....","....ddbbdddd....","....bbdbadddb...","...dbdbbbdddd...","...eaaajddddd...","........bdddd...","........dbbbe..."],"up0":["......ihghj.....","....jiiihiiij...","....ijjjiiijjk..","...kjjjjjjjjij..","...jijiiiiiiij..","...iiiiiiiiihj..","...hhiihhhhihh..","...ghihhhhhhggk.","..jiiiihhiiiihi.","...jhiiiiiigfj..","...gfgfffffgff..","..ggfhggggggfgg.","..gggggggggfggg.","..ggcfggghgcchg.","..nmldddddddlnn.","..nnlddddddblnn.","....jddbebdde...","....kddd.bddd...","....kddd.bdde...","....ebdd.dddb...","....dddd.bddb...","....dddb.bdddj..","...eddddebddbd..","...edddddddbdd..","...bddddabdddb..","...abdbababdbb.."],"up1":["......khghi.....","....kijiiiiij...","....jjjjjjiji...","...kijjjjjjjij..","...kiiijjiiiii..","...jiiiiiiiiij..","...hiiiiiiiiii..","...iiiiiiiiihi..","..jiiiiiiiiiiij.","...jhiiiiiihgi..","...hhggfffffgg..","..hhffggggggfgi.","..igcigggggfggh.","..hhfeggggggegg.","..nmmbbdddddlnn.","..nnnbddddddknn.",".....ddddaddj...",".....dddebdde...",".....dddebdde...",".....dddebbdb...",".....ddddabdb...",".....ddddabdde..","....dddddabbbe..","....bddddabbbb..","....dddddaabaa..","....dabbae......"],"up3":["......kighh.....",".....iiihhiij...","....jjjjiiijj...","....jjjjjjjjjh..","....iiijiiiiig..","...kiiiiiiiiii..","...hiihihhiiii..","...hiihihhiihh..","..jiiiiiihiiiij.","...khiiiihiihi..","...ffggffffggg..","..ggfgggggggfhg.","..gggfggggghegh.","..gghcggggggcgg.","..mlmbbdddddlnn.","..nnnbddddddlnn.",".....bddeddde...",".....dddkbddk...",".....dddkbbdj...",".....bddjbdda...","....jdddbbbbb...","....edddbbbbde..","....bddddbbbbe..","....dddddbbbbd..","....dddddabbaa..","....bbbba......."],"right0":["......ifcfg.....",".....ihhhhhgi...","....hhiiiiiiij..","....ghhhhhhjmh..","....ghghghhlng..","....fghnhikang..","...kgghkihlnnn..","...hhgggijnnn...","....hgffiimn....","....kjfghij.....","......jggff.....","......fhgfgg....","......hhgcfh....","......khgcfc....","......emngca....","......annma.....","......amnlb.....","......dddbak....","......abdbbe....",".....ebbbabe....",".....bbbbabb....","....dbbbaabb....","....abbbabbae...","....bbbbabbbd...","...ebbbbaabaa...","...eaaabbaabca.."],"right1":["......gfggg.....",".....hhhhhihj...","....fhhiiiiiii..","....hhhhhhhjnh..","....ihggghimng..","....ihkmhglanh..","...egggkihnnnn..","...hhhggiknnn...","....hgggiimn....","....jhfffhj.....","......ggfffj....",".....fgfcfgc....",".....ffcccfi....",".....fccfffh....",".....fcabcca....","....nnnbdbb.....",".....nnbddde....","......eabbdd....","......aabbbbe...",".....aaaabdde...","....baaaabbbb...","..jabbbaebdddk..",".dbbaabeebdddd..",".aabbaa.abddda..","..gaabe.abbbba..","....dbd.dababbb."],"right3":[".....hfggg......","....ihihhhhh....","....iiiiiiiii...","...hhhhhhijmg...","...gghhhhhlng...","...jhgnhikane...","...hggihilnnn...","..jhghhhinnn....","...fgghhiln.....","....igfcij......",".....jggffk.....",".....iggcgf.....",".....hggccg.....",".....khhffg.....",".....klmkab.....",".....bnnnaj.....",".....bmnnae.....",".....abdbaa.....","....ebbbbab.....","....dbbbabbe....","....bbbbabba....","...dbbbbabbbe...","...abbbdabbba...","...abbbbabbbab..","..ebbbbbabbaaab.","..baaaababbabde."],"left0":[".....jggfh......","...kiiiiiih.....","..kijjiiiiij....","..gmkiiihhhh....","..gmmkhhhghh....","..jnamkilkhhk...","..nnnnmikgggh...","...nnnmigghhh...","....nmljhggh....","......hfggik....",".....ccghh......","....jgcghf......",".....fchgh......","....kccghg......","....dbcmmd......",".....blnna......",".....aknma......","....baadba......","....aaadbbe.....","....daadbbd.....","....baabbbb.....","....bbabbbae....","...eababbbbb....","...dbbabbdbb....","...bbbaaddbbe...","..gbaabbaaaae..."],"left1":[".....jfcfi......","...kiiihhhhk....","..kiiiiiihii....","..hmkjihhhhhj...","..gnmjhhghhgi...","...nalkikmhhi...","...nnnmijgghi...","...nnnmiihhhhk..","....nmljihhhj...","......igffg.....",".....ccffgh.....","....ggfcffg.....","....jgffcfgj....","....jfffcffj....","....ccccafil....",".....bdddnnn....",".....dddbmnn....","....ddddae......","....bddbaaj.....","...edddaaab.....","...bdddaaaabe...","...bdddbaabbbe..","..bdddddebbbbad.","..dbddba.abbbab.","..dddddd.eaabd..",".bcbaabd.ecae..."],"left3":[".....kghgg......","...khhihiihi....","..kjjiiiiiii....","..hmjiiiiiihi...","..hnljhihhihh...","..knankiikiih...","..nnnnliihhhi...","...nnnmiihhhi...","....nmljhhhhj...",".....jhggfhk....",".....gcggf......","....jfcggf......","....ffcghf......","....kgcghi......","....gcimnh......",".....bmnnd......","....edmnmb......","....abbdbaj.....","....bbabbbe.....","...eababbbd.....","...abbaabbbd....","...bbaaabbbb....","..aabbaabbbbd...",".dbabbaabbbbd...","gaaabaaabbbbb...","dbdaaaabaaaab..."]},"por":{"pal":{"a":"#120f0f","b":"#2f1e1c","c":"#372221","d":"#352620","e":"#3c2b24","f":"#412625","g":"#3f2d26","h":"#422f28","i":"#45312a","j":"#48342c","k":"#4c372f","l":"#513b32","m":"#574139","n":"#604c44","o":"#775c4f","p":"#997664","q":"#b8937e","r":"#cdab95","s":"#e4c4ae","t":"#ecd1bc"},"rows":["................................................","................................................","................................................",".......................nnnmli...................","....................gehjeeghhehg................","..................mnigeeeegiiihin...............","................ogjiheegghhhgijjig..............","...............ieijjdeghhiiijiijjihm............","..............jehjjedhhiijjjjjkkkjim............",".............mhikjiegiihijjkkjkkkkkhn...........","............kjjjjiiejjjjjjjkllkkkkkji...........","...........kjlllkjiikklllkklmmllkkkjkk..........","..........mlllllkiiqllllllllmmlkkkjjjin.........","..........mlllllklqrllllmmmmllljjjjjjjj.........","..........jlllllkpstolmmmmmmlkkjihiiijl.........",".........mllllllmrstrmommmmmlkkjihiijjl.........",".........mkkkkllmsttsnpnllllkkjjhgghiiio........",".........nljjkjmqstttrnpollkjjjihhggiign........",".........mkjjjjlqtt.trppollkjijiiggghiin........","........hlkiijlorttttrpiggjkjijjihhggijl........","........gkkihihjnosttsqrrqpiiijjhgigejik........","........gkjhhjoqrrstttsrrrqqkijjhgigbiijl.......","........ekjhehoqqrrttttqnaaaagkjhgjprkiik.......","........ejjgedkaaaattttlm..aaakjgeiorohkm.......","........djjedaj..aasttst...baqkjheiorngjkn......","........eiieddos.basttttttsrsrhjhehorjgjjl......","........eijedbnrsqrstttsstsssrhihghopeehkl......",".........ljedborsssstttttstsssjiheikeeeijl......",".........ljgdbnrsssrrstttttsssiiheiebeehik......",".........ligebmpsttrqststttttsijheigbedhjm......",".........nljgdbjttttttttrrtttskjgeigdeehjm......","..........mnheddltttqqqqrsttttejhgiedgeijm......","...........lgedbdnttssrsttstsqhjhehedgghil......","..........njigdddeottsttstttppgjhghgdhghkn......",".........nliiheddbdorsttssqqpqijgehgdhgin.......","........nlihhhgedbbbnnqqqppqqqhjeghgdghjm.......","......mihjjhjjhgdbbbbboppppqrpiihhihejkkl.......",".....okggeeeghggedbbbipqqqrrrnkeiihgejn.........","......lcccbbbegeedbbboqqrrrrqgkekjjhde..........",".....nhfffccbcddhbccbpqrrrrrlokmmibbbbb.........",".....iffccccccbcbcfcbqqrrrqongpbfcbbbbcck.......","....kfffccccccbbbcffbqrrrrrrrqqbbccbbcfffi......","...hhfffcccccccbbcfffpqrrrrrrrqbcffbcffffe......","...fffffcbcccccccffffcqrrrrrrqbbcffbcfffffm.....","...iffccccbbccccbfffbcoqrrrrroccffcbcfcfffk.....","...ffffccbbbbcccccbbbccprrrrpcccbbccccccfck.....","..mffccccbbbbccccbbbbbbborqocbccbbbbbbccccl.....","..lfffcccbbbbcccccccbbbcccccbcccbccccccccfk....."]}}};
+// кадры: 0 стоит, 1 шаг, 2 стоит, 3 второй шаг; «~» — зеркальная копия кадра
+const SPR_MAP = {
+  ruben: { down: ['down0', 'down1', 'down0', '~down1'], up: ['up0', 'up1', 'up0', '~up1'], right: ['right0', 'right1', 'right0', 'right1'], left: ['left0', 'left1', 'left0', 'left1'],
+    downH: ['downH0', '~downH2', 'downH0', 'downH2'], upH: ['upH0', '~upH2', 'upH0', 'upH2'], rightH: ['rightH0', 'rightH2', 'rightH0', 'rightH2'], leftH: ['leftH0', 'leftH2', 'leftH0', 'leftH2'] },
+  varya: { down: ['down0', 'down1', 'down0', 'down3'], up: ['up0', 'up1', 'up0', 'up3'], right: ['right0', 'right1', 'right0', 'right3'], left: ['left0', 'left1', 'left0', 'left3'] },
+};
+const _cspr = {}, _cpor = {};
+const isSkinCol = col => { const [r, g, b] = hex2rgb(col); return r > 140 && r > g && g > b && r - b > 30; };
+const maskCol = col => { const [r, g, b] = hex2rgb(col); const l = (r + g + b) / 3 / 220; return rgba('#9fdcb4', 1).replace(/rgba\((\d+),(\d+),(\d+),1\)/, (m, R, G, B) => `rgb(${Math.round(R * l)},${Math.round(G * l)},${Math.round(B * l)})`); };
+function paintRows(c, rows, pal, opt, flip, w, ox = 0, oy = 0) {
+  rows.forEach((r, j) => { for (let i = 0; i < r.length; i++) { const ch = r[i]; if (ch === '.') continue; let col = pal[ch]; if (opt.mask && isSkinCol(col)) col = maskCol(col); c.fillStyle = col; c.fillRect(ox + (flip ? w - 1 - i : i), oy + j, 1, 1); } });
+}
+function customSprite(id, dir, f, opt = {}) {
+  const D = SPR_DATA[id], M = SPR_MAP[id]; const set = dir + (opt.hood && M[dir + 'H'] ? 'H' : '');
+  let name = (M[set] || M.down)[(f || 0) % 4]; if (opt.smile && id === 'varya' && dir === 'down' && name === 'down0') name = 'downS';
+  const key = id + set + name + (opt.mask ? 'M' : ''); if (_cspr[key]) return _cspr[key];
+  const flip = name[0] === '~'; if (flip) name = name.slice(1);
+  const [cv, c] = mk(D.w, D.h); paintRows(c, D.frames[name], D.pal, opt, flip, D.w);
+  return _cspr[key] = cv;
+}
+function customPortrait(id, opt = {}) {
+  const key = id + JSON.stringify(opt); if (_cpor[key]) return _cpor[key];
+  const D = SPR_DATA[id].por, pal = CHARS[id]; const [cv, c] = mk(48, 48);
+  const bg = opt.bg || shade(pal.top, -0.6); R(c, 0, 0, 48, 48, bg); dither(c, 0, 0, 48, 48, shade(bg, 0.06));
+  paintRows(c, D.rows, D.pal, opt, false, 48);
+  if (opt.lux) { for (const [x, y] of [[36, 6], [37, 5], [35, 5], [36, 4], [38, 6]]) P(c, x, y, '#fffbe0'); c.fillStyle = 'rgba(0,0,0,.22)'; for (let i = 0; i < 6; i++) { c.fillRect(16 + i, 33 + i, 1, 1); c.fillRect(31 - i, 33 + i, 1, 1); } }
+  return _cpor[key] = cv;
 }
 
 /* ---- 30_data_chars ---- */
@@ -2368,11 +2404,18 @@ function resize() {
   const k = Math.max(1, Math.floor(Math.min(ph / tH, pw / minW)));
   View.k = k; View.W = Math.ceil(pw / k); View.H = Math.ceil(ph / k); View.css = k / DPR;
   cv.width = View.W; cv.height = View.H; ctx.imageSmoothingEnabled = false;
-  [lightCv, lightCx] = mk(View.W, View.H); [reflCv, reflCx] = mk(View.W, View.H);
-  // виньетка
-  { const [vc, v] = mk(View.W, View.H); const g = v.createRadialGradient(View.W / 2, View.H / 2, Math.min(View.W, View.H) * 0.35, View.W / 2, View.H / 2, Math.hypot(View.W, View.H) * 0.62); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(2,4,10,.42)'); v.fillStyle = g; v.fillRect(0, 0, View.W, View.H); vigCv = vc; }
+  // свет и блики — в половинном разрешении (они мягкие), так в разы быстрее на телефонах
+  [lightCv, lightCx] = mk(Math.ceil(View.W / 2), Math.ceil(View.H / 2)); [reflCv, reflCx] = mk(View.W, View.H); [lrCv, lrCx] = mk(Math.ceil(View.W / 2), Math.ceil(View.H / 2));
+  for (const x of [lightCx, lrCx]) { x.imageSmoothingEnabled = true; x.setTransform(0.5, 0, 0, 0.5, 0, 0); }
+  _tv = {};
 }
-let vigCv = null;
+let vigCv = null, lrCv, lrCx, _tv = {};
+// тонировка сцены с виньеткой (умножение): центр — цвет атмосферы, края темнее
+function tintVig(col) { if (_tv[col]) return _tv[col]; const w = 160, h = Math.max(60, Math.round(160 * View.H / View.W)); const [c, x] = mk(w, h); x.fillStyle = col; x.fillRect(0, 0, w, h); const g = x.createRadialGradient(w / 2, h / 2, Math.min(w, h) * 0.35, w / 2, h / 2, Math.hypot(w, h) * 0.62); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.45)'); x.fillStyle = g; x.fillRect(0, 0, w, h); return _tv[col] = c; }
+// адаптивное качество: если кадр долгий — упрощаем эффекты
+const Perf = { ema: 16, level: 0, get low() { return this.level >= 1; }, t: 0,
+  frame(ms) { this.ema += (Math.min(ms, 120) - this.ema) * 0.05; this.t += ms; if (this.t < 1500) return; this.t = 0;
+    if (this.ema > 26 && this.level < 2) { this.level++; this.ema = 16; } else if (this.ema < 12 && this.level > 0) { this.level--; this.ema = 16; } } };
 const nightApt = () => (G.s.episode === 1 && !Flags.has('morning')) || G.s.episode === 10;
 const nightStreet = () => G.s.episode === 10 || Time.isNight();
 
@@ -2766,7 +2809,7 @@ const World = {
       this.drawSideExtras(cam, t);
       const list = [...this.npcs.map(n => ({ n, y: 0 })), { me: 1 }];
       const cs = L.charScale || 1;
-      if (L.mirror) { ctx.globalAlpha = L.mirror.ca || 0.25; for (const [pal, e, me] of [...this.npcs.map(n => [CHARS[n.id], n, false]), [CHARS.ruben, this.player, true]]) ctx.drawImage(Mirror.refl(this.charSprite(pal, e, me), 18), Math.round(e.x - 7 * cs - cam.x), Math.round(L.floor - cam.y), Math.round(14 * cs), Math.round(28 * cs)); ctx.globalAlpha = 1; }
+      if (L.mirror) { ctx.globalAlpha = L.mirror.ca || 0.25; for (const [pal, e, me] of [...this.npcs.map(n => [CHARS[n.id], n, false]), [CHARS.ruben, this.player, true]]) { const sp = this.charSprite(pal, e, me); ctx.drawImage(Mirror.refl(sp, Math.round(sp.height * 0.65)), Math.round(e.x - sp.width * cs / 2 - cam.x), Math.round(L.floor - cam.y), Math.round(sp.width * cs), Math.round(sp.height * cs)); } ctx.globalAlpha = 1; }
       for (const n of this.npcs) this.drawChar(CHARS[n.id], n, n.x - 7 * cs - cam.x, L.floor - 27 * cs - cam.y, false, cs);
       this.drawChar(CHARS.ruben, this.player, this.player.x - 7 * cs - cam.x, L.floor - 27 * cs - cam.y, true, cs);
       if (L.fg) L.fg(ctx, cam, t);
@@ -2774,7 +2817,8 @@ const World = {
       if (L.behind) L.behind(ctx, cam, t);
       ctx.drawImage(this.bg, -cam.x, -cam.y);
       const cs = L.charScale || 1;
-      if (L.mirror && this.mirrorMask) this.drawReflections(cam, t, cs);
+      if (L.mirror && this.mirrorMask) this.drawReflections(cam, t, cs, Perf.level >= 2);
+      if (L.fx && !Perf.low) { ctx.globalCompositeOperation = 'lighter'; L.fx(ctx, cam, t, L.dark ? L.dark() : 0); ctx.globalCompositeOperation = 'source-over'; } // лучи из окон — на полу, под людьми и мебелью
       const items = [];
       for (const p of this.props) { if (p.d.flat || p.d.wall || p.flatish) { if (p.if && p.if()) items.push({ y: p.y + p.h, f: () => ctx.drawImage(p.img, p.x - cam.x, p.y - cam.y) }); continue; } if (p.if && !p.if()) continue; items.push({ y: p.y + p.sortY, f: () => ctx.drawImage(p.img, p.x - cam.x, p.y - cam.y) }); }
       for (const n of this.npcs) items.push({ y: n.y, f: () => this.drawChar(CHARS[n.id], n, n.x - 7 * cs - cam.x, n.y - 26 * cs - cam.y, false, cs) });
@@ -2788,15 +2832,17 @@ const World = {
   charSprite(pal, ent, isPlayer) {
     const lux = isPlayer && G.s.luxUntil && Flags.has('lux_face') && !Flags.has('morning');
     const mask = isPlayer && Flags.has('mask_on');
-    return personSprite(pal, ent.dir, ent.frame || 0, { lux, mask });
+    const hood = isPlayer && (Time.isNight() || G.s.episode === 10) && this.locId !== 'apt' && !G.garageLit; // ночью Рубен в капюшоне
+    return personSprite(pal, ent.dir, ent.frame || 0, { lux, mask, hood });
   },
   drawChar(pal, ent, x, y, isPlayer, sc = 1) {
     // мягкая тень (контактная)
     { const sx = x + 7 * sc, sy = y + 27 * sc, rr = 6.5 * sc; ctx.save(); ctx.translate(sx, sy); ctx.scale(1, 0.32); const g = ctx.createRadialGradient(0, 0, 0, 0, 0, rr); g.addColorStop(0, 'rgba(0,0,0,.55)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(-rr, -rr, rr * 2, rr * 2); ctx.restore(); }
     const lux = isPlayer && G.s.luxUntil && Flags.has('lux_face') && !Flags.has('morning');
     const spr = this.charSprite(pal, ent, isPlayer);
-    const bob = (!ent.moving && Math.floor((this.t + (ent.x || 0) * 0.01) * 1.5) % 2 === 0) ? 0 : 0;
-    ctx.drawImage(spr, Math.round(x), Math.round(y + bob), Math.round(14 * sc), Math.round(28 * sc));
+    // спрайты разного размера: ставим по центру и по ступням
+    const sw = spr.width * sc, sh = spr.height * sc;
+    ctx.drawImage(spr, Math.round(x + 7 * sc - sw / 2), Math.round(y + 27 * sc - sh), Math.round(sw), Math.round(sh));
     if (lux && Math.floor(this.t * 4) % 3 === 0) { ctx.fillStyle = '#fff'; ctx.fillRect(Math.round(x + 12 * sc), Math.round(y + 1), Math.ceil(sc), Math.ceil(sc)); }
   },
   drawSideExtras(cam, t) {
@@ -2838,7 +2884,8 @@ const World = {
     const vis = l => { const x = l.x - cam.x, y = l.y - cam.y, r = l.r; return !(x < -r - 40 || x > W + r + 40 || y < -r || y > H + r + (l.cone || 0)); };
     // 1) холодная тонировка всей сцены
     const amb = L.ambient ? L.ambient() : (dark > 0.3 ? '#a9b8d8' : '#dfe6f2');
-    if (amb) { ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = amb; ctx.fillRect(0, 0, W, H); ctx.globalCompositeOperation = 'source-over'; }
+    ctx.globalCompositeOperation = 'multiply'; ctx.imageSmoothingEnabled = true; ctx.drawImage(tintVig(amb || '#ffffff'), 0, 0, W, H); ctx.imageSmoothingEnabled = false; ctx.globalCompositeOperation = 'source-over'; // тонировка + виньетка за один проход
+    const lo = Perf.low;
     // 2) темнота с «дырами» от источников
     if (dark > 0.01) {
       const lc = lightCx; lc.globalCompositeOperation = 'source-over'; lc.clearRect(0, 0, W, H);
@@ -2846,39 +2893,37 @@ const World = {
       lc.globalCompositeOperation = 'destination-out';
       for (const l of lights) {
         if (!vis(l)) continue; const x = l.x - cam.x, y = l.y - cam.y, a = l.a * l.k;
-        const g = lc.createRadialGradient(x, y, 0, x, y, l.r); g.addColorStop(0, `rgba(0,0,0,${a})`); g.addColorStop(0.45, `rgba(0,0,0,${a * 0.5})`); g.addColorStop(1, 'rgba(0,0,0,0)'); lc.fillStyle = g; lc.fillRect(x - l.r, y - l.r, l.r * 2, l.r * 2);
+        lc.globalAlpha = Math.min(1, a); lc.drawImage(holeSpr(), x - l.r, y - l.r, l.r * 2, l.r * 2); lc.globalAlpha = 1;
         if (l.cone) this.cone(lc, x, y, l.cone, l.cw || l.r * 0.6, `rgba(0,0,0,${a * 0.85})`);
       }
-      ctx.drawImage(lightCv, 0, 0);
+      ctx.imageSmoothingEnabled = true; ctx.drawImage(lightCv, 0, 0, W, H); ctx.imageSmoothingEnabled = false;
     }
     // 3) цветной свет — сложение: холодные лампы, тёплые точки
     ctx.globalCompositeOperation = 'lighter';
     const str = 0.05 + 0.2 * dark;
     for (const l of lights) {
       if (l.col === '#fff' || !vis(l)) continue; const x = l.x - cam.x, y = l.y - cam.y, a = l.a * l.k * (l.i || 1);
-      glow(ctx, x, y, l.r * 0.85, l.col, str * a);
-      if (l.core !== 0) glow(ctx, x, y, Math.max(3, l.r * 0.15), l.col, Math.min(0.85, (0.2 + 0.55 * dark) * a));
+      fglow(ctx, x, y, l.r * 0.85, l.col, str * a);
+      if (l.core !== 0 && !lo) fglow(ctx, x, y, Math.max(3, l.r * 0.15), l.col, Math.min(0.85, (0.2 + 0.55 * dark) * a));
       if (l.cone) this.cone(ctx, x, y, l.cone, l.cw || l.r * 0.6, rgba(l.col, Math.min(0.5, str * a * 1.4)));
     }
-    if (L.fx) L.fx(ctx, cam, t, dark);
     // 4) отражения света на глянцевом / мокром полу
-    if (L.mirror || (L.wet && L.wet())) this.lightRefl(cam, lights, dark);
+    if ((L.mirror || (L.wet && L.wet())) && Perf.level < 2) this.lightRefl(cam, lights, dark);
     ctx.globalCompositeOperation = 'source-over';
-    if (vigCv) ctx.drawImage(vigCv, 0, 0);
   },
   cone(c, x, y, len, w, c0, c1 = 'rgba(0,0,0,0)') { const g = c.createLinearGradient(0, y, 0, y + len); g.addColorStop(0, c0); g.addColorStop(1, c1); c.fillStyle = g; c.beginPath(); c.moveTo(x - w * 0.22, y); c.lineTo(x + w * 0.22, y); c.lineTo(x + w, y + len); c.lineTo(x - w, y + len); c.closePath(); c.fill(); },
   lightRefl(cam, lights, dark) {
-    const L = this.L, rc = reflCx, side = L.type === 'side'; rc.globalCompositeOperation = 'source-over'; rc.clearRect(0, 0, View.W, View.H);
+    const L = this.L, rc = lrCx, side = L.type === 'side'; rc.globalCompositeOperation = 'source-over'; rc.clearRect(0, 0, View.W, View.H); let any = false;
     const str = (L.mirror && L.mirror.la || 0.55) * (0.2 + 0.6 * dark);
     for (const l of lights) {
       if (l.col === '#fff' || l.norefl) continue; let ry;
       if (side) { if (l.y >= L.floor - 2) continue; ry = L.floor + (L.floor - l.y) * 0.35; } else { if (!l.h) continue; ry = l.y + l.h * 2; }
       const x = l.x - cam.x, y = ry - cam.y, rr = l.r * 0.75; if (x < -rr || x > View.W + rr || y < -rr * 1.6 || y > View.H + rr * 1.6) continue;
-      rc.save(); rc.translate(x, y); rc.scale(side ? 0.32 : 0.42, side ? 1 : 1.6); glow(rc, 0, 0, rr, l.col, Math.min(0.85, str * l.a * l.k)); glow(rc, 0, 0, rr * 0.25, l.col, Math.min(0.9, str * l.a * l.k * 1.6)); rc.restore();
+      any = true; const sx = side ? 0.32 : 0.42, sy = side ? 1 : 1.6; fglow(rc, x, y, rr, l.col, Math.min(0.85, str * l.a * l.k), sx, sy); fglow(rc, x, y, rr * 0.25, l.col, Math.min(0.9, str * l.a * l.k * 1.6), sx, sy);
     }
     if (side) { rc.globalCompositeOperation = 'destination-out'; rc.fillStyle = '#000'; rc.fillRect(0, 0, View.W, L.floor - cam.y); }
-    else if (this.mirrorMask) { rc.globalCompositeOperation = 'destination-in'; rc.drawImage(this.mirrorMask, -cam.x, -cam.y); }
-    ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(reflCv, 0, 0);
+    else if (this.mirrorMask) { if (!any) return; rc.globalCompositeOperation = 'destination-in'; rc.drawImage(this.mirrorMask, -cam.x, -cam.y); }
+    rc.globalCompositeOperation = 'source-over'; ctx.globalCompositeOperation = 'lighter'; ctx.imageSmoothingEnabled = true; ctx.drawImage(lrCv, 0, 0, View.W, View.H); ctx.imageSmoothingEnabled = false;
   },
   // щелчок стартера, когда лампа мигает рядом с героем
   fluoSound(lights, cam) {
@@ -2887,18 +2932,25 @@ const World = {
       if (off && !was && Math.hypot(l.x - p.x, l.y - p.y) < 160 && (now - (this._flT || 0)) > 0.12) { this._flT = now; SND.sfx('fluo'); } this._fl[key] = off; }
   },
   // отражения в полу: окно с городом и все, кто ходит по плитке
-  drawReflections(cam, t, cs) {
-    const L = this.L, M = L.mirror, rc = reflCx; rc.globalCompositeOperation = 'source-over'; rc.clearRect(0, 0, View.W, View.H);
-    if (M.band) {
-      const [y0, y1, fl] = M.band; const sf = fl - cam.y; const a0 = Math.max(0, y0 - cam.y), a1 = Math.min(View.H, y1 - cam.y, sf);
-      if (a1 > a0 && sf < View.H) { rc.save(); rc.translate(0, 2 * sf); rc.scale(1, -1); rc.drawImage(cv, 0, a0, View.W, a1 - a0, 0, a0, View.W, a1 - a0); rc.restore();
-        rc.globalCompositeOperation = 'destination-out'; const g = rc.createLinearGradient(0, sf, 0, sf + (M.bandLen || 110)); g.addColorStop(0, 'rgba(0,0,0,.25)'); g.addColorStop(1, 'rgba(0,0,0,1)'); rc.fillStyle = g; rc.fillRect(0, sf, View.W, View.H); rc.globalCompositeOperation = 'source-over'; }
+  drawReflections(cam, t, cs, noBand) {
+    const L = this.L, M = L.mirror, rc = reflCx, W = View.W, H = View.H;
+    // окно с городом: только когда полоса пола под окном в кадре
+    if (M.band && !noBand) {
+      const [y0, y1, fl] = M.band; const sf = fl - cam.y, len = M.bandLen || 110; const top = Math.max(0, Math.floor(sf)), bot = Math.min(H, Math.ceil(sf + len));
+      if (bot > top) {
+        rc.save(); rc.beginPath(); rc.rect(0, top, W, bot - top); rc.clip(); rc.globalCompositeOperation = 'source-over'; rc.clearRect(0, top, W, bot - top);
+        rc.save(); rc.translate(0, 2 * sf); rc.scale(1, -1); M.bandDraw(rc, cam, t); rc.restore();
+        rc.globalCompositeOperation = 'destination-out'; const g = rc.createLinearGradient(0, sf, 0, sf + len); g.addColorStop(0, 'rgba(0,0,0,.25)'); g.addColorStop(1, 'rgba(0,0,0,1)'); rc.fillStyle = g; rc.fillRect(0, top, W, bot - top);
+        rc.globalCompositeOperation = 'destination-in'; rc.drawImage(this.mirrorMask, -cam.x, -cam.y); rc.restore(); rc.globalCompositeOperation = 'source-over';
+        ctx.globalAlpha = M.ca || 0.4; ctx.drawImage(reflCv, 0, top, W, bot - top, 0, top, W, bot - top); ctx.globalAlpha = 1;
+      }
     }
-    const one = (pal, ent, isP) => { const spr = this.charSprite(pal, ent, isP); const rf = Mirror.refl(spr, 22); const x = ent.x - 7 * cs - cam.x, y = ent.y + 1 * cs - cam.y; if (x < -20 * cs || x > View.W || y > View.H || y < -30 * cs) return; rc.drawImage(rf, Math.round(x), Math.round(y), Math.round(14 * cs), Math.round(28 * cs)); };
+    // люди — прямо в кадр (без буфера и маски)
+    ctx.globalAlpha = (M.ca || 0.4) * 0.85;
+    const one = (pal, ent, isP) => { const spr = this.charSprite(pal, ent, isP); const rf = Mirror.refl(spr, Math.round(spr.height * 0.8)); const sw = spr.width * cs, sh = spr.height * cs; const x = ent.x - sw / 2 - cam.x, y = ent.y + 1 * cs - cam.y; if (x < -sw || x > W || y > H || y < -sh) return; ctx.drawImage(rf, Math.round(x), Math.round(y), Math.round(sw), Math.round(sh)); };
     for (const n of this.npcs) one(CHARS[n.id], n, false);
     one(CHARS.ruben, this.player, true);
-    rc.globalCompositeOperation = 'destination-in'; rc.drawImage(this.mirrorMask, -cam.x, -cam.y);
-    ctx.globalAlpha = M.ca || 0.4; ctx.drawImage(reflCv, 0, 0); ctx.globalAlpha = 1;
+    ctx.globalAlpha = 1;
   },
   surface() { const L = this.L, p = this.player; if (L.surface) return typeof L.surface === 'function' ? L.surface(p.x, p.y) : L.surface; return L.type === 'top' ? 'tile' : 'wood'; },
   rain(t) {
@@ -2999,9 +3051,9 @@ LOC.office2 = {
   amb: () => Time.isNight() ? 'office_night' : 'office_day',
   surface: (x, y) => (y > O2_STAIRS.y - 6 && x > O2_STAIRS.x - 4 && x < O2_STAIRS.x + O2_STAIRS.w + 4) ? 'stairs' : 'tile',
   // пол слегка зеркальный: отражает людей, мебель, свет и панораму города
-  mirror: { a: 0.3, ca: 0.42, la: 0.6, band: [10, 138, 146], bandLen: 130 },
+  mirror: { a: 0.3, ca: 0.42, la: 0.6, band: [10, 138, 146], bandLen: 130, bandDraw(c, cam, t) { if (City.frame) c.drawImage(City.frame, 0, 10 - cam.y); c.fillStyle = '#1a1d22'; for (let x = 11; x < O2W; x += 34) { const sx = x - cam.x; if (sx > -4 && sx < View.W + 4) c.fillRect(sx, 10 - cam.y, 2, 128); } for (const [x, w] of [[210, 45], [569, 42]]) c.fillRect(x - cam.x, 10 - cam.y, w, 128); } },
   mirrorMask(m) { m.fillStyle = '#fff'; m.fillRect(0, 146, O2W, O2H - 146); const S = O2_STAIRS; m.clearRect(S.x - 2, S.y - 2, S.w + 4, S.h + 20); },
-  behind(c, cam, t) { if (cam.y > 146) return; City.draw(c, -cam.x, 10 - cam.y, O2W, 128, cam.x, t, Time.isNight()); },
+  behind(c, cam, t) { City.frame = null; if (cam.y > 146) return; let f = City.fcv; if (!f || f.width !== View.W) { [f] = mk(View.W, 128); City.fcv = f; } const x = f.getContext('2d'); x.clearRect(0, 0, f.width, 128); City.draw(x, -cam.x, 0, O2W, 128, cam.x, t, Time.isNight()); c.drawImage(f, 0, 10 - cam.y); City.frame = f; },
   ambient: () => Time.isNight() ? '#a2b4dc' : '#d8e2f0',
   fx(c, cam, t, dark) { // косые столбы света из окон + дымка у стекла
     if (cam.y > 330) return; const night = Time.isNight(); const y0 = 146 - cam.y, len = night ? 110 : 150, sk = 46;
@@ -3132,7 +3184,7 @@ const City = {
     return this.cache[k] = out;
   },
   // rx,ry — экранная позиция левого верхнего угла полосы окна (мировой x=0), rw — ширина полосы, rh — высота
-  draw(c, rx, ry, rw, rh, camx, t, night, clip) {
+  draw(c, rx, ry, rw, rh, camx, t, night, clip, lite) {
     const D = this.build(night), CW = this.CW, H = this.H, P_ = D.P;
     c.save();
     if (clip) { c.beginPath(); for (const q of clip) c.rect(q[0], q[1], q[2], q[3]); c.clip(); }
@@ -3167,7 +3219,7 @@ const City = {
     // туман у низа окна
     const fog = c.createLinearGradient(0, ry + rh * 0.55, 0, ry + rh); fog.addColorStop(0, 'rgba(120,150,190,0)'); fog.addColorStop(1, night ? 'rgba(90,120,170,.22)' : 'rgba(220,230,240,.35)'); c.fillStyle = fog; c.fillRect(rx, ry, rw, rh);
     // капли на стекле ночью
-    if (night) { c.fillStyle = 'rgba(180,200,230,.28)'; for (const d of D.drops) { const y = ((d.s + t * d.v) % (rh + 10)) - 5; c.fillRect(Math.round(rx + d.x % rw), Math.round(ry + y), 1, d.l); } }
+    if (night && !lite) { c.fillStyle = 'rgba(180,200,230,.28)'; for (const d of D.drops) { const y = ((d.s + t * d.v) % (rh + 10)) - 5; c.fillRect(Math.round(rx + d.x % rw), Math.round(ry + y), 1, d.l); } }
     c.restore();
   },
 };
@@ -3236,6 +3288,12 @@ let reflCv, reflCx;
 // масштабированная копия спрайта предмета (общие предметы в офисе 2 приводятся к росту людей)
 const _scImg = new Map();
 function scaleImg(img, sc) { let m = _scImg.get(img); if (!m) _scImg.set(img, m = {}); if (m[sc]) return m[sc]; const [c, x] = mk(Math.round(img.width * sc), Math.round(img.height * sc)); x.drawImage(img, 0, 0, c.width, c.height); return m[sc] = c; }
+
+// заготовленные текстуры свечения (вместо градиентов каждый кадр — в разы быстрее на телефонах)
+const _glowSpr = {}; let _holeSpr = null;
+function glowSpr(col) { if (_glowSpr[col]) return _glowSpr[col]; const [c, x] = mk(64, 64); const g = x.createRadialGradient(32, 32, 0, 32, 32, 32); g.addColorStop(0, rgba(col, 1)); g.addColorStop(0.5, rgba(col, 0.42)); g.addColorStop(1, rgba(col, 0)); x.fillStyle = g; x.fillRect(0, 0, 64, 64); return _glowSpr[col] = c; }
+function holeSpr() { if (_holeSpr) return _holeSpr; const [c, x] = mk(64, 64); const g = x.createRadialGradient(32, 32, 0, 32, 32, 32); g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(0.45, 'rgba(0,0,0,.5)'); g.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(0, 0, 64, 64); return _holeSpr = c; }
+function fglow(c, x, y, r, col, a, sx = 1, sy = 1) { if (a <= 0.003 || r < 1) return; c.globalAlpha = Math.min(1, a); c.drawImage(glowSpr(col), x - r * sx, y - r * sy, r * 2 * sx, r * 2 * sy); c.globalAlpha = 1; }
 
 /* ---- 50_ui ---- */
 /* =====================================================================
@@ -4396,11 +4454,13 @@ const Menu = {
 /* ---------------- Цикл ---------------- */
 let _last = performance.now();
 function loop(now) {
-  const dt = Math.min(0.05, (now - _last) / 1000); _last = now;
+  const raw = (now - _last) / 1000; _last = now; const dt = Math.min(0.1, raw);
   try {
     if (G.mode === 'menu') Menu.draw(dt);
     else {
-      World.update(dt); World.draw(); UI.dlgTick(dt); UI.frame(dt); Game.checkChapter();
+      // движение мелкими шагами: при низком fps герой идёт с нормальной скоростью и не проходит сквозь стены
+      let left = dt; while (left > 0.0001) { const s = Math.min(0.034, left); World.update(s); left -= s; }
+      const f0 = performance.now(); World.draw(); Perf.frame(Math.max(raw * 1000 > 40 ? raw * 1000 : 0, performance.now() - f0)); UI.dlgTick(dt); UI.frame(dt); Game.checkChapter();
       if (UI.dq && Input.act) { Input.act = false; UI.dlgAdvance(); }
       if (UI.dq && !UI.dq.choices && (Input.take('KeyE') || Input.take('Space') || Input.take('Enter'))) UI.dlgAdvance();
     }
