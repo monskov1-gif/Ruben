@@ -29,6 +29,7 @@ input{font:inherit;user-select:text;-webkit-user-select:text}
 #crt::before{content:'';position:absolute;inset:0;background:rgba(255,240,220,.025);animation:flick 4s infinite steps(1)}
 @keyframes flick{0%,100%{opacity:.6}47%{opacity:1}48%{opacity:.3}50%{opacity:.9}}
 body.nocrt #crt{display:none}
+body.touch #crt::before{animation:none;display:none}
 .hidden{display:none!important}
 @keyframes blink{50%{opacity:0}}
 @keyframes tin{from{transform:translateX(30px);opacity:0}to{transform:none;opacity:1}}
@@ -422,9 +423,9 @@ const tmin = s => { if (!s) return 9999; const [a, b] = s.split(':').map(Number)
 
 /* ---------------- Settings ---------------- */
 const Settings = {
-  music: 0.55, sfx: 0.8, crt: true, textSpeed: 2,
-  load() { try { Object.assign(this, JSON.parse(store.get('mrruben_settings') || '{}')); } catch (e) { } this.apply(); },
-  save() { store.set('mrruben_settings', JSON.stringify({ music: this.music, sfx: this.sfx, crt: this.crt, textSpeed: this.textSpeed })); this.apply(); },
+  music: 0.55, sfx: 0.8, crt: true, textSpeed: 2, gfx: 'auto',
+  load() { let o = {}; try { o = JSON.parse(store.get('mrruben_settings') || '{}'); } catch (e) { } Object.assign(this, o); if (!(o.v >= 2) && IS_TOUCH) this.crt = false; /* на телефонах сканлайны по умолчанию выключены: полноэкранный слой дорого композитить */ this.apply(); },
+  save() { store.set('mrruben_settings', JSON.stringify({ v: 2, music: this.music, sfx: this.sfx, crt: this.crt, textSpeed: this.textSpeed, gfx: this.gfx })); this.apply(); },
   apply() { document.body.classList.toggle('nocrt', !this.crt); if (typeof SND !== 'undefined') SND.applyVol(); },
 };
 
@@ -597,10 +598,10 @@ const SND = {
       this.fx = this.ac.createGain(); this.fx.connect(this.master);
       const len = this.ac.sampleRate * 2; this.noiseBuf = this.ac.createBuffer(1, len, this.ac.sampleRate);
       const d = this.noiseBuf.getChannelData(0); for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-      // реверберация помещения (сгенерированный импульс) и отдельная шина эмбиента
-      this.vsend = this.ac.createGain(); this.vsend.gain.value = 0.15; const cv = this.ac.createConvolver(); const il = Math.floor(this.ac.sampleRate * 2.4); const ib = this.ac.createBuffer(2, il, this.ac.sampleRate);
-      for (let ch = 0; ch < 2; ch++) { const dd = ib.getChannelData(ch); for (let i = 0; i < il; i++) dd[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / il, 3.2) * (i < 60 ? i / 60 : 1); }
-      cv.buffer = ib; this.vsend.connect(cv); cv.connect(this.fx);
+      // лёгкое эхо помещения: две линии задержки с обратной связью (вместо тяжёлой свёртки — бережёт процессор телефона)
+      this.vsend = this.ac.createGain(); this.vsend.gain.value = 0.15;
+      for (const [dt, fbv] of [[0.11, 0.42], [0.173, 0.36]]) { const dl = this.ac.createDelay(1); dl.delayTime.value = dt; const lp = this.ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2400; const fb = this.ac.createGain(); fb.gain.value = fbv; this.vsend.connect(dl); dl.connect(lp); lp.connect(fb); fb.connect(dl); lp.connect(this.fx); }
+      this.mkBufs();
       this.fxv = this.ac.createGain(); this.fxv.connect(this.fx); this.fxv.connect(this.vsend);
       this.amb = this.ac.createGain(); this.amb.gain.value = 0.9; this.amb.connect(this.fx); this.amb.connect(this.vsend);
       this.far = this.ac.createBiquadFilter(); this.far.type = 'lowpass'; this.far.frequency.value = 900; this.far.connect(this.amb);
@@ -657,20 +658,28 @@ const SND = {
     }
   },
   // шаги: звук зависит от поверхности
-  step(surf) {
-    if (!this.ac) return; const t = this.ac.currentTime, rv = 0.9 + Math.random() * 0.2, d = this.fxv;
-    switch (surf) {
-      case 'tile': this.noise(t, 0.035, 0.09, 3200 * rv, d, 'bandpass', 1.4); this.tone(210 * rv, t, 0.05, 'sine', 0.06, d, 0.002, 120); break; // каблук по плитке, звонко с эхом
-      case 'stairs': this.tone(95 * rv, t, 0.1, 'sine', 0.17, d, 0.002, 60); this.noise(t, 0.07, 0.08, 700 * rv, d, 'lowpass', 1); this.tone(880 * rv, t + 0.005, 0.07, 'triangle', 0.008, d); break; // гулко, с металлом перил
-      case 'carpet': this.noise(t, 0.06, 0.05, 320 * rv, null, 'lowpass', 0.8); break;
-      case 'wood': this.noise(t, 0.05, 0.07, 450 * rv, d, 'lowpass', 1); this.tone(120 * rv, t, 0.05, 'sine', 0.06, d); if (Math.random() < 0.08) this.tone(260, t + 0.02, 0.18, 'triangle', 0.01, d, 0.05, 210); break;
-      case 'asphalt': this.noise(t, 0.05, 0.06, 1400 * rv, d, 'bandpass', 0.9); this.noise(t, 0.03, 0.03, 4500, null, 'highpass', 1); break;
-      case 'wet': this.noise(t, 0.09, 0.07, 2300 * rv, d, 'bandpass', 0.7); this.noise(t + 0.02, 0.07, 0.04, 6000, null, 'highpass', 0.6); break;
-      case 'gravel': for (let i = 0; i < 4; i++) this.noise(t + i * 0.012, 0.03, 0.05, 1800 + Math.random() * 2500, d, 'bandpass', 2); break;
-      case 'concrete': this.noise(t, 0.04, 0.08, 900 * rv, d, 'bandpass', 1); this.tone(150 * rv, t, 0.04, 'sine', 0.05, d); break;
-      default: this.noise(t, 0.05, 0.07, 500 + Math.random() * 200, d, 'lowpass', 1);
-    }
+  // заготовленные короткие звуки (шаги, щелчки): один узел на звук вместо пяти
+  bufs: {},
+  mkBufs() {
+    const sr = this.ac.sampleRate, mkb = (dur, fn, peak = 0.12) => { const n = Math.floor(sr * dur), b = this.ac.createBuffer(1, n, sr), d = b.getChannelData(0); fn(d, n, sr); let m = 0; for (let i = 0; i < n; i++) m = Math.max(m, Math.abs(d[i])); if (m) for (let i = 0; i < n; i++) d[i] *= peak / m; return b; };
+    // шум через однополюсные фильтры: lp — низкие частоты, hp = x − lp
+    const nz = (d, n, sr, { lo = 0, hi = 0, tau = 0.02, vol = 1, t0 = 0 }) => { let a = 0, b2 = 0; const al = hi ? 1 - Math.exp(-2 * Math.PI * hi / sr) : 1, bl = lo ? 1 - Math.exp(-2 * Math.PI * lo / sr) : 0; for (let i = Math.floor(t0 * sr); i < n; i++) { const t = i / sr - t0, x = Math.random() * 2 - 1; a += al * (x - a); b2 += bl * (a - b2); d[i] += (a - (lo ? b2 : 0)) * Math.exp(-t / tau) * vol; } };
+    const th = (d, n, sr, { f0, f1, tau, vol }) => { let ph = 0; for (let i = 0; i < n; i++) { const t = i / sr, f = f1 + (f0 - f1) * Math.exp(-t / 0.03); ph += 2 * Math.PI * f / sr; d[i] += Math.sin(ph) * Math.exp(-t / tau) * vol; } };
+    const B = this.bufs;
+    B.tile = mkb(0.14, (d, n, r) => { nz(d, n, r, { lo: 1500, hi: 5000, tau: 0.012, vol: 1 }); th(d, n, r, { f0: 210, f1: 120, tau: 0.02, vol: 0.6 }); }, 0.13);
+    B.stairs = mkb(0.18, (d, n, r) => { th(d, n, r, { f0: 95, f1: 60, tau: 0.05, vol: 1 }); nz(d, n, r, { hi: 700, tau: 0.03, vol: 0.5 }); th(d, n, r, { f0: 880, f1: 880, tau: 0.04, vol: 0.05 }); }, 0.2);
+    B.carpet = mkb(0.1, (d, n, r) => nz(d, n, r, { hi: 320, tau: 0.025 }), 0.07);
+    B.wood = mkb(0.12, (d, n, r) => { nz(d, n, r, { hi: 450, tau: 0.02 }); th(d, n, r, { f0: 120, f1: 110, tau: 0.03, vol: 0.7 }); }, 0.11);
+    B.asphalt = mkb(0.1, (d, n, r) => nz(d, n, r, { lo: 700, hi: 2500, tau: 0.02 }), 0.09);
+    B.wet = mkb(0.16, (d, n, r) => { nz(d, n, r, { lo: 1200, hi: 3500, tau: 0.045 }); nz(d, n, r, { lo: 5000, hi: 12000, tau: 0.035, vol: 0.5 }); }, 0.1);
+    B.gravel = mkb(0.12, (d, n, r) => { for (let k = 0; k < 4; k++) nz(d, n, r, { lo: 1200 + Math.random() * 1500, hi: 4500, tau: 0.01, vol: 0.8, t0: k * 0.012 }); }, 0.09);
+    B.concrete = mkb(0.12, (d, n, r) => { nz(d, n, r, { lo: 500, hi: 1500, tau: 0.018 }); th(d, n, r, { f0: 150, f1: 140, tau: 0.02, vol: 0.6 }); }, 0.11);
+    B.key = mkb(0.04, (d, n, r) => nz(d, n, r, { lo: 2500, hi: 6000, tau: 0.006 }), 0.035);
+    B.click = mkb(0.03, (d, n, r) => nz(d, n, r, { lo: 4000, hi: 9000, tau: 0.004 }), 0.03);
   },
+  play(name, t, dest, rate = 1) { const b = this.bufs[name]; if (!b) return; const s = this.ac.createBufferSource(); s.buffer = b; s.playbackRate.value = rate; s.connect(dest || this.fxv); s.start(t || this.ac.currentTime); },
+  // шаги: звук зависит от поверхности
+  step(surf) { if (!this.ac) return; this.play(this.bufs[surf] ? surf : 'tile', 0, surf === 'carpet' ? this.fx : this.fxv, 0.9 + Math.random() * 0.2); },
   // эмбиент локации: петли шума + случайные события (без тональных гудений)
   aloops: [], ambName: null, ambNext: {},
   ambience(name) {
@@ -781,11 +790,11 @@ const AMB = {
   office_day: {
     verb: 0.16, loops: [[0.016, 1500, 'lowpass'], [0.008, 480, 'bandpass', 1.6]], // кондиционер + гул голосов
     ev: {
-      keys: [0.6, 3, (s, t) => { const n = 4 + (Math.random() * 14 | 0); for (let i = 0; i < n; i++) { const tt = t + i * (0.07 + Math.random() * 0.09); s.noise(tt, 0.02, 0.035, 2600 + Math.random() * 2400, s.far, 'bandpass', 3); } }],
-      keys2: [1.5, 5, (s, t) => { const n = 6 + (Math.random() * 10 | 0); for (let i = 0; i < n; i++) s.noise(t + i * 0.11, 0.018, 0.02, 3500, s.far, 'bandpass', 3); }],
+      keys: [0.6, 3, (s, t) => { const n = 4 + (Math.random() * 10 | 0); for (let i = 0; i < n; i++) s.play('key', t + i * (0.07 + Math.random() * 0.09), s.far, 0.8 + Math.random() * 0.5); }],
+      keys2: [1.5, 5, (s, t) => { const n = 5 + (Math.random() * 7 | 0); for (let i = 0; i < n; i++) s.play('key', t + i * 0.11, s.far, 1.2); }],
       phone: [14, 32, (s, t) => { for (let r = 0; r < 2 + (Math.random() * 2 | 0); r++) for (let i = 0; i < 12; i++) { const tt = t + r * 1.4 + i * 0.05; s.tone(i % 2 ? 620 : 480, tt, 0.045, 'sine', 0.02, s.far); } }],
       printer: [18, 40, (s, t) => { for (let i = 0; i < 9; i++) s.noise(t + i * 0.22, 0.18, 0.03, 700 + (i % 2) * 300, s.far, 'bandpass', 2); s.noise(t + 2.1, 0.4, 0.03, 1800, s.far, 'highpass', 0.6); }],
-      mouse: [2, 6, (s, t) => { s.noise(t, 0.012, 0.03, 5000, s.far, 'highpass', 1); s.noise(t + 0.14, 0.012, 0.03, 5000, s.far, 'highpass', 1); }],
+      mouse: [2, 6, (s, t) => { s.play('click', t, s.far); s.play('click', t + 0.14, s.far); }],
       chair: [10, 25, (s, t) => s.tone(520 + Math.random() * 200, t, 0.25, 'sawtooth', 0.006, s.far, 0.05, 380)],
       laugh: [20, 45, (s, t) => { for (let i = 0; i < 4; i++) s.noise(t + i * 0.16, 0.1, 0.02, 650 + i * 40, s.far, 'bandpass', 4); }],
       cup: [15, 35, (s, t) => { s.tone(2400, t, 0.12, 'sine', 0.012, s.amb); s.tone(3100, t + 0.01, 0.1, 'sine', 0.008, s.amb); }],
@@ -819,14 +828,14 @@ const AMB = {
   } },
   apt: { verb: 0.05, loops: [[0.006, 600, 'lowpass']], ev: {
     car: [14, 30, (s, t) => s.noise(t, 3, 0.012, 300, s.far, 'lowpass', 0.6)],
-    tick: [0.9, 1.1, (s, t) => s.noise(t, 0.008, 0.008, 5000, s.amb, 'highpass', 1)],
+    tick: [0.9, 1.1, (s, t) => s.play('click', t, s.amb, 0.7)],
   } },
   cab: { verb: 0.1, loops: [[0.01, 380, 'lowpass'], [0.003, 3000, 'bandpass', 0.6]], ev: {
     fan: [10, 25, (s, t) => s.noise(t, 2, 0.008, 900, s.amb, 'bandpass', 1)],
     drip: [12, 30, (s, t) => s.tone(1500, t, 0.07, 'sine', 0.008, s.amb, 0.002, 800)],
   } },
   exec: { verb: 0.3, loops: [[0.008, 380, 'lowpass']], ev: {
-    clock: [0.95, 1.05, (s, t) => s.noise(t, 0.01, 0.012, 3000, s.amb, 'bandpass', 2)],
+    clock: [0.95, 1.05, (s, t) => s.play('click', t, s.amb, 0.6)],
     car: [12, 30, (s, t) => s.noise(t, 3, 0.012, 300, s.far, 'lowpass', 0.6)],
   } },
   garage: { verb: 0.3, loops: [[0.004, 300, 'lowpass']], ev: { drip: [3, 8, (s, t) => s.tone(1100 + Math.random() * 400, t, 0.09, 'sine', 0.014, s.amb, 0.002, 600)] } },
@@ -2395,7 +2404,7 @@ const CAB_OBJS = {
    41 WORLD — локации, движение, камера, свет
    ===================================================================== */
 const View = { W: 320, H: 180, k: 3 };
-const cv = $('#cv'), ctx = cv.getContext('2d');
+const cv = $('#cv'), ctx = cv.getContext('2d', { alpha: false }); // непрозрачный кадр — быстрее композитинг на телефонах
 let lightCv, lightCx;
 function resize() {
   const L = World.L; const tH = L ? (L.viewH || 170) : 170; const minW = L ? (L.minW || 230) : 230;
@@ -2411,10 +2420,10 @@ function resize() {
 }
 let vigCv = null, lrCv, lrCx, _tv = {};
 // тонировка сцены с виньеткой (умножение): центр — цвет атмосферы, края темнее
-function tintVig(col) { if (_tv[col]) return _tv[col]; const w = 160, h = Math.max(60, Math.round(160 * View.H / View.W)); const [c, x] = mk(w, h); x.fillStyle = col; x.fillRect(0, 0, w, h); const g = x.createRadialGradient(w / 2, h / 2, Math.min(w, h) * 0.35, w / 2, h / 2, Math.hypot(w, h) * 0.62); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.45)'); x.fillStyle = g; x.fillRect(0, 0, w, h); return _tv[col] = c; }
+function tintVig(col) { if (_tv[col]) return _tv[col]; const w = View.W, h = View.H; /* сразу в размер кадра — без растяжения */ const [c, x] = mk(w, h); x.fillStyle = col; x.fillRect(0, 0, w, h); const g = x.createRadialGradient(w / 2, h / 2, Math.min(w, h) * 0.35, w / 2, h / 2, Math.hypot(w, h) * 0.62); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.45)'); x.fillStyle = g; x.fillRect(0, 0, w, h); return _tv[col] = c; }
 // адаптивное качество: если кадр долгий — упрощаем эффекты
-const Perf = { ema: 16, level: 0, get low() { return this.level >= 1; }, t: 0,
-  frame(ms) { this.ema += (Math.min(ms, 120) - this.ema) * 0.05; this.t += ms; if (this.t < 1500) return; this.t = 0;
+const Perf = { ema: 16, level: IS_TOUCH ? 1 : 0, get low() { return this.level >= 1; }, t: 0,
+  frame(ms) { if (Settings.gfx === 'low') { this.level = 2; return; } if (Settings.gfx === 'high') { this.level = 0; return; } this.ema += (Math.min(ms, 120) - this.ema) * 0.05; this.t += ms; if (this.t < 1500) return; this.t = 0;
     if (this.ema > 26 && this.level < 2) { this.level++; this.ema = 16; } else if (this.ema < 12 && this.level > 0) { this.level--; this.ema = 16; } } };
 const nightApt = () => (G.s.episode === 1 && !Flags.has('morning')) || G.s.episode === 10;
 const nightStreet = () => G.s.episode === 10 || Time.isNight();
@@ -2660,6 +2669,8 @@ const World = {
     }
     this.bg = cv;
     this.mirrorMask = null; if (L.mirror) { this.mirrorMask = Mirror.buildMask(this); Mirror.bake(this, c); }
+    if (L.fx) { c.save(); c.globalCompositeOperation = 'lighter'; L.fx(c, { x: 0, y: 0 }, 0, 0, true); c.restore(); } // лучи из окон запекаются в пол
+    this._lc = null;
     this.solids = [];
     for (const p of this.props) { if (p.box && !p.d.flat && !p.d.wall && !p.flatish) { const [bx, by, bw, bh] = p.box; this.solids.push({ x: p.x + bx, y: p.y + by, w: (p.o.w ? Math.round(p.o.w * (p.sc || 1)) : bw), h: bh, if: p.if }); } }
     for (const w of (L.walls || [])) this.solids.push({ x: w[0], y: w[1], w: w[2], h: w[3], wall: true });
@@ -2818,7 +2829,6 @@ const World = {
       ctx.drawImage(this.bg, -cam.x, -cam.y);
       const cs = L.charScale || 1;
       if (L.mirror && this.mirrorMask) this.drawReflections(cam, t, cs, Perf.level >= 2);
-      if (L.fx && !Perf.low) { ctx.globalCompositeOperation = 'lighter'; L.fx(ctx, cam, t, L.dark ? L.dark() : 0); ctx.globalCompositeOperation = 'source-over'; } // лучи из окон — на полу, под людьми и мебелью
       const items = [];
       for (const p of this.props) { if (p.d.flat || p.d.wall || p.flatish) { if (p.if && p.if()) items.push({ y: p.y + p.h, f: () => ctx.drawImage(p.img, p.x - cam.x, p.y - cam.y) }); continue; } if (p.if && !p.if()) continue; items.push({ y: p.y + p.sortY, f: () => ctx.drawImage(p.img, p.x - cam.x, p.y - cam.y) }); }
       for (const n of this.npcs) items.push({ y: n.y, f: () => this.drawChar(CHARS[n.id], n, n.x - 7 * cs - cam.x, n.y - 26 * cs - cam.y, false, cs) });
@@ -2837,7 +2847,7 @@ const World = {
   },
   drawChar(pal, ent, x, y, isPlayer, sc = 1) {
     // мягкая тень (контактная)
-    { const sx = x + 7 * sc, sy = y + 27 * sc, rr = 6.5 * sc; ctx.save(); ctx.translate(sx, sy); ctx.scale(1, 0.32); const g = ctx.createRadialGradient(0, 0, 0, 0, 0, rr); g.addColorStop(0, 'rgba(0,0,0,.55)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(-rr, -rr, rr * 2, rr * 2); ctx.restore(); }
+    { const rr = 6.5 * sc; ctx.globalAlpha = 0.55; ctx.drawImage(holeSpr(), x + 7 * sc - rr, y + 27 * sc - rr * 0.32, rr * 2, rr * 0.64); ctx.globalAlpha = 1; }
     const lux = isPlayer && G.s.luxUntil && Flags.has('lux_face') && !Flags.has('morning');
     const spr = this.charSprite(pal, ent, isPlayer);
     // спрайты разного размера: ставим по центру и по ступням
@@ -2878,53 +2888,59 @@ const World = {
   lighting(cam) {
     const L = this.L, t = this.t; const dark = L.dark ? L.dark() : 0; const cs = L.charScale || 1; const W = View.W, H = View.H;
     const lights = (L.lights ? L.lights() : []).slice();
-    if (dark > 0.4 && this.player && !L.noTorch) { const p = this.player; lights.push({ x: p.x, y: L.type === 'side' ? L.floor - 14 * cs : p.y - 10 * cs, r: L.type === 'side' ? 34 * cs : 30 * cs, a: 0.5, col: '#fff' }); }
-    for (const l of lights) l.k = l.fl ? flickK(l, t) : 1;
+    if (dark > 0.4 && this.player && !L.noTorch) { const p = this.player; lights.push({ x: p.x, y: L.type === 'side' ? L.floor - 14 * cs : p.y - 10 * cs, r: L.type === 'side' ? 34 * cs : 30 * cs, a: 0.5, col: '#fff', dyn: 1 }); }
+    for (const l of lights) l.k = this.isDyn(l) ? flickK(l, t) : 1;
     this.fluoSound(lights, cam);
-    const vis = l => { const x = l.x - cam.x, y = l.y - cam.y, r = l.r; return !(x < -r - 40 || x > W + r + 40 || y < -r || y > H + r + (l.cone || 0)); };
-    // 1) холодная тонировка всей сцены
+    // 1) холодная тонировка + виньетка — один проход
     const amb = L.ambient ? L.ambient() : (dark > 0.3 ? '#a9b8d8' : '#dfe6f2');
-    ctx.globalCompositeOperation = 'multiply'; ctx.imageSmoothingEnabled = true; ctx.drawImage(tintVig(amb || '#ffffff'), 0, 0, W, H); ctx.imageSmoothingEnabled = false; ctx.globalCompositeOperation = 'source-over'; // тонировка + виньетка за один проход
-    const lo = Perf.low;
-    // 2) темнота с «дырами» от источников
+    ctx.globalCompositeOperation = 'multiply'; ctx.drawImage(tintVig(amb || '#ffffff'), 0, 0); ctx.globalCompositeOperation = 'source-over';
+    const smooth = Perf.level === 0; // мягкое растяжение света — только на мощных устройствах
+    // 2) неподвижный свет запечён на всю карту: в кадр копируется только видимый кусок
+    const C = this.lightCache(lights, dark), sx = (cam.x + C.P) / 2, sy = (cam.y + C.P) / 2, sw = W / 2, sh = H / 2;
+    const vis = l => { const x = l.x - cam.x, y = l.y - cam.y, r = l.r; return !(x < -r - 40 || x > W + r + 40 || y < -r || y > H + r + (l.cone || 0)); };
+    const dyn = lights.filter(l => this.isDyn(l) && vis(l)), str = 0.05 + 0.2 * dark;
     if (dark > 0.01) {
-      const lc = lightCx; lc.globalCompositeOperation = 'source-over'; lc.clearRect(0, 0, W, H);
-      lc.fillStyle = `rgba(3,6,16,${dark})`; lc.fillRect(0, 0, W, H);
-      lc.globalCompositeOperation = 'destination-out';
-      for (const l of lights) {
-        if (!vis(l)) continue; const x = l.x - cam.x, y = l.y - cam.y, a = l.a * l.k;
-        lc.globalAlpha = Math.min(1, a); lc.drawImage(holeSpr(), x - l.r, y - l.r, l.r * 2, l.r * 2); lc.globalAlpha = 1;
-        if (l.cone) this.cone(lc, x, y, l.cone, l.cw || l.r * 0.6, `rgba(0,0,0,${a * 0.85})`);
-      }
-      ctx.imageSmoothingEnabled = true; ctx.drawImage(lightCv, 0, 0, W, H); ctx.imageSmoothingEnabled = false;
+      const lc = lightCx; lc.save(); lc.setTransform(1, 0, 0, 1, 0, 0); lc.globalCompositeOperation = 'copy'; lc.drawImage(C.d, sx, sy, sw, sh, 0, 0, sw, sh); lc.restore();
+      if (dyn.length) { lc.globalCompositeOperation = 'destination-out'; lc.save(); lc.translate(-cam.x, -cam.y); for (const l of dyn) this.paintLight(lc, null, l, l.k, str, dark); lc.restore(); lc.globalCompositeOperation = 'source-over'; }
+      ctx.imageSmoothingEnabled = smooth; ctx.drawImage(lightCv, 0, 0, W, H);
     }
-    // 3) цветной свет — сложение: холодные лампы, тёплые точки
-    ctx.globalCompositeOperation = 'lighter';
-    const str = 0.05 + 0.2 * dark;
-    for (const l of lights) {
-      if (l.col === '#fff' || !vis(l)) continue; const x = l.x - cam.x, y = l.y - cam.y, a = l.a * l.k * (l.i || 1);
-      fglow(ctx, x, y, l.r * 0.85, l.col, str * a);
-      if (l.core !== 0 && !lo) fglow(ctx, x, y, Math.max(3, l.r * 0.15), l.col, Math.min(0.85, (0.2 + 0.55 * dark) * a));
-      if (l.cone) this.cone(ctx, x, y, l.cone, l.cw || l.r * 0.6, rgba(l.col, Math.min(0.5, str * a * 1.4)));
+    ctx.globalCompositeOperation = 'lighter'; ctx.imageSmoothingEnabled = smooth;
+    ctx.drawImage(C.g, sx, sy, sw, sh, 0, 0, W, H);
+    if (C.r && Perf.level < 2) ctx.drawImage(C.r, sx, sy, sw, sh, 0, 0, W, H);
+    if (dyn.length) { ctx.save(); ctx.translate(-cam.x, -cam.y); for (const l of dyn) this.paintLight(null, ctx, l, l.k, str, dark, Perf.low); ctx.restore(); }
+    ctx.globalCompositeOperation = 'source-over'; ctx.imageSmoothingEnabled = false;
+  },
+  isDyn(l) { return !!(l.dyn || l.fl === 'dying' || l.fl === 'tv' || l.fl === 'neon' || l.fl === 'pulse'); },
+  paintLight(d, g, l, k, str, dark, lo) {
+    const a = l.a * k;
+    if (d) { d.globalAlpha = Math.min(1, a); d.drawImage(holeSpr(), l.x - l.r, l.y - l.r, l.r * 2, l.r * 2); d.globalAlpha = 1; if (l.cone) this.cone(d, l.x, l.y, l.cone, l.cw || l.r * 0.6, `rgba(0,0,0,${a * 0.85})`); }
+    if (!g || l.col === '#fff') return; const ai = a * (l.i || 1);
+    fglow(g, l.x, l.y, l.r * 0.85, l.col, str * ai);
+    if (l.core !== 0 && !lo) fglow(g, l.x, l.y, Math.max(3, l.r * 0.15), l.col, Math.min(0.85, (0.2 + 0.55 * dark) * ai));
+    if (l.cone) this.cone(g, l.x, l.y, l.cone, l.cw || l.r * 0.6, rgba(l.col, Math.min(0.5, str * ai * 1.4)));
+  },
+  // запекание: темнота с дырами, цветное свечение и блики на полу — один раз на локацию (пересчёт, только если набор ламп изменился)
+  lightCache(lights, dark) {
+    const L = this.L; const st = lights.filter(l => !this.isDyn(l)); const wet = !!(L.mirror || (L.wet && L.wet()));
+    const sig = this.locId + '|' + dark.toFixed(3) + '|' + wet + '|' + st.map(l => l.x + ',' + l.y + ',' + l.r + ',' + l.a + l.col + (l.cone || '')).join(';');
+    if (this._lc && this._lc.sig === sig) return this._lc;
+    const P = 420, Wm = (L.type === 'side' ? L.w : L.mw) + P * 2, Hm = (L.type === 'side' ? L.H : L.mh) + P * 2;
+    const mkh = () => { const [c, x] = mk(Math.ceil(Wm / 2), Math.ceil(Hm / 2)); x.imageSmoothingEnabled = true; x.setTransform(0.5, 0, 0, 0.5, P / 2, P / 2); return [c, x]; };
+    const [dC, d] = mkh(), [gC, g] = mkh(); let rC = null;
+    d.save(); d.setTransform(1, 0, 0, 1, 0, 0); d.fillStyle = `rgba(3,6,16,${dark})`; d.fillRect(0, 0, dC.width, dC.height); d.restore();
+    d.globalCompositeOperation = 'destination-out'; g.globalCompositeOperation = 'lighter';
+    const str = 0.05 + 0.2 * dark; for (const l of st) this.paintLight(d, g, l, 1, str, dark);
+    if (wet) {
+      const side = L.type === 'side', rs = (L.mirror && L.mirror.la || 0.55) * (0.2 + 0.6 * dark); let r; [rC, r] = mkh(); r.globalCompositeOperation = 'lighter'; let any = false;
+      for (const l of st) { if (l.col === '#fff' || l.norefl) continue; let ry; if (side) { if (l.y >= L.floor - 2) continue; ry = L.floor + (L.floor - l.y) * 0.35; } else { if (!l.h) continue; ry = l.y + l.h * 2; }
+        any = true; const fx = side ? 0.32 : 0.42, fy = side ? 1 : 1.6, rr = l.r * 0.75; fglow(r, l.x, ry, rr, l.col, Math.min(0.85, rs * l.a), fx, fy); fglow(r, l.x, ry, rr * 0.25, l.col, Math.min(0.9, rs * l.a * 1.6), fx, fy); }
+      r.globalCompositeOperation = side ? 'destination-out' : 'destination-in';
+      if (side) { r.fillStyle = '#000'; r.fillRect(-P, -P, Wm, L.floor + P); } else if (this.mirrorMask) r.drawImage(this.mirrorMask, 0, 0);
+      if (!any) rC = null;
     }
-    // 4) отражения света на глянцевом / мокром полу
-    if ((L.mirror || (L.wet && L.wet())) && Perf.level < 2) this.lightRefl(cam, lights, dark);
-    ctx.globalCompositeOperation = 'source-over';
+    return this._lc = { sig, d: dC, g: gC, r: rC, P };
   },
   cone(c, x, y, len, w, c0, c1 = 'rgba(0,0,0,0)') { const g = c.createLinearGradient(0, y, 0, y + len); g.addColorStop(0, c0); g.addColorStop(1, c1); c.fillStyle = g; c.beginPath(); c.moveTo(x - w * 0.22, y); c.lineTo(x + w * 0.22, y); c.lineTo(x + w, y + len); c.lineTo(x - w, y + len); c.closePath(); c.fill(); },
-  lightRefl(cam, lights, dark) {
-    const L = this.L, rc = lrCx, side = L.type === 'side'; rc.globalCompositeOperation = 'source-over'; rc.clearRect(0, 0, View.W, View.H); let any = false;
-    const str = (L.mirror && L.mirror.la || 0.55) * (0.2 + 0.6 * dark);
-    for (const l of lights) {
-      if (l.col === '#fff' || l.norefl) continue; let ry;
-      if (side) { if (l.y >= L.floor - 2) continue; ry = L.floor + (L.floor - l.y) * 0.35; } else { if (!l.h) continue; ry = l.y + l.h * 2; }
-      const x = l.x - cam.x, y = ry - cam.y, rr = l.r * 0.75; if (x < -rr || x > View.W + rr || y < -rr * 1.6 || y > View.H + rr * 1.6) continue;
-      any = true; const sx = side ? 0.32 : 0.42, sy = side ? 1 : 1.6; fglow(rc, x, y, rr, l.col, Math.min(0.85, str * l.a * l.k), sx, sy); fglow(rc, x, y, rr * 0.25, l.col, Math.min(0.9, str * l.a * l.k * 1.6), sx, sy);
-    }
-    if (side) { rc.globalCompositeOperation = 'destination-out'; rc.fillStyle = '#000'; rc.fillRect(0, 0, View.W, L.floor - cam.y); }
-    else if (this.mirrorMask) { if (!any) return; rc.globalCompositeOperation = 'destination-in'; rc.drawImage(this.mirrorMask, -cam.x, -cam.y); }
-    rc.globalCompositeOperation = 'source-over'; ctx.globalCompositeOperation = 'lighter'; ctx.imageSmoothingEnabled = true; ctx.drawImage(lrCv, 0, 0, View.W, View.H); ctx.imageSmoothingEnabled = false;
-  },
   // щелчок стартера, когда лампа мигает рядом с героем
   fluoSound(lights, cam) {
     const p = this.player; if (!p) return; this._fl = this._fl || {}; const now = this.t;
@@ -3053,13 +3069,13 @@ LOC.office2 = {
   // пол слегка зеркальный: отражает людей, мебель, свет и панораму города
   mirror: { a: 0.3, ca: 0.42, la: 0.6, band: [10, 138, 146], bandLen: 130, bandDraw(c, cam, t) { if (City.frame) c.drawImage(City.frame, 0, 10 - cam.y); c.fillStyle = '#1a1d22'; for (let x = 11; x < O2W; x += 34) { const sx = x - cam.x; if (sx > -4 && sx < View.W + 4) c.fillRect(sx, 10 - cam.y, 2, 128); } for (const [x, w] of [[210, 45], [569, 42]]) c.fillRect(x - cam.x, 10 - cam.y, w, 128); } },
   mirrorMask(m) { m.fillStyle = '#fff'; m.fillRect(0, 146, O2W, O2H - 146); const S = O2_STAIRS; m.clearRect(S.x - 2, S.y - 2, S.w + 4, S.h + 20); },
-  behind(c, cam, t) { City.frame = null; if (cam.y > 146) return; let f = City.fcv; if (!f || f.width !== View.W) { [f] = mk(View.W, 128); City.fcv = f; } const x = f.getContext('2d'); x.clearRect(0, 0, f.width, 128); City.draw(x, -cam.x, 0, O2W, 128, cam.x, t, Time.isNight()); c.drawImage(f, 0, 10 - cam.y); City.frame = f; },
+  behind(c, cam, t) { City.frame = null; if (cam.y > 146) return; let f = City.fcv; if (!f || f.width !== View.W) { [f] = mk(View.W, 128); City.fcv = f; } City.n = (City.n || 0) + 1; if (Perf.level < 2 || City.n % 2 === 0 || City.lx !== cam.x) { City.lx = cam.x; const x = f.getContext('2d'); x.clearRect(0, 0, f.width, 128); City.draw(x, -cam.x, 0, O2W, 128, cam.x, t, Time.isNight(), null, Perf.level >= 1); } c.drawImage(f, 0, 10 - cam.y); City.frame = f; },
   ambient: () => Time.isNight() ? '#a2b4dc' : '#d8e2f0',
-  fx(c, cam, t, dark) { // косые столбы света из окон + дымка у стекла
+  fx(c, cam, t, dark, bake) { // косые столбы света из окон + дымка у стекла
     if (cam.y > 330) return; const night = Time.isNight(); const y0 = 146 - cam.y, len = night ? 110 : 150, sk = 46;
     const g = c.createLinearGradient(0, y0, 0, y0 + len); g.addColorStop(0, night ? 'rgba(80,110,170,.13)' : 'rgba(220,232,255,.16)'); g.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = g;
-    for (let x = 11; x < O2W; x += 34) { if ((x > 205 && x < 255) || (x > 565 && x < 611)) continue; const sx = x + 2 - cam.x; if (sx < -80 || sx > View.W + 20) continue; c.beginPath(); c.moveTo(sx, y0); c.lineTo(sx + 30, y0); c.lineTo(sx + 30 + sk, y0 + len); c.lineTo(sx + sk, y0 + len); c.fill(); }
-    const h = c.createLinearGradient(0, y0 - 30, 0, y0 + 40); h.addColorStop(0, 'rgba(0,0,0,0)'); h.addColorStop(0.5, night ? 'rgba(90,120,180,.07)' : 'rgba(230,240,255,.1)'); h.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = h; c.fillRect(0, y0 - 30, View.W, 70);
+    for (let x = 11; x < O2W; x += 34) { if ((x > 205 && x < 255) || (x > 565 && x < 611)) continue; const sx = x + 2 - cam.x; if (!bake && (sx < -80 || sx > View.W + 20)) continue; c.beginPath(); c.moveTo(sx, y0); c.lineTo(sx + 30, y0); c.lineTo(sx + 30 + sk, y0 + len); c.lineTo(sx + sk, y0 + len); c.fill(); }
+    const h = c.createLinearGradient(0, y0 - 30, 0, y0 + 40); h.addColorStop(0, 'rgba(0,0,0,0)'); h.addColorStop(0.5, night ? 'rgba(90,120,180,.07)' : 'rgba(230,240,255,.1)'); h.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = h; c.fillRect(0, y0 - 30, bake ? O2W : View.W, 70);
   },
   map: Array.from({ length: Math.ceil(O2H / 16) }, () => '.'.repeat(Math.ceil(O2W / 16))), floorPal: { '.': '#323840' }, wall: '#2c323a', drawBase: drawOffice2Base,
   music: () => Time.isNight() ? 'night' : 'day', dark: () => Time.isNight() ? 0.62 : 0.08,
@@ -3173,11 +3189,14 @@ const City = {
         if (li === 1 && r() < 0.12 && bw > 26) out.ads.push({ x: x + 4, y: by + 6, w: bw - 8, h: 8, s: r() * 10 });
         x += bw + (r() < 0.2 ? 3 + r() * 6 : 0);
       }
+      if (li === 0) { const fg = c.createLinearGradient(0, H * 0.4, 0, H); fg.addColorStop(0, 'rgba(0,0,0,0)'); fg.addColorStop(1, night ? 'rgba(40,50,80,.35)' : 'rgba(210,220,232,.45)'); c.fillStyle = fg; c.fillRect(0, 0, CW, H); } // дымка запечена
+      if (li === 2) { const fg = c.createLinearGradient(0, H * 0.55, 0, H); fg.addColorStop(0, 'rgba(120,150,190,0)'); fg.addColorStop(1, night ? 'rgba(90,120,170,.22)' : 'rgba(220,230,240,.35)'); c.fillStyle = fg; c.fillRect(0, 0, CW, H); }
       if (li === 0) { const tx = 640; R(c, tx, 10, 2, H - 10, P_.far); R(c, tx - 3, 34, 8, 5, P_.far); R(c, tx - 1, 0, 1, 10, P_.far); out.red.push({ li, x: tx, y: 1, s: 0, big: 1 }); out.red.push({ li, x: tx + 1, y: 34, s: 4 }); }
       if (li === 2) { R(c, 0, H - 14, CW, 3, shade(S.col, 0.06)); R(c, 0, H - 11, CW, 11, shade(S.col, -0.2)); for (let i = 0; i < CW; i += 22) R(c, i, H - 11, 2, 11, shade(S.col, 0.05)); }
       out.layers.push(cv);
     });
     // облака
+    { const [sc, sx] = mk(1, H); const g = sx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, P_.sky0); g.addColorStop(1, P_.sky1); sx.fillStyle = g; sx.fillRect(0, 0, 1, H); const hg = sx.createLinearGradient(0, H * 0.45, 0, H); hg.addColorStop(0, 'rgba(0,0,0,0)'); hg.addColorStop(1, P_.glow); sx.fillStyle = hg; sx.fillRect(0, 0, 1, H); out.sky = sc; } // небо — столбик 1px, растягивается без затрат
     out.clouds = Array.from({ length: 7 }, (_, i) => ({ x: r() * CW, y: 6 + r() * 34, w: 50 + r() * 90, h: 6 + r() * 8, v: 1.5 + r() * 2.5 }));
     // капли на стекле
     out.drops = Array.from({ length: 40 }, () => ({ x: r() * CW, v: 6 + r() * 18, s: r() * 200, l: 2 + (r() * 4 | 0) }));
@@ -3189,8 +3208,7 @@ const City = {
     c.save();
     if (clip) { c.beginPath(); for (const q of clip) c.rect(q[0], q[1], q[2], q[3]); c.clip(); }
     const oy = ry + rh - H;
-    const g = c.createLinearGradient(0, ry, 0, ry + rh); g.addColorStop(0, P_.sky0); g.addColorStop(1, P_.sky1); c.fillStyle = g; c.fillRect(rx, ry, rw, rh);
-    const hg = c.createLinearGradient(0, ry + rh * 0.45, 0, ry + rh); hg.addColorStop(0, 'rgba(0,0,0,0)'); hg.addColorStop(1, P_.glow); c.fillStyle = hg; c.fillRect(rx, ry, rw, rh);
+    const sm = c.imageSmoothingEnabled; c.imageSmoothingEnabled = false; c.drawImage(D.sky, 0, 0, 1, H, rx, oy, rw, H); c.imageSmoothingEnabled = sm;
     if (night) { const sr = mulberry(5); for (let i = 0; i < 40; i++) { const sx = sr() * CW, sy = sr() * rh * 0.4; if (Math.sin(t * 1.3 + i) > -0.6) P(c, Math.round(rx + ((sx - camx * 0.02) % rw + rw) % rw), Math.round(ry + sy), 'rgba(220,230,255,.6)'); } }
     // облака
     for (const cl of D.clouds) { const x = ((cl.x + t * cl.v - camx * 0.04) % (CW + 200) + CW + 200) % (CW + 200) - 200; c.fillStyle = night ? 'rgba(90,70,90,.16)' : 'rgba(240,244,250,.32)'; ellipse(c, rx + x, ry + cl.y, cl.w, cl.h, c.fillStyle); c.fillStyle = night ? 'rgba(150,100,90,.08)' : 'rgba(255,255,255,.2)'; c.fillRect(Math.round(rx + x - cl.w * 0.35), Math.round(ry + cl.y + cl.h * 0.3), Math.round(cl.w * 0.7), 1); }
@@ -3198,7 +3216,6 @@ const City = {
       const L = D.layers[li]; let X0 = rx + camx * (1 - D.f[li]); while (X0 > rx) X0 -= CW; while (X0 + CW < rx) X0 += CW;
       // повтор слоя по кругу (дальние слои смещаются медленнее рамы окна)
       for (let x0 = X0; x0 < rx + rw; x0 += CW) c.drawImage(L, Math.round(x0), Math.round(oy));
-      if (li === 0) { const fg = c.createLinearGradient(0, oy + H * 0.4, 0, oy + H); fg.addColorStop(0, 'rgba(0,0,0,0)'); fg.addColorStop(1, night ? 'rgba(40,50,80,.35)' : 'rgba(210,220,232,.45)'); c.fillStyle = fg; c.fillRect(rx, ry, rw, rh); }
       const px = (x) => { let v = X0 + x; while (v < rx - 4) v += CW; return Math.round(v); };
       // мигающие окна
       for (const b of D.blink) if (b.li === li) { const ph = Math.floor(t * 0.25 + b.s) % 7; const on = b.off ? ph === 0 : ph !== 0; if (!on) { R(c, px(b.x), Math.round(oy + b.y), b.w, b.h, night ? '#0a0e18' : shade(P_.mid, 0.06)); } else if (b.off) R(c, px(b.x), Math.round(oy + b.y), b.w, b.h, b.c); }
@@ -3216,8 +3233,6 @@ const City = {
         }
       }
     }
-    // туман у низа окна
-    const fog = c.createLinearGradient(0, ry + rh * 0.55, 0, ry + rh); fog.addColorStop(0, 'rgba(120,150,190,0)'); fog.addColorStop(1, night ? 'rgba(90,120,170,.22)' : 'rgba(220,230,240,.35)'); c.fillStyle = fog; c.fillRect(rx, ry, rw, rh);
     // капли на стекле ночью
     if (night && !lite) { c.fillStyle = 'rgba(180,200,230,.28)'; for (const d of D.drops) { const y = ((d.s + t * d.v) % (rh + 10)) - 5; c.fillRect(Math.round(rx + d.x % rw), Math.round(ry + y), 1, d.l); } }
     c.restore();
@@ -3299,6 +3314,8 @@ function fglow(c, x, y, r, col, a, sx = 1, sy = 1) { if (a <= 0.003 || r < 1) re
 /* =====================================================================
    50 UI — HUD, подсказки, мысли, диалоги, панели
    ===================================================================== */
+// запись стиля только при изменении — меньше пересчётов вёрстки за кадр
+function setSt(el, k, v) { const c = el._st || (el._st = {}); if (c[k] !== v) { c[k] = v; el.style[k] = v; } }
 const UI = {
   stack: [], dq: null, thoughtT: 0, thoughtQ: [], markers: {},
   init() {
@@ -3350,14 +3367,13 @@ const UI = {
     // мысли
     if (this.thoughtT > 0) { this.thoughtT -= dt; if (this.thoughtT <= 0) this.nextThought(); }
     const th = $('#thought');
-    if (World.player && World.L && World.L.type !== 'cut') { const p = World.player; const [sx, sy] = World.toScreen(p.x, World.L.type === 'side' ? World.L.floor - 30 * (World.L.charScale || 1) : p.y - 32 * (World.L.charScale || 1)); th.style.left = clamp(sx, 120, innerWidth - 120) + 'px'; th.style.top = Math.max(120, sy - 46) + 'px'; }
+    if (World.player && World.L && World.L.type !== 'cut') { const p = World.player; const [sx, sy] = World.toScreen(p.x, World.L.type === 'side' ? World.L.floor - 30 * (World.L.charScale || 1) : p.y - 32 * (World.L.charScale || 1)); setSt(th, 'left', Math.round(clamp(sx, 120, innerWidth - 120)) + 'px'); setSt(th, 'top', Math.round(Math.max(120, sy - 46)) + 'px'); }
     // подсказка взаимодействия
     const pr = $('#prompt'); const tg = World.target;
     if (tg && G.mode === 'play' && !this.busy()) {
-      const [sx, sy] = World.toScreen(tg.wx, tg.wy); pr.classList.remove('hidden'); pr.style.left = sx + 'px'; pr.style.top = Math.max(40, sy) + 'px';
-      $('.lbl', pr).textContent = tg.label; $('.key', pr).textContent = IS_TOUCH ? '●' : 'E';
-      $('#actBtn').classList.add('hot');
-    } else { pr.classList.add('hidden'); $('#actBtn').classList.remove('hot'); }
+      const [sx, sy] = World.toScreen(tg.wx, tg.wy); if (pr.classList.contains('hidden')) { pr.classList.remove('hidden'); $('#actBtn').classList.add('hot'); } setSt(pr, 'left', Math.round(sx) + 'px'); setSt(pr, 'top', Math.round(Math.max(40, sy)) + 'px');
+      if (pr._lbl !== tg.label) { pr._lbl = tg.label; $('.lbl', pr).textContent = tg.label; $('.key', pr).textContent = IS_TOUCH ? '●' : 'E'; }
+    } else if (!pr.classList.contains('hidden')) { pr.classList.add('hidden'); $('#actBtn').classList.remove('hot'); }
   },
   updateHUD() {
     if (!G.s) return; const ep = EPISODES[G.s.episode] || {};
@@ -3591,6 +3607,7 @@ UI.settings = function (fromMenu) {
     h('span', {}, 'Музыка'), range(Settings.music, v => { Settings.music = v; Settings.save(); }),
     h('span', {}, 'Звуки'), range(Settings.sfx, v => { Settings.sfx = v; Settings.save(); SND.sfx('click'); }),
     h('span', {}, 'CRT / сканлайны'), tog(Settings.crt, v => { Settings.crt = v; Settings.save(); }),
+    h('span', {}, 'Графика'), (() => { const L = { auto: 'АВТО', high: 'ВЫСОКАЯ', low: 'ЭКОНОМНАЯ' }, order = ['auto', 'high', 'low']; const b = h('button', { class: 'btn', onclick: () => { Settings.gfx = order[(order.indexOf(Settings.gfx) + 1) % 3]; b.textContent = L[Settings.gfx]; Settings.save(); } }, L[Settings.gfx] || 'АВТО'); return b; })(),
     h('span', {}, 'Скорость текста'), sp,
     h('span', {}, 'Полноэкранный режим'), h('button', { class: 'btn', onclick: () => { try { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); } catch (e) { } } }, '⛶'),
   ), h('div', { class: 'sect', style: 'margin-top:22px' }, 'ОПАСНАЯ ЗОНА'), h('button', { class: 'btn red', onclick: e => { if (e.target.dataset.c) { Save.wipe(); this.toast('', 'Прогресс удалён'); this.closeAll(); Menu.show(); } else { e.target.dataset.c = 1; e.target.textContent = 'ТОЧНО? НАЖМИ ЕЩЁ РАЗ'; } } }, 'СБРОСИТЬ ПРОГРЕСС'));
