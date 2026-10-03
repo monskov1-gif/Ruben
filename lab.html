@@ -27,26 +27,36 @@ html,body{height:100%;overflow:hidden;touch-action:none;user-select:none;-webkit
 <div id="joy"></div>
 <script>
 // Флаги в адресе: ?f=c,s,j,a,g,t,p
-const FL = { c: 'холст 2D', s: 'стили игры', j: 'джойстик', a: 'звук', g: 'WebGL', t: 'touch-события', p: 'захват указателя' };
+const FL = { c: 'холст 2D', s: 'стили игры', j: 'джойстик', a: 'звук', g: 'WebGL', t: 'touch-события', p: 'захват указателя', f: 'холст во весь экран', d: 'рисование как в игре' };
 const on = new Set((new URLSearchParams(location.search).get('f') || '').split(',').filter(Boolean));
 const bar = document.getElementById('bar');
 for (const k in FL) { const l = document.createElement('label'); const c = document.createElement('input'); c.type = 'checkbox'; c.checked = on.has(k); c.onchange = () => { c.checked ? on.add(k) : on.delete(k); }; l.append(c, ' ' + FL[k]); bar.append(l); }
 const go = document.createElement('button'); go.textContent = 'ПРИМЕНИТЬ'; go.onclick = () => { location.search = '?f=' + [...on].join(','); }; bar.append(go);
-const all = document.createElement('button'); all.textContent = 'ВСЁ КАК В ИГРЕ'; all.onclick = () => { location.search = '?f=c,s,j,a,g,p'; }; bar.append(all);
+const all = document.createElement('button'); all.textContent = 'ВСЁ КАК В ИГРЕ'; all.onclick = () => { location.search = '?f=c,s,j,a,g,p,f,d'; }; bar.append(all);
 if (on.has('s')) document.getElementById('gamecss').media = 'all';
 
 const info = document.getElementById('info'), cv = document.getElementById('cv'), zone = document.getElementById('zone'), joy = document.getElementById('joy');
 let frames = 0, last = performance.now(), touching = false, tFrames = 0, tMaxGap = 0, tStart = 0, moves = 0, tMoves = 0, ticks = 0, report = 'ещё не касался';
 let x2 = null, gl = null;
+// холст во весь экран: маленький кадр 263x114, растянутый до разрешения экрана (как в игре)
+let LW = 80, LH = 40;
+if (on.has('f')) { LW = 263; LH = 114; const dpr = devicePixelRatio || 1, k = Math.max(1, Math.floor(Math.min(innerHeight * dpr / LH, innerWidth * dpr / LW))); cv.width = LW * k; cv.height = LH * k; cv.style.cssText = `position:fixed;left:0;top:0;width:${LW * k / dpr}px;height:${LH * k / dpr}px;z-index:1;border:0;right:auto`; }
+// «рисование как в игре»: фон-холст, спрайты-холсты, полупрозрачные тени, пиксельный текст
+const mkc = (w, h, f) => { const c = document.createElement('canvas'); c.width = w; c.height = h; f(c.getContext('2d')); return c; };
+const bgC = mkc(320, 110, x => { for (let i = 0; i < 400; i++) { x.fillStyle = `hsl(${i * 7 % 360},30%,${20 + i % 30}%)`; x.fillRect((i * 37) % 320, (i * 53) % 110, 12, 8); } });
+const sprC = mkc(18, 29, x => { x.fillStyle = '#334'; x.fillRect(4, 8, 10, 14); x.fillStyle = '#eca'; x.fillRect(5, 1, 8, 7); x.fillStyle = '#111'; x.fillRect(5, 22, 3, 7); x.fillRect(10, 22, 3, 7); });
+const shC = mkc(64, 64, x => { const g = x.createRadialGradient(32, 32, 0, 32, 32, 32); g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(0, 0, 64, 64); });
+function gameDraw(x, n) { x.imageSmoothingEnabled = false; x.drawImage(bgC, -(n % 60), 0); for (let i = 0; i < 4; i++) { const px = 30 + i * 50 + (n % 40); x.globalAlpha = 0.55; x.drawImage(shC, px - 6, 100, 30, 8); x.globalAlpha = 1; x.drawImage(sprC, px, 46, 36, 58); }
+  x.fillStyle = 'rgba(80,140,220,.7)'; x.fillRect(200, 40, 38, 22); for (let i = 0; i < 300; i++) { x.fillStyle = i % 2 ? '#e3343a' : '#3f3'; x.fillRect(150 + (i % 30), 70 + (i / 30 | 0), 1, 1); } }
 if (on.has('g')) {
-  gl = cv.getContext('webgl'); var off = document.createElement('canvas'); off.width = 80; off.height = 40; x2 = off.getContext('2d');
+  gl = cv.getContext('webgl'); var off = document.createElement('canvas'); off.width = LW; off.height = LH; x2 = off.getContext('2d');
   const sh = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); return o; }; const pr = gl.createProgram();
   gl.attachShader(pr, sh(gl.VERTEX_SHADER, 'attribute vec2 p;varying vec2 uv;void main(){uv=vec2((p.x+1.)*.5,(1.-p.y)*.5);gl_Position=vec4(p,0.,1.);}'));
   gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, 'precision mediump float;uniform sampler2D t;varying vec2 uv;void main(){gl_FragColor=texture2D(t,uv);}')); gl.linkProgram(pr); gl.useProgram(pr);
   const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
   gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0); const tx = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tx);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-} else if (on.has('c')) x2 = cv.getContext('2d');
+} else if (on.has('c') || on.has('f')) { if (on.has('f')) { var off2 = document.createElement('canvas'); off2.width = LW; off2.height = LH; var outC = cv.getContext('2d'); x2 = off2.getContext('2d'); } else x2 = cv.getContext('2d'); }
 
 let ac = null;
 function audio() { if (!on.has('a') || ac) return; ac = new (window.AudioContext || window.webkitAudioContext)(); const g = ac.createGain(); g.gain.value = 0.0001; g.connect(ac.destination);
@@ -69,7 +79,8 @@ if (on.has('t')) {
 function loop(now) {
   const gap = now - last; last = now; frames++;
   if (touching) { tFrames++; if (tFrames > 1) tMaxGap = Math.max(tMaxGap, gap); }
-  if (x2) { x2.fillStyle = touching ? '#030' : '#000'; x2.fillRect(0, 0, 80, 40); x2.fillStyle = '#3f3'; x2.fillRect(frames % 76, 4, 4, 4); x2.font = '14px monospace'; x2.fillText(String(frames % 10000), 4, 30);
+  if (x2) { x2.fillStyle = touching ? '#030' : '#000'; x2.fillRect(0, 0, LW, LH); if (on.has('d')) gameDraw(x2, frames); x2.fillStyle = '#3f3'; x2.fillRect(frames % 76, 4, 4, 4); x2.font = '14px monospace'; x2.fillText(String(frames % 10000), 4, 30);
+    if (!gl && on.has('f')) { outC.imageSmoothingEnabled = false; outC.drawImage(x2.canvas, 0, 0, cv.width, cv.height); }
     if (gl) { gl.viewport(0, 0, cv.width, cv.height); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, x2.canvas); gl.drawArrays(gl.TRIANGLES, 0, 6); } }
   info.textContent = `кадров: ${frames}${touching ? '   ← КАСАНИЕ' : ''}\nдвижений пальца: ${moves}\nтиков звука: ${ticks}\nвключено: ${[...on].map(k => FL[k]).join(', ') || 'ничего'}\n\nПОСЛЕДНЕЕ: ${report}`;
   requestAnimationFrame(loop);

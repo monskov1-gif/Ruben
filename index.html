@@ -2451,7 +2451,8 @@ function initPresenter(mode) {
 }
 initPresenter('gl');
 function present() {
-  if (Dbg.on) { Dbg.fc++; ctx.fillStyle = '#000'; ctx.fillRect(View.W - 40, 1, 39, 12); ctx.fillStyle = '#3f3'; ctx.fillRect(View.W - 38 + (Dbg.fc % 34), 2, 3, 3); ptext(ctx, String(Dbg.fc % 10000), View.W - 3, 7, '#3f3', 1, 'right'); }
+  if (Dbg.on) Dbg.fc++;
+  if (Dbg.on && !Dbg.skip.text) { ctx.fillStyle = '#000'; ctx.fillRect(View.W - 40, 1, 39, 12); ctx.fillStyle = '#3f3'; ctx.fillRect(View.W - 38 + (Dbg.fc % 34), 2, 3, 3); ptext(ctx, String(Dbg.fc % 10000), View.W - 3, 7, '#3f3', 1, 'right'); }
   if (gl) { gl.viewport(0, 0, cvOut.width, cvOut.height); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, cv); gl.drawArrays(gl.TRIANGLES, 0, 6); return; }
   if (!upscaleSelf) { ctxOut.drawImage(cv, 0, 0); return; }
   ctxOut.imageSmoothingEnabled = false; ctxOut.drawImage(cv, 0, 0, cvOut.width, cvOut.height);
@@ -2874,27 +2875,27 @@ const World = {
     if (L.type === 'cut') { L.draw(ctx, this.t); return; }
     const cam = this.cam = this.camera(); const t = this.t;
     if (L.type === 'side') {
-      if (this.far) ctx.drawImage(this.far, Math.round(-cam.x * 0.4) - 0, -cam.y);
-      ctx.drawImage(this.bg, -cam.x, -cam.y);
-      if (L.anim) L.anim(ctx, cam, t);
-      this.drawSideExtras(cam, t);
+      const S = Dbg.skip;
+      if (!S.bg) { if (this.far) ctx.drawImage(this.far, Math.round(-cam.x * 0.4) - 0, -cam.y); ctx.drawImage(this.bg, -cam.x, -cam.y); }
+      if (!S.deco) { if (L.anim) L.anim(ctx, cam, t); this.drawSideExtras(cam, t); }
       const list = [...this.npcs.map(n => ({ n, y: 0 })), { me: 1 }];
       const cs = L.charScale || 1;
       if (L.mirror) { ctx.globalAlpha = L.mirror.ca || 0.25; for (const [pal, e, me] of [...this.npcs.map(n => [CHARS[n.id], n, false]), [CHARS.ruben, this.player, true]]) { const sp = this.charSprite(pal, e, me); ctx.drawImage(Mirror.refl(sp, Math.round(sp.height * 0.65)), Math.round(e.x - sp.width * cs / 2 - cam.x), Math.round(L.floor - cam.y), Math.round(sp.width * cs), Math.round(sp.height * cs)); } ctx.globalAlpha = 1; }
-      for (const n of this.npcs) this.drawChar(CHARS[n.id], n, n.x - 7 * cs - cam.x, L.floor - 27 * cs - cam.y, false, cs);
-      this.drawChar(CHARS.ruben, this.player, this.player.x - 7 * cs - cam.x, L.floor - 27 * cs - cam.y, true, cs);
+      if (!S.chars) { for (const n of this.npcs) this.drawChar(CHARS[n.id], n, n.x - 7 * cs - cam.x, L.floor - 27 * cs - cam.y, false, cs);
+      this.drawChar(CHARS.ruben, this.player, this.player.x - 7 * cs - cam.x, L.floor - 27 * cs - cam.y, true, cs); }
       if (L.fg) L.fg(ctx, cam, t);
     } else {
-      if (L.behind) L.behind(ctx, cam, t);
-      ctx.drawImage(this.bg, -cam.x, -cam.y);
+      const S = Dbg.skip;
+      if (L.behind && !S.deco) L.behind(ctx, cam, t);
+      if (!S.bg) ctx.drawImage(this.bg, -cam.x, -cam.y);
       const cs = L.charScale || 1;
       if (L.mirror && this.mirrorMask) this.drawReflections(cam, t, cs, Perf.level >= 2);
       const items = [];
-      for (const p of this.props) { if (p.d.flat || p.d.wall || p.flatish) { if (p.if && p.if()) items.push({ y: p.y + p.h, f: () => ctx.drawImage(p.img, p.x - cam.x, p.y - cam.y) }); continue; } if (p.if && !p.if()) continue; items.push({ y: p.y + p.sortY, f: () => ctx.drawImage(p.img, p.x - cam.x, p.y - cam.y) }); }
-      for (const n of this.npcs) items.push({ y: n.y, f: () => this.drawChar(CHARS[n.id], n, n.x - 7 * cs - cam.x, n.y - 26 * cs - cam.y, false, cs) });
-      const p = this.player; items.push({ y: p.y, f: () => this.drawChar(CHARS.ruben, p, p.x - 7 * cs - cam.x, p.y - 26 * cs - cam.y, true, cs) });
+      if (!S.deco) for (const p of this.props) { if (p.d.flat || p.d.wall || p.flatish) { if (p.if && p.if()) items.push({ y: p.y + p.h, f: () => ctx.drawImage(p.img, p.x - cam.x, p.y - cam.y) }); continue; } if (p.if && !p.if()) continue; items.push({ y: p.y + p.sortY, f: () => ctx.drawImage(p.img, p.x - cam.x, p.y - cam.y) }); }
+      if (!S.chars) for (const n of this.npcs) items.push({ y: n.y, f: () => this.drawChar(CHARS[n.id], n, n.x - 7 * cs - cam.x, n.y - 26 * cs - cam.y, false, cs) });
+      const p = this.player; if (!S.chars) items.push({ y: p.y, f: () => this.drawChar(CHARS.ruben, p, p.x - 7 * cs - cam.x, p.y - 26 * cs - cam.y, true, cs) });
       items.sort((a, b) => a.y - b.y); for (const it of items) it.f();
-      this.drawTopExtras(cam, t);
+      if (!S.deco) this.drawTopExtras(cam, t);
     }
     this.lighting(cam);
     if (L.rain && L.rain()) this.rain(t);
@@ -2907,7 +2908,7 @@ const World = {
   },
   drawChar(pal, ent, x, y, isPlayer, sc = 1) {
     // мягкая тень (контактная)
-    { const rr = 6.5 * sc; ctx.globalAlpha = 0.55; ctx.drawImage(holeSpr(), x + 7 * sc - rr, y + 27 * sc - rr * 0.32, rr * 2, rr * 0.64); ctx.globalAlpha = 1; }
+    if (!Dbg.skip.shadow) { const rr = 6.5 * sc; ctx.globalAlpha = 0.55; ctx.drawImage(holeSpr(), x + 7 * sc - rr, y + 27 * sc - rr * 0.32, rr * 2, rr * 0.64); ctx.globalAlpha = 1; }
     const lux = isPlayer && G.s.luxUntil && Flags.has('lux_face') && !Flags.has('morning');
     const spr = this.charSprite(pal, ent, isPlayer);
     // спрайты разного размера: ставим по центру и по ступням
@@ -4534,7 +4535,7 @@ const Menu = {
 };
 
 /* ---------------- Диагностика (?debug или Настройки → Диагностика) ---------------- */
-const Dbg = { on: false, el: null, fr: [], resizes: 0, rzEv: 0, tm: 0, snd: 0, upd: 0, drw: 0, noDraw: false, noLight: false, t: 0, fc: 0, oldSpr: false, xs: [], xt: 0, dot: null,
+const Dbg = { on: false, el: null, fr: [], resizes: 0, rzEv: 0, tm: 0, snd: 0, upd: 0, drw: 0, noDraw: false, noLight: false, t: 0, fc: 0, oldSpr: false, skip: {}, xs: [], xt: 0, dot: null,
   frame(ms) { if (!this.on) return; this.track(ms); this.fr.push(ms); if (this.fr.length > 120) this.fr.shift(); this.t += ms; if (this.t > 500) { this.t = 0; this.show(); } },
   init() { this.on = /debug/.test(location.search) || !!Settings.debug; if (!this.on) return;
     const el = this.el = h('div', { style: 'position:fixed;left:4px;bottom:4px;z-index:95;background:rgba(0,0,0,.82);color:#7f7;font:11px/1.35 monospace;padding:6px 8px;max-width:62vw;pointer-events:auto;border:1px solid #3a3' });
@@ -4547,6 +4548,7 @@ const Dbg = { on: false, el: null, fr: [], resizes: 0, rzEv: 0, tm: 0, snd: 0, u
     btn('МАРКЕР: выкл', b => { if (this.dot) { this.dot.remove(); this.dot = null; } else { this.dot = h('div', { style: 'position:fixed;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#f22;border:2px solid #fff;z-index:94;pointer-events:none;left:0;top:0' }); document.body.append(this.dot); } b.textContent = 'МАРКЕР: ' + (this.dot ? 'вкл' : 'выкл'); });
     btn('ИНТЕРФЕЙС: вкл', b => { document.body.classList.toggle('dbgnoui'); b.textContent = 'ИНТЕРФЕЙС: ' + (document.body.classList.contains('dbgnoui') ? 'скрыт' : 'вкл'); });
     btn('ВЫВОД: ' + (presenter === 'gl' ? 'webgl' : '2d'), b => { initPresenter(presenter === 'gl' ? '2d' : 'gl'); resize(); b.textContent = 'ВЫВОД: ' + (presenter === 'gl' ? 'webgl' : '2d'); });
+    for (const [k, nm] of [['bg', 'ФОН'], ['deco', 'ДЕКОР'], ['chars', 'ГЕРОИ'], ['shadow', 'ТЕНЬ'], ['text', 'СЧЁТЧИК']]) btn(nm + ': вкл', b => { this.skip[k] = !this.skip[k]; b.textContent = nm + ': ' + (this.skip[k] ? 'выкл' : 'вкл'); });
     btn('КАДР: вкл', b => { this.noDraw = !this.noDraw; b.textContent = 'КАДР: ' + (this.noDraw ? 'выкл' : 'вкл'); });
     el.append(txt, row); this.txt = txt; document.body.append(el); this.tmLast = performance.now();
   },
