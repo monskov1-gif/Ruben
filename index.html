@@ -29,6 +29,7 @@ input{font:inherit;user-select:text;-webkit-user-select:text}
 #crt::before{content:'';position:absolute;inset:0;background:rgba(255,240,220,.025);animation:flick 4s infinite steps(1)}
 @keyframes flick{0%,100%{opacity:.6}47%{opacity:1}48%{opacity:.3}50%{opacity:.9}}
 body.nocrt #crt{display:none}
+body.dbgnoui #hud,body.dbgnoui #prompt,body.dbgnoui #thought,body.dbgnoui #joy{visibility:hidden}
 body.touch #crt::before{animation:none;display:none}
 .hidden{display:none!important}
 @keyframes blink{50%{opacity:0}}
@@ -601,7 +602,7 @@ const NOTE = n => { const m = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }; con
 const SND = {
   ac: null, master: null, mus: null, fx: null, track: null, step: 0, nextT: 0, timer: null, loops: [], noiseBuf: null,
   init() {
-    if (this.ac) { if (this.ac.state === 'suspended') this.ac.resume(); return; }
+    if (this.ac) { if (this.ac.state === 'suspended' && !this.muted) this.ac.resume(); return; }
     try {
       this.ac = new (window.AudioContext || window.webkitAudioContext)();
       this.master = this.ac.createGain(); this.master.connect(this.ac.destination);
@@ -939,7 +940,7 @@ function drawTitle(c, s, x, y, sc, col = '#e3343a', inner = '#000') {
 /* ---------- Персонажи: палитры задаются в CHARS (30 data) ---------- */
 const _spr = {};
 function personSprite(pal, dir, f, opt = {}) {
-  if (typeof SPR_DATA !== 'undefined' && SPR_DATA[pal.id]) return customSprite(pal.id, dir, f, opt);
+  if (typeof SPR_DATA !== 'undefined' && SPR_DATA[pal.id] && !(typeof Dbg !== 'undefined' && Dbg.oldSpr)) return customSprite(pal.id, dir, f, opt);
   const key = pal.id + dir + f + (opt.lux ? 'L' : '') + (opt.mask ? 'M' : '') + (opt.sit ? 'S' : '');
   if (_spr[key]) return _spr[key];
   const [cv, c] = mk(14, 28);
@@ -2421,6 +2422,7 @@ const cv = document.createElement('canvas'), ctx = cv.getContext('2d');
 const cvOut = $('#cv'), ctxOut = cvOut.getContext('2d', { alpha: false });
 let upscaleSelf = true;
 function present() {
+  if (Dbg.on) { Dbg.fc++; ctx.fillStyle = '#000'; ctx.fillRect(View.W - 40, 1, 39, 12); ctx.fillStyle = '#3f3'; ctx.fillRect(View.W - 38 + (Dbg.fc % 34), 2, 3, 3); ptext(ctx, String(Dbg.fc % 10000), View.W - 3, 7, '#3f3', 1, 'right'); }
   if (!upscaleSelf) { ctxOut.drawImage(cv, 0, 0); return; }
   ctxOut.imageSmoothingEnabled = false; ctxOut.drawImage(cv, 0, 0, cvOut.width, cvOut.height);
 }
@@ -4401,6 +4403,9 @@ LOC.apt.update = function (dt) { if (G.waitMark) { G.waitMarkT = (G.waitMarkT ||
    ===================================================================== */
 const Menu = {
   cv: $('#menuCv'), bg: null, W: 0, H: 0, k: 1, t: 0, sel: 0, lay: null,
+  // след позиции героя (каждые 100 мс) и красная точка-маркер (элемент страницы, не картинка игры)
+  track(ms) { const p = World.player; if (!p) return; this.xt += ms; if (this.xt >= 100) { this.xt = 0; this.xs.push(Math.round(World.L && World.L.type === 'side' ? p.x : p.x + p.y)); if (this.xs.length > 10) this.xs.shift(); }
+    if (this.dot && World.L && World.L.type !== 'cut') { const [sx, sy] = World.toScreen(p.x, World.L.type === 'side' ? World.L.floor : p.y); this.dot.style.transform = `translate(${sx | 0}px,${sy | 0}px)`; } },
   show() {
     G.mode = 'menu'; G.s = G.s || freshState(); UI.closeAll(); $('#menu').classList.remove('hidden'); $('#hud').classList.add('hidden'); $('#prompt').classList.add('hidden'); $('#touch').classList.add('hidden'); $('#dlg').classList.add('hidden'); $('#desk').classList.add('hidden'); $('#comp').classList.add('hidden'); UI.dq = null;
     const box = $('#menu .mbtns'); box.innerHTML = '';
@@ -4498,8 +4503,8 @@ const Menu = {
 };
 
 /* ---------------- Диагностика (?debug или Настройки → Диагностика) ---------------- */
-const Dbg = { on: false, el: null, fr: [], resizes: 0, rzEv: 0, tm: 0, snd: 0, upd: 0, drw: 0, noDraw: false, noLight: false, t: 0,
-  frame(ms) { if (!this.on) return; this.fr.push(ms); if (this.fr.length > 120) this.fr.shift(); this.t += ms; if (this.t > 500) { this.t = 0; this.show(); } },
+const Dbg = { on: false, el: null, fr: [], resizes: 0, rzEv: 0, tm: 0, snd: 0, upd: 0, drw: 0, noDraw: false, noLight: false, t: 0, fc: 0, oldSpr: false, xs: [], xt: 0, dot: null,
+  frame(ms) { if (!this.on) return; this.track(ms); this.fr.push(ms); if (this.fr.length > 120) this.fr.shift(); this.t += ms; if (this.t > 500) { this.t = 0; this.show(); } },
   init() { this.on = /debug/.test(location.search) || !!Settings.debug; if (!this.on) return;
     const el = this.el = h('div', { style: 'position:fixed;left:4px;bottom:4px;z-index:95;background:rgba(0,0,0,.82);color:#7f7;font:11px/1.35 monospace;padding:6px 8px;max-width:62vw;pointer-events:auto;border:1px solid #3a3' });
     const txt = h('div', {}); const row = h('div', { style: 'display:flex;gap:4px;margin-top:4px;flex-wrap:wrap' });
@@ -4507,11 +4512,17 @@ const Dbg = { on: false, el: null, fr: [], resizes: 0, rzEv: 0, tm: 0, snd: 0, u
     btn('ЗВУК: вкл', b => { SND.muted = !SND.muted; if (SND.ac) SND.muted ? SND.ac.suspend() : SND.ac.resume(); b.textContent = 'ЗВУК: ' + (SND.muted ? 'выкл' : 'вкл'); });
     btn('СВЕТ: вкл', b => { this.noLight = !this.noLight; b.textContent = 'СВЕТ: ' + (this.noLight ? 'выкл' : 'вкл'); });
     btn('РАСТЯЖЕНИЕ: игра', b => { upscaleSelf = !upscaleSelf; resize(); b.textContent = 'РАСТЯЖЕНИЕ: ' + (upscaleSelf ? 'игра' : 'браузер'); });
+    btn('МОДЕЛЬКИ: новые', b => { this.oldSpr = !this.oldSpr; b.textContent = 'МОДЕЛЬКИ: ' + (this.oldSpr ? 'старые' : 'новые'); });
+    btn('МАРКЕР: выкл', b => { if (this.dot) { this.dot.remove(); this.dot = null; } else { this.dot = h('div', { style: 'position:fixed;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#f22;border:2px solid #fff;z-index:94;pointer-events:none;left:0;top:0' }); document.body.append(this.dot); } b.textContent = 'МАРКЕР: ' + (this.dot ? 'вкл' : 'выкл'); });
+    btn('ИНТЕРФЕЙС: вкл', b => { document.body.classList.toggle('dbgnoui'); b.textContent = 'ИНТЕРФЕЙС: ' + (document.body.classList.contains('dbgnoui') ? 'скрыт' : 'вкл'); });
     btn('КАДР: вкл', b => { this.noDraw = !this.noDraw; b.textContent = 'КАДР: ' + (this.noDraw ? 'выкл' : 'вкл'); });
     el.append(txt, row); this.txt = txt; document.body.append(el); this.tmLast = performance.now();
   },
+  // след позиции героя (каждые 100 мс) и красная точка-маркер (элемент страницы, не картинка игры)
+  track(ms) { const p = World.player; if (!p) return; this.xt += ms; if (this.xt >= 100) { this.xt = 0; this.xs.push(Math.round(World.L && World.L.type === 'side' ? p.x : p.x + p.y)); if (this.xs.length > 10) this.xs.shift(); }
+    if (this.dot && World.L && World.L.type !== 'cut') { const [sx, sy] = World.toScreen(p.x, World.L.type === 'side' ? World.L.floor : p.y); this.dot.style.transform = `translate(${sx | 0}px,${sy | 0}px)`; } },
   show() { const f = this.fr; if (!f.length || !this.txt) return; const avg = f.reduce((a, b) => a + b, 0) / f.length, mx = Math.max(...f), dtm = (performance.now() - this.tmLast) / 1000; this.tmLast = performance.now();
-    const p = World.player; this.txt.textContent = `fps ${(1000 / avg).toFixed(0)} · худший кадр ${mx.toFixed(0)}мс · логика ${this.upd.toFixed(1)} · рисование ${this.drw.toFixed(1)}мс\nкасаний/с ${(this.tm / dtm).toFixed(0)} · resize событий ${this.rzEv} · пересозданий ${this.resizes} · звук ${SND.ac ? SND.ac.state : 'нет'} · звуков/с ${(this.snd / dtm).toFixed(0)}\nэкран ${innerWidth}x${innerHeight} dpr ${devicePixelRatio} · кадр ${View.W}x${View.H}·${View.k} · графика ${Perf.level} · ${World.locId} ${p ? (p.x | 0) + ',' + (p.y | 0) : ''}`;
+    const p = World.player; this.txt.textContent = `fps ${(1000 / avg).toFixed(0)} · худший кадр ${mx.toFixed(0)}мс · логика ${this.upd.toFixed(1)} · рисование ${this.drw.toFixed(1)}мс\nкасаний/с ${(this.tm / dtm).toFixed(0)} · resize событий ${this.rzEv} · пересозданий ${this.resizes} · звук ${SND.ac ? SND.ac.state : 'нет'} · звуков/с ${(this.snd / dtm).toFixed(0)}\nэкран ${innerWidth}x${innerHeight} dpr ${devicePixelRatio} · кадр ${View.W}x${View.H}·${View.k} · графика ${Perf.level} · ${World.locId} ${p ? (p.x | 0) + ',' + (p.y | 0) : ''}\nпозиция каждые 0.1с: ${this.xs.join(' ')}\nкадров нарисовано: ${this.fc}`;
     this.txt.style.whiteSpace = 'pre-wrap'; this.tm = 0; this.snd = 0; },
 };
 
