@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>MR. RUBEN — тест касаний</title>
+<style id="base">
+body{margin:0;background:#111;color:#cfc;font:14px/1.4 monospace}
+#bar{position:fixed;left:0;right:0;top:0;padding:8px;background:#000;z-index:5;display:flex;flex-wrap:wrap;gap:6px}
+#bar label{background:#132;border:1px solid #3a3;padding:4px 7px;border-radius:4px}
+#bar button{font:13px monospace;background:#331;color:#ff9;border:1px solid #aa3;padding:4px 8px}
+#zone{position:fixed;left:0;right:0;bottom:0;top:45%;background:rgba(60,120,60,.18);border-top:2px dashed #3a3;touch-action:none;z-index:3}
+#zone::after{content:'ДЕРЖИ И ВОДИ ПАЛЬЦЕМ ЗДЕСЬ';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#5a5;font-size:16px}
+#info{position:fixed;left:8px;top:120px;z-index:4;white-space:pre;font-size:15px;color:#efe}
+#cv{position:fixed;right:8px;top:120px;width:160px;height:80px;z-index:4;image-rendering:pixelated;background:#000;border:1px solid #3a3}
+#joy{position:fixed;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:rgba(10,10,14,.35);pointer-events:none;opacity:0;z-index:4;will-change:transform}
+</style>
+<style id="gamecss" media="none">
+html,body{height:100%;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;overscroll-behavior:none}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div id="info">загрузка…</div>
+<canvas id="cv" width="80" height="40"></canvas>
+<div id="zone"></div>
+<div id="joy"></div>
+<script>
+// Флаги в адресе: ?f=c,s,j,a,g,t,p
+const FL = { c: 'холст 2D', s: 'стили игры', j: 'джойстик', a: 'звук', g: 'WebGL', t: 'touch-события', p: 'захват указателя' };
+const on = new Set((new URLSearchParams(location.search).get('f') || '').split(',').filter(Boolean));
+const bar = document.getElementById('bar');
+for (const k in FL) { const l = document.createElement('label'); const c = document.createElement('input'); c.type = 'checkbox'; c.checked = on.has(k); c.onchange = () => { c.checked ? on.add(k) : on.delete(k); }; l.append(c, ' ' + FL[k]); bar.append(l); }
+const go = document.createElement('button'); go.textContent = 'ПРИМЕНИТЬ'; go.onclick = () => { location.search = '?f=' + [...on].join(','); }; bar.append(go);
+const all = document.createElement('button'); all.textContent = 'ВСЁ КАК В ИГРЕ'; all.onclick = () => { location.search = '?f=c,s,j,a,g,p'; }; bar.append(all);
+if (on.has('s')) document.getElementById('gamecss').media = 'all';
+
+const info = document.getElementById('info'), cv = document.getElementById('cv'), zone = document.getElementById('zone'), joy = document.getElementById('joy');
+let frames = 0, last = performance.now(), touching = false, tFrames = 0, tMaxGap = 0, tStart = 0, moves = 0, tMoves = 0, ticks = 0, report = 'ещё не касался';
+let x2 = null, gl = null;
+if (on.has('g')) {
+  gl = cv.getContext('webgl'); var off = document.createElement('canvas'); off.width = 80; off.height = 40; x2 = off.getContext('2d');
+  const sh = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); return o; }; const pr = gl.createProgram();
+  gl.attachShader(pr, sh(gl.VERTEX_SHADER, 'attribute vec2 p;varying vec2 uv;void main(){uv=vec2((p.x+1.)*.5,(1.-p.y)*.5);gl_Position=vec4(p,0.,1.);}'));
+  gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, 'precision mediump float;uniform sampler2D t;varying vec2 uv;void main(){gl_FragColor=texture2D(t,uv);}')); gl.linkProgram(pr); gl.useProgram(pr);
+  const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0); const tx = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tx);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+} else if (on.has('c')) x2 = cv.getContext('2d');
+
+let ac = null;
+function audio() { if (!on.has('a') || ac) return; ac = new (window.AudioContext || window.webkitAudioContext)(); const g = ac.createGain(); g.gain.value = 0.0001; g.connect(ac.destination);
+  setInterval(() => { ticks++; const o = ac.createOscillator(); o.connect(g); o.start(); o.stop(ac.currentTime + 0.03); }, 40); }
+
+let jx = 0, jy = 0;
+const down = (x, y) => { touching = true; tFrames = 0; tMaxGap = 0; tMoves = 0; tStart = performance.now(); audio(); jx = x; jy = y; if (on.has('j')) { joy.style.left = x + 'px'; joy.style.top = y + 'px'; joy.style.opacity = 1; } };
+const move = (x, y) => { moves++; if (touching) tMoves++; if (on.has('j')) joy.style.transform = `translate(${x - jx}px,${y - jy}px)`; };
+const up = () => { if (!touching) return; touching = false; const d = (performance.now() - tStart) / 1000; report = `касание ${d.toFixed(1)} с: кадров ${tFrames} (${(tFrames / d).toFixed(0)}/с), макс. пауза ${tMaxGap.toFixed(0)} мс, движений пальца ${tMoves}`; if (on.has('j')) joy.style.opacity = 0; };
+if (on.has('t')) {
+  zone.addEventListener('touchstart', e => { const t = e.changedTouches[0]; down(t.clientX, t.clientY); e.preventDefault(); }, { passive: false });
+  zone.addEventListener('touchmove', e => { const t = e.changedTouches[0]; move(t.clientX, t.clientY); e.preventDefault(); }, { passive: false });
+  zone.addEventListener('touchend', up); zone.addEventListener('touchcancel', up);
+} else {
+  zone.addEventListener('pointerdown', e => { if (on.has('p')) try { zone.setPointerCapture(e.pointerId); } catch (_) { } down(e.clientX, e.clientY); }, { passive: true });
+  zone.addEventListener('pointermove', e => move(e.clientX, e.clientY), { passive: true });
+  zone.addEventListener('pointerup', up); zone.addEventListener('pointercancel', up);
+}
+
+function loop(now) {
+  const gap = now - last; last = now; frames++;
+  if (touching) { tFrames++; if (tFrames > 1) tMaxGap = Math.max(tMaxGap, gap); }
+  if (x2) { x2.fillStyle = touching ? '#030' : '#000'; x2.fillRect(0, 0, 80, 40); x2.fillStyle = '#3f3'; x2.fillRect(frames % 76, 4, 4, 4); x2.font = '14px monospace'; x2.fillText(String(frames % 10000), 4, 30);
+    if (gl) { gl.viewport(0, 0, cv.width, cv.height); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, x2.canvas); gl.drawArrays(gl.TRIANGLES, 0, 6); } }
+  info.textContent = `кадров: ${frames}${touching ? '   ← КАСАНИЕ' : ''}\nдвижений пальца: ${moves}\nтиков звука: ${ticks}\nвключено: ${[...on].map(k => FL[k]).join(', ') || 'ничего'}\n\nПОСЛЕДНЕЕ: ${report}`;
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
