@@ -1568,6 +1568,7 @@ const ITEMS = {
   stapler: { name: 'Степлер Димы', kind: 'easter', desc: 'Подписан: «Степлер №3. Учёт ведётся».' },
   cactus_note: { name: 'Записка у кактуса', kind: 'easter', desc: '«Гена, поливать раз в две недели. Не разговаривать с ним — он стесняется».' },
   pick: { name: 'Медиатор Никиты', kind: 'easter', desc: 'На медиаторе нацарапано: «19».' },
+  lift_key: { name: 'Ключ лифта «3»', kind: 'story', desc: 'Маленький ключ с жёлтой биркой «ЛИФТ · 3 ЭТ. · EXECUTIVE». Вставляется в скважину под кнопкой третьего этажа.' },
   sec_card: { name: 'Пропуск охраны', kind: 'story', desc: '«ОХРАНА · А. ПЕТРОСЯН». Лежал в шкафчике №7. Открывает дверь охраны на 1 этаже.' },
   old_photo: { name: 'Фото 2019', kind: 'easter', desc: 'Первый корпоратив. Варя в бумажной короне, ты — в ужасе. На обороте её почерком: «Первый раз, когда ты не сбежал».' },
   dima_key: { name: 'Ключ «D-04»', kind: 'story', desc: 'Ключ из ящика «потеряшек» на 1 этаже. На бирке только «D-04». Что за дверь — неизвестно.' },
@@ -2293,7 +2294,7 @@ function investigation(who, cfg) {
   return [
     ...(cfg.pre || []),
     who === 'dima' ? Q('Открыть кабинет Димы', () => Flags.has('in_cab_dima'), () => Inv.has('dima_key') ? (Ev.has('cab_d04') ? 'Кабинет Димы — 2 этаж, справа внизу. На двери «04». Ключ «D-04» у тебя.' : 'Кабинет Димы — 2 этаж, справа внизу. Посмотри на номер двери.') : 'Кабинет заперт. Потерянные ключи в офисе собирают в комнате посылок на 1 этаже.')
-      : who === 'nikita' ? Q('Подняться к кабинету Никиты', () => Flags.has('in_cab_nikita'), 'Кабинет Никиты — на отдельном верхнем этаже. Туда можно попасть только на лифте.')
+      : who === 'nikita' ? Q('Подняться к кабинету Никиты', () => Flags.has('in_cab_nikita'), () => Inv.has('lift_key') ? 'Ключ лифта у тебя. Лифт на 1 или 2 этаже → кнопка «3».' : Inv.has('sec_card') ? 'Лифт на 3 этаж едет только с ключом. Ключи от лифта у техников: техпомещение за комнатой охраны (1 этаж).' : 'Лифт на 3 этаж едет только с ключом. Ключи у техников, а техпомещение — за дверью охраны. Ашот как раз опять потерял свой пропуск… В комнате отдыха есть шкафчики.')
       : Q(`Подойти к столу: ${Ng}`, () => Flags.has('in_cab_' + who), `Рабочие места — на 2 этаже, у колонн. На колонне табличка «${N.toUpperCase()}». Лестница наверх — в правом нижнем углу холла, у тамбура (или лифт слева).`),
     Q(`Осмотреть стол: ${Ng}`, () => (cfg.desk || []).every(Ev.has) && (cfg.deskFlags || []).every(Flags.has), cfg.deskHint),
     Q(`Открыть ноутбук: ${Ng}`, () => Puzzle.compOpen(who), () => { const L = COMPUTERS[who].lock.hints; const k = 'hint_' + who; const n = G.s.seen[k] = Math.min(1, (G.s.seen[k] == null ? -1 : G.s.seen[k]) + 1); return L[n]; }),
@@ -3726,6 +3727,7 @@ LOC.office1 = {
     wp('stairsLink', 744, 176, {}, { act: 'sec_door', label: 'Дверь: ОХРАНА', ix: 738, iy: 200, if: () => !G.s.world.secOpen }),
     wp('doorBlock', 744, 176, {}, { if: () => !G.s.world.secOpen }),
     wp('stairsLink', 860, 150, {}, { act: 'sec_pc', label: 'Пульт охраны', noCheck: 1, ix: 890, iy: 222 }), wp('stairsLink', 960, 150, {}, { act: 'sec_roster', label: 'График смен', noCheck: 1, ix: 940, iy: 214 }),
+    wp('stairsLink', 1060, 236, {}, { act: 'tech_keys', label: 'Ящик с ключами', noCheck: 1, ix: 1080, iy: 250 }),
     wp('stairsLink', 1020, 160, {}, { act: 'tech_panel', label: 'Электрощит', noCheck: 1, ix: 1110, iy: 230 }), wp('stairsLink', 1060, 250, {}, { act: 'tech_server', label: 'Серверная стойка', noCheck: 1, ix: 1040, iy: 230 }),
     wp('stairsLink', 1000, 340, {}, { act: 'arch_files', label: 'Стеллажи', ix: 1040, iy: 380 }), wp('stairsLink', 1060, 400, {}, { act: 'arch_lamp', label: 'Лампа', ix: 1050, iy: 438 }),
     wp('stairsLink', 960, 430, {}, { act: 'arch_box', label: 'Коробка «2019»', ix: 980, iy: 448 }),
@@ -4200,7 +4202,7 @@ const EXTRA_TALK = {
       6: ['Видел тебя на втором этаже в два ночи. Я всё вижу. Работа такая.'],
       7: ['Твои друзья сегодня какие-то дёрганые. Саша полчаса стоял у лифта и не заходил.'],
       8: ['Дима спрашивал, не брал ли кто ключи из «потеряшек». Я сказал — не видел. Я и правда не видел.'],
-      9: ['Лифт на третий этаж ночью не возит. Только по карте. Не спрашивай, у кого карта.'],
+      9: ['Лифт на третий этаж без ключа не поедет. Скважина под кнопкой.', 'Ключи от лифта у техников. В техпомещении, за моей комнатой. Я тебе этого не говорил.'],
     }[n] || ['Тихо сегодня. Даже слишком.'];
     return L.map(t);
   },
@@ -5374,13 +5376,15 @@ const Interact = {
   cab_exit() { const id = World.L.owner; const d = DOORS2[id]; if (d.loc === 'exec') Game.goto('exec', 290, null, 'left'); else Game.goto('office2', d.x, d.y, 'down'); },
   // лифт: панель этажей; EXECUTIVE закрыт до эпизода 9
   async lift() {
-    SND.sfx('ping'); const here = World.locId; const ex = G.s.episode >= 9;
-    const opts = [['1 — ЛОББИ', 'office1'], ['2 — ОФИС', 'office2'], [ex ? '3 — EXECUTIVE FLOOR' : '3 — EXECUTIVE FLOOR · ACCESS DENIED', 'exec']].filter(o => o[1] !== here);
+    SND.sfx('ping'); const here = World.locId; const key = Inv.has('lift_key');
+    // 3 этаж — только с ключом: его вставляют в скважину рядом с кнопкой
+    const opts = [['1 — ЛОББИ', 'office1'], ['2 — ОФИС', 'office2'], [key ? '3 — EXECUTIVE FLOOR · ключ вставлен' : '3 — EXECUTIVE FLOOR · вставьте ключ', 'exec']].filter(o => o[1] !== here);
     G.lockMove = true; const r = await choose('ЛИФТ', [...opts, ['Отмена', null]]); G.lockMove = false;
     if (!r) return;
-    if (r === 'exec' && !ex) { SND.sfx('fail'); UI.think('Кнопка не горит. «ACCESS DENIED». Сюда пускают не всех.'); return; }
+    if (r === 'exec' && !key) { SND.sfx('fail'); UI.think('Кнопка «3» не горит. Под ней замочная скважина и надпись: «Для доступа на этаж вставьте ключ».'); return; }
+    if (r === 'exec') { SND.sfx('unlock'); UI.toast('', 'Ключ повёрнут. Кнопка «3» загорелась.'); }
     G.lockMove = true; await UI.fade(true, 400); SND.sfx('whoosh'); await wait(700); G.lockMove = false;
-    if (r === 'office1') World.enter('office1', 128, 1070, 'down'); else if (r === 'office2') World.enter('office2', 71, 830, 'down'); else World.enter('exec', 40, null, 'right');
+    if (r === 'office1') World.enter('office1', 150, 1070, 'down'); else if (r === 'office2') World.enter('office2', 71, 830, 'down'); else World.enter('exec', 40, null, 'right');
     SND.sfx('ping'); await UI.fade(false, 400); UI.toast('', LOC[r].name);
   },
   board2: 'Доска задач: стикеры «отчёт», «созвон», «бюджет Q4». И один, наклеенный криво: «19.10 — НЕ ПЛАНИРОВАТЬ НИЧЕГО».',
@@ -5424,6 +5428,11 @@ Object.assign(Interact, {
     const W = G.s.world; W.hallOff = !W.hallOff; SND.sfx('switch'); World._key = null; World._lc = null;
     UI.think(W.hallOff ? 'Выключил свет в холле. Только аварийные «ВЫХОД» и мониторы. Так тише. И страшнее.' : 'Свет в холле снова горит. Так лучше. Наверное.');
     Game.onChange();
+  },
+  tech_keys() {
+    if (Inv.has('lift_key')) { UI.think('Ящик техников. Ключи от щитков, от крыши. Ключ лифта у меня.'); return; }
+    if (G.s.episode < 9) { UI.think('Ящик с ключами техников: щитки, крыша, лифт. Подписано аккуратно. Мне пока ни один не нужен.'); return; }
+    Inv.add('lift_key'); SND.sfx('pickup'); UI.think('Ящик техников. Крючок «ЛИФТ · 3 ЭТ.». Ключ на месте. Кабинет Никиты — там, наверху.');
   },
   arch_lamp() { const W = G.s.world; W.archLamp = !W.archLamp; SND.sfx('switch'); World._lc = null; UI.think(W.archLamp ? 'Включил лампу. Пыль в луче — как снег.' : 'Выключил. В архиве снова темно.'); Game.onChange(); },
   arch_box() {
