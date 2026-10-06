@@ -1536,7 +1536,7 @@ const EVIDENCE = {
 
   // ----- Эпизод 5: Андрей -----
   and_camera: { who: 'andrey', title: 'Снимки на фотоаппарате', time: '19:43', src: 'Фотоаппарат Андрея', status: 'varya', link: 'Фото Вари', text: 'Кадры в памяти: IMG_8041 — 19:43 (улица), IMG_8042 — 19:51 (девушка у цветочной лавки, со спины), IMG_8044 — 20:03 (Варя у ряда гаражей). Кадр IMG_8043 перенесён на компьютер.' },
-  and_gps: { who: 'andrey', title: 'Метаданные снимка', time: '20:03', src: 'EXIF', status: 'refuted', verify: 'В 20:03 был у гаражей', garage: true, text: 'IMG_8044: 20:03:17, GPS 59.94°N — гаражи «Fun Society», ряд гаражей у дома Рубена. Камера была там.' },
+  and_gps: { who: 'andrey', title: 'Метаданные снимка', time: '20:03', src: 'EXIF', status: 'refuted', verify: 'В 20:03 был у гаражей', garage: true, text: 'IMG_8044: 20:03:17, GPS 59.94°N — гаражи «Fun Society». Камера была там.' },
   and_img: { who: 'andrey', title: 'IMG_8043.jpg', time: '20:02', src: 'Ноутбук Андрея', status: 'varya', link: 'Фон: коробки, шарики, гирлянда', garage: true, text: 'На фоне снимка в приоткрытом гараже — коробки, связка шариков и гирлянда.' },
   and_matvey: { who: 'andrey', title: 'Сообщение от «М.»', time: '20:20', src: 'Ноутбук Андрея', status: 'varya', link: '«М.» был в гараже', garage: true, text: 'Контакт «М.» → Андрей: «я сегодня был в гараже. ты меня видел?» Андрей: «видел. молчу». Андрей об этом не рассказывал. Кто такой «М.» — непонятно.' },
 
@@ -1566,7 +1566,7 @@ const EVIDENCE = {
   nik_meta: { who: 'nikita', title: 'Метаданные final_message.wav', time: '20:46', src: 'Свойства файла', status: 'contradiction', verify: 'Файл создан 14 октября', text: 'Создан: 14 октября, 18:20. Изменён: 17 октября, 20:46. Запись сделана за три дня до исчезновения.' },
   nik_chat: { who: 'nikita', title: 'Переписка с Варей', time: '20:47', src: 'Ноутбук Никиты', status: 'varya', link: '«Не включай её раньше времени»', text: 'Варя: «Запись готова?» — Никита: «Да». — Варя: «Главное — не включай её раньше времени».' },
   nik_audio: { who: 'nikita', title: 'final_message.wav', time: null, src: 'Аудио', status: 'varya', link: 'Голос Вари', text: 'Голос Вари: «Рубен, если ты это слышишь…» — запись обрывается.' },
-  mat_msg: { who: 'matvey', title: 'Сообщение Матвея', time: null, src: 'Телефон Рубена', status: 'varya', link: '«Есть информация о Варе»', garage: true, text: '«Рубен, это Матвей. Надо срочно встретиться. У меня есть кое-что про Варю. Сегодня, 23:59. Гараж у твоего дома — от метро налево».' },
+  mat_msg: { who: 'matvey', title: 'Сообщение Матвея', time: null, src: 'Телефон Рубена', status: 'varya', link: '«Есть информация о Варе»', garage: true, text: '«Рубен, это Матвей. Надо срочно встретиться. У меня есть кое-что про Варю. Сегодня, 23:59. Гараж «Fun Society» — от метро налево».' },
   mat_camera: { who: 'matvey', title: 'Камера у гаража', time: '20:02', src: 'Улица у гаражей', status: 'confirmed', verify: 'Камера стоит у гаража', garage: true, text: 'Над гаражом «Fun Society» — маленькая камера с красным огоньком. Она смотрит прямо на дверь. Кто-то поставил её недавно.' },
 };
 
@@ -1749,7 +1749,7 @@ const CHAT_Q = [
   // Глава 9 — Никита
   { id: 'q_nik_sasha', to: 'andrey', ep: 9, q: 'Никита что-то записывал для Вари?', a: ['никита? месяц назад просил у вари голос записать', 'для трека, наверное. или для курсовой по акустике, я не вникал', 'всё, я ничего не говорил. я вообще дома сижу'], ev: 'nik_sasha' },
   { id: 'q_nik_conf', to: 'nikita', ep: 9, if: () => Ev.has('nik_sasha'), q: 'Голос Вари в твоём треке есть?', a: ['vielleicht. то есть — может быть', 'не включай ничего раньше времени. пожалуйста'], flag: 'nikita_interrogated' },
-  { id: 'q_mat', to: 'matvey', ep: 9, if: () => Flags.has('matvey_message_received'), q: 'Что ты знаешь про Варю?', a: ['не по телефону', 'сегодня. 23:59. гараж у твоего дома. доедешь на метро'] },
+  { id: 'q_mat', to: 'matvey', ep: 9, if: () => Flags.has('matvey_message_received'), q: 'Что ты знаешь про Варю?', a: ['не по телефону', 'сегодня. 23:59. гаражи «Fun Society». доедешь на метро'] },
 ];
 const CHAT_PEOPLE = ['mark', 'tigran', 'taras', 'andrey', 'kirill', 'sasha', 'dima', 'nikita'];
 const chatInTurn = q => { if (q.ep !== G.s.episode) return true; const O = EPISODES[q.ep].objectives, i = O.findIndex(o => o.qid === q.id); return i >= 0 ? O.slice(0, i).every(o => o.done()) : O.filter(o => o.qid).every(o => o.done()); };
@@ -5231,7 +5231,7 @@ const PHONE = {
     L.push({ id: 'varya', name: CONTACTS.varya, who: 'varya', msgs: varya });
     L.push({ id: 'mark', name: CONTACTS.mark, who: 'mark', msgs: HIST.mark.concat(Flags.has('mark_msg') ? [['Рубен. Приходи в офис. Срочно.', '18.10 06:20']] : []) });
     for (const id of CHAT_PEOPLE) if (!L.find(c => c.id === id)) L.push({ id, name: CONTACTS[id] || CHARS[id].name, who: id, msgs: (HIST[id] || []).slice() });
-    if (G.s.episode >= 9 || Flags.has('matvey_message_received') || G.s.phoneNew.includes('matvey')) L.push({ id: 'matvey', name: CONTACTS.matvey, who: 'matvey', msgs: [['Рубен, это Матвей. Надо срочно встретиться. У меня есть кое-что про Варю.', '18.10 23:25'], ['Сегодня. 23:59. Гараж у твоего дома — от метро налево. Только сначала закончи то, что начал.', '23:25'], ...(ep >= 10 && Flags.has('metro_done') ? [['Я на месте. Жду.', '23:50']] : [])] });
+    if (G.s.episode >= 9 || Flags.has('matvey_message_received') || G.s.phoneNew.includes('matvey')) L.push({ id: 'matvey', name: CONTACTS.matvey, who: 'matvey', msgs: [['Рубен, это Матвей. Надо срочно встретиться. У меня есть кое-что про Варю.', '18.10 23:25'], ['Сегодня. 23:59. Гараж «Fun Society» — от метро налево. Только сначала закончи то, что начал.', '23:25'], ...(ep >= 10 && Flags.has('metro_done') ? [['Я на месте. Жду.', '23:50']] : [])] });
     for (const c of L) { const log = (G.s.chat || {})[c.id]; if (log) c.msgs = c.msgs.concat(log); c.ask = chatAvail(c.id).filter(q => !G.s.seen[q.id]); }
     // чат с новым сообщением — наверх, затем недавние переписки
     const rank = c => G.s.phoneNew.includes(c.id) ? 0 : (G.s.chatT || {})[c.id] ? 1e6 - G.s.chatT[c.id] : 2e6 + L.indexOf(c);
