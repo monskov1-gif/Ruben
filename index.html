@@ -67,7 +67,8 @@ body.touch .hbtn .k{display:none}
 #prompt .key{min-width:22px;height:22px;padding:0 5px;border-radius:11px;background:#0d0e12;border:2px solid #f3ead7;color:#f3ead7;font-family:var(--f-pix);font-size:8px;display:grid;place-items:center}
 #thought{position:fixed;z-index:26;transform:translate(-50%,-100%);max-width:min(360px,72cqw);font-style:italic;font-size:14px;line-height:1.4;color:#efe8d8;
   background:rgba(10,10,14,.78);padding:7px 12px 9px;border:1px dashed rgba(239,232,216,.35);pointer-events:none;transition:opacity .35s;text-align:center;opacity:0}
-#thought.on{opacity:1}
+#thought.on{opacity:1;pointer-events:auto;cursor:pointer}
+#thought.more::after{content:'дальше ▸';display:block;font-style:normal;font-family:var(--f-pix);font-size:7px;color:var(--amber);margin-top:5px;letter-spacing:1px;animation:blink 1s steps(2) infinite}
 #thought::before{content:'— мысли —';display:block;font-style:normal;font-family:var(--f-pix);font-size:7px;color:var(--amber);margin-bottom:5px;letter-spacing:1px}
 
 /* ---------- dialogue ---------- */
@@ -180,6 +181,7 @@ body.touch .hbtn .k{display:none}
 .cthink canvas{width:40px;height:40px;image-rendering:pixelated;flex:none}
 .cthink .tx{font-size:14px;line-height:1.45;font-style:italic;color:#e8e2d0;min-height:2.9em;display:flex;align-items:center}
 .cthink .tx .ln{animation:evIn .35s ease-out both}
+.cthink{cursor:pointer}.cthink.more::after{content:'▸';margin-left:auto;padding-left:6px;color:var(--amber);font-size:16px;font-style:normal;animation:blink 1s steps(2) infinite}
 .cthink.contra{border-top-color:#ff6b6b}.cthink.sup{border-top-color:#7be39a}.cthink.con{border-top-color:#f4d35e}
 .cdet{background:#12141b;border:1px solid var(--line);padding:12px 14px;animation:evIn .25s ease-out both}
 .cdet.hidden{display:none}
@@ -730,9 +732,10 @@ const Input = {
     let x = 0, y = 0; const k = this.keys;
     if (k.ArrowLeft || k.KeyA) x -= 1; if (k.ArrowRight || k.KeyD) x += 1;
     if (k.ArrowUp || k.KeyW) y -= 1; if (k.ArrowDown || k.KeyS) y += 1;
-    if (this.joy.active) { const m = Math.hypot(this.joy.x, this.joy.y); if (m > 0.18) { x = this.joy.x; y = this.joy.y; } }
+    let jrun = false; // джойстик отведён почти до края — бег
+    if (this.joy.active) { const m = Math.hypot(this.joy.x, this.joy.y); if (m > 0.18) { x = this.joy.x; y = this.joy.y; jrun = m > 0.85; } }
     const m = Math.hypot(x, y); if (m > 1) { x /= m; y /= m; }
-    return { x, y, run: !!(k.ShiftLeft || k.ShiftRight) };
+    return { x, y, run: jrun || !!(k.ShiftLeft || k.ShiftRight) };
   },
   clear() { this.pressed.clear(); this.act = false; },
 };
@@ -1618,6 +1621,18 @@ const EP = () => G.s.episode;
 
 /* ---------- Дневные допросы 18 октября (только эпизод 1) ----------
    Алиби попадает в дело, только когда персонаж его назвал. */
+// повторный вопрос: во второй раз персонаж напоминает ответ, дальше — реагирует по-своему
+const REPEAT_TALK = {
+  mark: { again: ['Я же говорил.', 'Повторю — мне не сложно.', 'Записать тебе это в график?'], tired: ['Рубен, ты уже спрашивал. Я записал, что ты спрашивал.', 'Тот же вопрос — тот же ответ. Как с кофемашиной.', 'Слушай, иди поспи. Ты по кругу ходишь.'] },
+  tigran: { again: ['Ахпер, я же сказал.', 'Повторяю, для протокола.', 'Ещё раз? Ладно.'], tired: ['Ахпер, у тебя кэш не очищается? Ответ тот же.', 'Ты как бот, который зациклился. Перезагрузись.', 'Барев ещё раз. Ответ не поменялся.'] },
+  taras: { again: ['Братан, я ж говорил.', 'Опять? Ну ладно.', 'Повторю. Мне не жалко. Мне вообще ничего не жалко, у меня неделя такая.'], tired: ['Братан, ты меня допрашиваешь или мучаешь? Ответ тот же.', 'Жизнь не мёд, а ты ещё по третьему кругу спрашиваешь.', 'Я ж уже сказал. Меня никто не слушает. Даже ты.'] },
+  andrey: { again: ['…Я уже отвечал.', '…Опять?', 'Ну… как и сказал.'], tired: ['…', '…Тот же ответ. Не смотри так.', 'Я не передумаю, если спросишь ещё раз.'] },
+  kirill: { again: ['Дежавю! Ладно, повторяю.', 'Ты сохранился и загрузился, что ли?', 'Это повтор. Как в реплее.'], tired: ['Детектив, это уже баг. Ответ тот же.', 'Квест «спросить Кирилла» уже выполнен. Награда получена.', 'Я могу ответить иначе, но тогда это будет враньё. Шучу. Наверное.'] },
+  sasha: { again: ['Я же… уже говорил, да?', 'Э… ну как и сказал.', 'Да-да, всё так.'], tired: ['Рубен, давай без паники. Ответ тот же.', 'Ты чего так смотришь? Я всё уже сказал. Честно.', 'Опять? Слушай, я… мне чайник надо выключить. В смысле, ответ тот же.'] },
+  dima: { again: ['Повторяю. Пункт тот же.', 'Уже отвечал. Кратко:', 'Внесу в протокол повторно.'], tired: ['Вопрос задан трижды. Неэффективно.', 'Ответ не меняется от количества запросов. Это не Excel.', 'Записываю: «Рубен спрашивает по кругу». Пункт первый в списке причин для сна.'] },
+  nikita: { again: ['…Ja. То есть я уже говорил.', 'Как я и сказал…', 'Повторю. Как припев.'], tired: ['Wie bitte? Это уже третий куплет. Ответ тот же.', 'Даже у Баха столько повторов не было.', 'Тот же ответ. Как сказал бы Гегель — снятие вопроса.'] },
+  _: { again: ['Я уже говорил.'], tired: ['Ответ тот же.'] },
+};
 const GREET = { tigran: 'Барев, ахпер.', taras: 'Привет, Тарас.', andrey: 'Привет, Андрей.', kirill: 'Здорово, Кирилл.', sasha: 'Привет, Саш.', dima: 'Привет, Дим.', nikita: 'Привет, Никит. Hallo.', mark: 'Привет, Марк.' };
 function interrogation(id, cfg) {
   const A = id + '_alibi';
@@ -2381,7 +2396,7 @@ function investigation(who, cfg) {
     Q(`Открыть ноутбук: ${Ng}`, () => Puzzle.compOpen(who), () => { const L = COMPUTERS[who].lock.hints; const k = 'hint_' + who; const n = G.s.seen[k] = Math.min(1, (G.s.seen[k] == null ? -1 : G.s.seen[k]) + 1); return L[n]; }),
     Q(cfg.compGoal || 'Найти в ноутбуке, где он был на самом деле', () => cfg.comp.every(Ev.has), cfg.compHint),
     ...(cfg.chat || []),
-    Q(() => { const L = Case.allFor(epOf()); return `Сопоставить все факты в «Деле» (${L.filter(r => G.s.links.includes(r.id)).length} из ${L.length})`; }, () => Case.allDone(epOf()), () => { const n = epOf(), L = CASE_HINTS[n] || ['Открой «Расследование» → «Дело» и сравни карточки.'], k = 'casehint_' + n; const i = G.s.seen[k] = Math.min(L.length - 1, (G.s.seen[k] == null ? -1 : G.s.seen[k]) + 1); return L.slice(0, i + 1).join(' '); }),
+    Q(() => { const L = Case.allFor(epOf()); return `Сопоставить все факты в «Деле» (${L.filter(r => G.s.links.includes(r.id)).length} из ${L.length})`; }, () => Case.allDone(epOf()), () => caseHint(epOf())),
   ];
 }
 const askQ = (qid, text, hint) => Object.assign(Q(text, () => { const q = CHAT_Q.find(x => x.id === qid); return q.ev ? Ev.has(q.ev) : q.flag ? Flags.has(q.flag) : !!G.s.seen[qid]; }, hint || 'Открой телефон → «Сообщения» → выбери человека и задай вопрос.'), { qid });
@@ -2403,7 +2418,7 @@ const EPISODES = {
       Q(() => `Узнать у всех, где они были вчера вечером (${ALIBI7.filter(x => Flags.has(x + '_alibi')).length}/${ALIBI7.length})`,
         () => ALIBI7.every(x => Flags.has(x + '_alibi')),
         () => { const left = ALIBI7.filter(x => !Flags.has(x + '_alibi')); return 'Ещё не спросил: ' + left.map(x => `${CHARS[x].name} (${WHERE[x]})`).join('; ') + '.'; }),
-      Q(() => { const L = Case.allFor(1); return `Сопоставить факты в «Деле» (${L.filter(r => G.s.links.includes(r.id)).length} из ${L.length})`; }, () => Case.allDone(1), 'Кнопка «Расследование» → «Дело». Соедини карточки, которые подтверждают или опровергают друг друга: запись камер, рассказ Марка, уход Вари.'),
+      Q(() => { const L = Case.allFor(1); return `Сопоставить факты в «Деле» (${L.filter(r => G.s.links.includes(r.id)).length} из ${L.length})`; }, () => Case.allDone(1), () => 'Кнопка «Расследование» → «Дело». ' + caseHint(1)),
       Q('Дождаться, пока все уйдут — часы в холле', () => false, 'Часы — на двух колоннах по бокам от ресепшена.'),
     ],
     done: () => ALIBI7.every(x => Flags.has(x + '_alibi')) && Ev.has('cam_bag'),
@@ -3319,7 +3334,7 @@ const World = {
     const busy = UI.busy();
     const a = busy || G.lockMove ? { x: 0, y: 0, run: false } : Input.axis();
     if (L.forceRun && (a.x || a.y)) a.run = true; // к гаражу герой бежит сам
-    const sm = L.type === 'top' ? 1 + ((L.charScale || 1) - 1) * 0.35 : 1; const sp = (a.run ? 105 : 64) * sm * dt;
+    const sm = L.type === 'top' ? 1 + ((L.charScale || 1) - 1) * 0.35 : 1; const sp = (a.run ? 150 : 84) * sm * dt;
     p.moving = false;
     if (L.type === 'side') {
       if (Math.abs(a.x) > 0.2) {
@@ -3350,6 +3365,7 @@ const World = {
     for (const ps of this.passers) { ps.x += ps.v * dt; if (ps.x < -40) ps.x = L.w + 30; if (ps.x > L.w + 40) ps.x = -30; }
     // цель взаимодействия
     this.target = busy ? null : this.findTarget();
+    if (!this.target && UI.thoughtT > 0 && UI.thoughtQ.length && G.mode === 'play' && !UI.busy() && Input.takeAct()) UI.nextThought();
     if (this.target && Input.takeAct()) { const tg = this.target; SND.sfx('click'); if (tg.npc) Interact.talk(tg.npc); else Interact.run(tg.act, tg); }
     else if (!busy) Input.takeAct();
     if (L.update) L.update(dt);
@@ -4188,6 +4204,7 @@ const UI = {
       b.dataset.id = id; wrap.append(b);
     }
     $('#dlg').addEventListener('click', e => { if (e.target.classList.contains('choice')) return; this.dlgAdvance(); });
+    $('#thought').addEventListener('click', () => { SND.sfx('click'); this.nextThought(); });
     $('#deskBack').addEventListener('click', () => this.closeDesk()); $('#deskHint').addEventListener('click', () => this.hint());
     if (IS_TOUCH) $('#touch').classList.remove('hidden');
   },
@@ -4224,10 +4241,11 @@ const UI = {
     while ($('#toasts').children.length > 4) $('#toasts').firstChild.remove();
   },
   think(text, dur) { this.thoughtQ.push([text, dur || Math.max(2.6, text.length * 0.06)]); if (this.thoughtT <= 0) this.nextThought(); },
-  nextThought() { const n = this.thoughtQ.shift(); const el = $('#thought'); if (!n) { el.classList.remove('on'); return; } el.textContent = n[0]; el.classList.add('on'); this.thoughtT = n[1]; },
+  // цепочка мыслей ждёт щелчка/касания (или E/Пробел, когда рядом не с чем взаимодействовать); последняя гаснет сама
+  nextThought() { const n = this.thoughtQ.shift(); const el = $('#thought'); if (!n) { el.classList.remove('on', 'more'); this.thoughtT = 0; return; } el.textContent = n[0]; el.classList.add('on'); el.classList.toggle('more', this.thoughtQ.length > 0); this.thoughtT = n[1] * 1.5; },
   frame(dt) {
     // мысли
-    if (this.thoughtT > 0) { this.thoughtT -= dt; if (this.thoughtT <= 0) this.nextThought(); }
+    if (this.thoughtT > 0) { const th0 = $('#thought'); if (this.thoughtQ.length) th0.classList.add('more'); else { this.thoughtT -= dt; if (this.thoughtT <= 0) this.nextThought(); } }
     const th = $('#thought');
     if (World.player && World.L && World.L.type !== 'cut') { const p = World.player; const [sx, sy] = World.toScreen(p.x, World.L.type === 'side' ? World.L.floor - 30 * (World.L.charScale || 1) : p.y - 32 * (World.L.charScale || 1)); const z = Scale.z; setSt(th, 'left', Math.round(clamp(sx / z, 120, innerWidth / z - 120)) + 'px'); setSt(th, 'top', Math.round(Math.max(120, sy / z - 46)) + 'px'); }
     // подсказка взаимодействия
@@ -4259,8 +4277,13 @@ const UI = {
     const S = q.script;
     while (q.i < S.length) {
       const st = S[q.i];
-      if (st.label) { q.i++; continue; }
-      if (st.go) { q.i = this.dlgFind(st.go); continue; }
+      if (st.label) { if (q.rep && st.label !== q.rep.lbl) q.rep = null; q.i++; continue; }
+      if (st.go) { q.rep = null; q.i = this.dlgFind(st.go); continue; }
+      if (q.rep && st.s === q.rep.who) {
+        if (q.rep.said) { q.i++; continue; }
+        q.rep.said = true; const R = REPEAT_TALK[st.s] || REPEAT_TALK._, pick = L => L[Math.floor(Math.random() * L.length)];
+        this.showLine(Object.assign({}, st, { t: q.rep.n === 2 ? pick(R.again) + ' ' + st.t : pick(R.tired) })); return;
+      }
       if (st.if && st.go !== undefined) { q.i = st.if() ? this.dlgFind(st.go) : q.i + 1; continue; }
       if (st.ev) { Ev.add(st.ev); q.i++; continue; }
       if (st.sus) { Sus.add(st.sus); q.i++; continue; }
@@ -4304,7 +4327,20 @@ const UI = {
     this.renderChoiceSel();
   },
   renderChoiceSel() { $$('#dlg .choice').forEach((b, i) => b.classList.toggle('sel', i === this.dq.sel)); },
-  pickChoice(i) { const q = this.dq; const c = q.choices[i]; if (!c) return; SND.sfx('click'); if (c.once) G.s.seen[c.once] = 1; q.choices = null; $('#dlg .choices').innerHTML = ''; q.i = c.go ? this.dlgFind(c.go) : q.i + 1; this.dlgRun(); },
+  pickChoice(i) { const q = this.dq; const c = q.choices[i]; if (!c) return; SND.sfx('click'); if (c.once) G.s.seen[c.once] = 1; q.choices = null; $('#dlg .choices').innerHTML = ''; q.i = c.go ? this.dlgFind(c.go) : q.i + 1; q.rep = c.go ? this.dlgRepeat(c) : null; this.dlgRun(); },
+  // вопрос, который уже задавали: ветка, возвращающаяся в меню, звучит по-другому (2-й раз — напоминание, дальше — реакция персонажа)
+  dlgRepeat(c) {
+    const S = this.dq.script; let who = null, back = false;
+    for (let i = this.dlgFind(c.go) + 1; i < S.length && !back; i++) {
+      const st = S[i];
+      if (st.label || st.end || st.ch || st.if) return null;
+      if (st.go) back = true;
+      else if (st.s && st.s !== 'ruben' && CHARS[st.s] && !who) who = st.s;
+    }
+    if (!who || !back) return null;
+    const k = 'rq|' + who + '|' + c.t; const n = G.s.seen[k] = (G.s.seen[k] || 0) + 1;
+    return n > 1 ? { lbl: c.go, who, n, said: false } : null;
+  },
   dlgEnd() { const q = this.dq; this.dq = null; $('#dlg').classList.add('hidden'); Input.clear(); Game.onChange(); if (q) q.res(); },
   say(s, t, p) { return this.dialog([{ s, t, p }]); },
   /* ---------- карточка эпизода / затемнение / субтитры ---------- */
@@ -4598,6 +4634,26 @@ const CASE_HINTS = {
   8: ['Дима сам предложил проверить историю файла. И ещё — ключ «D-04».', 'С какого устройства правили таблицу в 20:13?', 'Сравни «Слова: Дима» с expenses.xlsx.'],
   9: ['Голос Вари звучит как прощание. Но когда он записан?', 'Посмотри свойства файла final_message.wav.', 'Сравни метаданные записи с самой записью.'],
 };
+// мысли в «Деле» листаются щелчком: следующая строка — по клику на полосу мыслей
+const cthinkPlay = (el, lines, now = true) => {
+  el._q = lines.slice();
+  const next = () => { const s = el._q.shift(); if (s == null) return; const tx = $('.tx', el); tx.textContent = ''; tx.append(h('span', { class: 'ln' }, s)); SND.sfx('type'); el.classList.toggle('more', el._q.length > 0); };
+  el.onclick = next; if (now) next(); else el.classList.toggle('more', el._q.length > 0);
+};
+// подсказка к «Делу»: по одной несопоставленной связи (ключевая — первой); каждый вызов открывает следующую ступень,
+// пока связь не найдена; затем подсказки переходят к следующей связи
+const linkHints = r => {
+  const A = '«' + EVIDENCE[r.a].title + '»', B = '«' + EVIDENCE[r.b].title + '»';
+  return [r.t === 'contra' ? `Что-то в карточке ${A} не сходится с другим фактом.` : r.t === 'sup' ? `Карточку ${A} можно чем-то подтвердить.` : `С карточкой ${A} что-то связано. Ищи общее: время, место, людей.`,
+    `Сравни ${A} с ${B} — перетащи одну карточку на другую.`];
+};
+const caseHint = n => {
+  const L = Case.allFor(n).filter(r => !Case.made(r.id)).sort((a, b) => (b.key || 0) - (a.key || 0));
+  if (!L.length) return 'Для оставшихся связей не хватает фактов. Осмотрись и поговори с людьми.';
+  const r = L[0], H = r.key && CASE_HINTS[n] ? CASE_HINTS[n] : linkHints(r), k = 'lhint_' + r.id;
+  const i = G.s.seen[k] = Math.min(H.length - 1, (G.s.seen[k] == null ? -1 : G.s.seen[k]) + 1);
+  return (L.length > 1 ? `Несопоставленных связей: ${L.length}. Начни с этой. ` : '') + H.slice(0, i + 1).join(' ');
+};
 const NO_LINK = ['Нет. Это ничего не доказывает.', 'Не вижу связи.', 'Мало. Одно с другим не сходится и не спорит.', 'Просто два факта. Пока — просто два факта.'];
 const REL_T = { sup: ['ПОДТВЕРЖДАЕТ', '#7be39a'], contra: ['ПРОТИВОРЕЧИЕ', '#ff6b6b'], con: ['СВЯЗАНО', '#f4d35e'], inc: ['НЕ ДОКАЗЫВАЕТ', '#8a90a0'] };
 
@@ -4766,12 +4822,7 @@ UI.investigation = function (tab = 'case') {
       }
     };
     const marks = () => { for (const id in cards) cards[id].classList.toggle('pick', pick === id); };
-    let tq = [], tT = null;
-    const think = (arr, kind) => {
-      clearTimeout(tT); tq = arr.slice(); const tx = $('.tx', thought); thought.className = 'cthink ' + (kind || '');
-      const step = () => { const s = tq.shift(); if (s == null) return; tx.textContent = ''; tx.append(h('span', { class: 'ln' }, s)); SND.sfx('type'); tT = setTimeout(step, Math.max(1400, s.length * 45)); };
-      step();
-    };
+    const think = (arr, kind) => { thought.className = 'cthink ' + (kind || ''); cthinkPlay(thought, arr); };
     const connect = (a, b) => {
       const res = Case.test(a, b); if (!res) return;
       const lbl = REL_T[res.t];
@@ -4783,7 +4834,7 @@ UI.investigation = function (tab = 'case') {
         area.append(banner); setTimeout(() => banner.remove(), 1900);
         lines(res.r.id);
         // обновить вопросы/гипотезы/счётчики, не теряя нити
-        setTimeout(() => { const keep = tq.slice(), txt = $('.tx', thought).innerHTML, cls = thought.className; const sc = body.parentNode ? body.parentNode.scrollTop : 0; show('case'); const t2 = $('.cthink', body); if (t2) { t2.className = cls; $('.tx', t2).innerHTML = txt; } if (body.parentNode) body.parentNode.scrollTop = sc; if (keep.length) setTimeout(() => { const T3 = $('.cthink .tx', body); let i = 0; const go = () => { if (!T3 || i >= keep.length) return; T3.innerHTML = ''; T3.append(h('span', { class: 'ln' }, keep[i++])); SND.sfx('type'); setTimeout(go, 1600); }; go(); }, 1300); }, 1200);
+        setTimeout(() => { const keep = (thought._q || []).slice(), txt = $('.tx', thought).innerHTML, cls = thought.className; const sc = body.parentNode ? body.parentNode.scrollTop : 0; show('case'); const t2 = $('.cthink', body); if (t2) { t2.className = cls; $('.tx', t2).innerHTML = txt; } if (body.parentNode) body.parentNode.scrollTop = sc; if (t2) cthinkPlay(t2, keep, false); }, 1200);
       }
     };
     // перетаскивание: мышь — за карточку, палец — за ⠿
@@ -4814,7 +4865,7 @@ UI.investigation = function (tab = 'case') {
       det.append(h('div', { class: 'dh' }, h('span', {}, '#' + EV_NO[id] + ' · ' + (e.kind === 'stmt' ? 'ЗАЯВЛЕНИЕ' : 'УЛИКА')), h('button', { class: 'xbtn', onclick: () => det.classList.add('hidden') }, '✕')),
         h('h3', {}, e.title), h('div', { class: 'meta' }, [CHARS[e.who].name, e.src, '17 октября', e.time].filter(Boolean).join(' · ')),
         e.claim ? h('div', { class: 'claim' }, 'Утверждает: ' + e.claim) : null, h('p', {}, e.text), ...ls,
-        h('div', { class: 'row' }, h('button', { class: 'btn', onclick: () => { pick = id; marks(); det.classList.add('hidden'); think(['Сопоставить «' + e.title + '» с…', 'Выбери вторую карточку.']); } }, 'СОПОСТАВИТЬ С…')));
+        h('div', { class: 'row' }, h('button', { class: 'btn', onclick: () => { pick = id; marks(); det.classList.add('hidden'); think(['Сопоставить «' + e.title + '» с… Выбери вторую карточку.']); } }, 'СОПОСТАВИТЬ С…')));
       det.classList.remove('hidden');
       if (first) think([e.kind === 'stmt' ? 'Его слова. Слова надо проверять фактами.' : e.time ? e.time + '… Запомню.' : 'Запомню.']);
     };
@@ -4891,7 +4942,7 @@ UI.pause = function () {
     h('button', { class: 'btn', onclick: () => { Save.write(); this.toast('', 'Игра сохранена'); SND.sfx('ok'); } }, 'СОХРАНИТЬ'),
     h('button', { class: 'btn', onclick: () => { this.closeTop(); this.settings(); } }, 'НАСТРОЙКИ'),
     h('button', { class: 'btn', onclick: () => { Save.write(); this.closeAll(); Menu.show(); } }, 'В ГЛАВНОЕ МЕНЮ'),
-    h('div', { class: 'keys', style: 'margin-top:10px' }, IS_TOUCH ? 'Джойстик — слева (коснись любой точки левой половины экрана). Кнопка «Действие» — справа. Кнопки вверху — инвентарь, подозреваемые, расследование, телефон, подсказка.' : h('span', { html: '<kbd>WASD</kbd>/<kbd>стрелки</kbd> — ходьба · <kbd>Shift</kbd> — бег · <kbd>E</kbd>/<kbd>Пробел</kbd> — действие<br><kbd>I</kbd> инвентарь · <kbd>Q</kbd> подозреваемые · <kbd>J</kbd> расследование · <kbd>P</kbd> телефон · <kbd>H</kbd> подсказка · <kbd>Esc</kbd> пауза' })));
+    h('div', { class: 'keys', style: 'margin-top:10px' }, IS_TOUCH ? 'Джойстик — слева (коснись любой точки левой половины экрана), отведи до края — бег. Мысли пролистываются касанием. Кнопка «Действие» — справа. Кнопки вверху — инвентарь, подозреваемые, расследование, телефон, подсказка.' : h('span', { html: '<kbd>WASD</kbd>/<kbd>стрелки</kbd> — ходьба · <kbd>Shift</kbd> — бег · <kbd>E</kbd>/<kbd>Пробел</kbd> — действие · клик по мысли — следующая<br><kbd>I</kbd> инвентарь · <kbd>Q</kbd> подозреваемые · <kbd>J</kbd> расследование · <kbd>P</kbd> телефон · <kbd>H</kbd> подсказка · <kbd>Esc</kbd> пауза' })));
   this.open(this.panel('ПАУЗА', body, { small: true }), 'pause');
 };
 UI.settings = function (fromMenu) {
@@ -5514,7 +5565,7 @@ const SAY = {
 const Interact = {
   async talk(id) { G.lockMove = true; await UI.dialog(EXTRA_TALK[id] ? EXTRA_TALK[id]() : talkScript(id)); G.lockMove = false; Game.onChange(); if (G.pendingCams) { G.pendingCams = false; Mini.open('cams', () => { Game.onChange(); if (!G.s.seen.mk_after) { G.s.seen.mk_after = 1; UI.think('Лицо закрыто. Рост средний. Это может быть кто угодно. Даже кто-то из своих. Надо узнать, где все были вчера вечером.'); } }); } },
   async run(act, tg) {
-    UI.thoughtQ = []; UI.thoughtT = 0; $('#thought').classList.remove('on'); // новая мысль при осмотре сразу заменяет старую
+    UI.thoughtQ = []; UI.thoughtT = 0; $('#thought').classList.remove('on', 'more'); // новая мысль при осмотре сразу заменяет старую
     if (act.startsWith('cab:')) return this.cab(act.slice(4));
     if (act.startsWith('desk:')) return this.deskZone(act.slice(5));
     if (act === 'say' && tg && tg.o) { UI.think(tg.o.text); return; }
@@ -5717,7 +5768,7 @@ function choose(title, options) {
 /* ---------------- Катсцены ---------------- */
 const Scenes = {
   // общий рендер катсцены в канвасе
-  clearThoughts() { UI.thoughtQ = []; UI.thoughtT = 0; $('#thought').classList.remove('on'); },
+  clearThoughts() { UI.thoughtQ = []; UI.thoughtT = 0; $('#thought').classList.remove('on', 'more'); },
   play(drawFn, dur, scaleAs) { this.clearThoughts(); return new Promise(res => { const L = { type: 'cut', viewH: 120, minW: 200, draw: drawFn, scaleAs }; LOC.__cut = L; World.locId = '__cut'; World.L = L; World.t = 0; resize(); setTimeout(res, dur); }); },
   async intro() {
     G.cutscene = true; SND.music('night'); G.s.episode = 1; Time.set('night', '22:00');
